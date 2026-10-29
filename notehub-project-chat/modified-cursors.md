@@ -6,23 +6,15 @@ last successful checkpoint. The same mechanism works through MCP and the Notehub
 For a foreground question, use it for the bounded read and stop when the work is done.
 On the user's Cloud Computer, resume saved cursors at each periodic acquisition run.
 
-## Choose the relevant reference
+## 1. Verify the stream and cursor contract
 
-| If you need to | Read | Then |
-|---|---|---|
-| Choose evidence for a question | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use sufficient cached evidence, a repository or a bounded live read |
-| Prepare recurring caching or enroll a newly referenced project | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the cache database and maintenance task and verify each project's saved checkpoints |
-| Apply changes to a maintained cache | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve atomic checkpoints, deletion handling, coverage and retention |
-| Resolve an entity's cursor parameters or response shape | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Read the current contract and invoke it through the selected connection |
-
-## Read and resume batches
-
-Use modified cursors for incremental synchronization wherever the operation documents
-them. Start with `0` for a complete initial entity scan, or an epoch time in **microseconds**
-when a deliberately bounded starting point is appropriate. A returned cursor is an
-**opaque string**, potentially including a tie-breaker: preserve it exactly. Never parse
-it into a float, increment it, derive it from the last row's timestamp, or replace it
-with an Event UID. Old event-UID cursors and `/events-cursor` are not the sync mechanism.
+Use modified cursors for incremental synchronization wherever the operation
+documents them. Start with `0` for a complete initial entity scan, or an epoch time
+in **microseconds** when a deliberately bounded starting point is appropriate. A
+returned cursor is an **opaque string**, potentially including a tie-breaker:
+preserve it exactly. Never parse it into a float, increment it, derive it from the
+last row's timestamp, or replace it with an EventUID. Old EventUID cursors and
+`/events-cursor` are not the sync mechanism.
 
 Check the exact response: Events, Devices and Device Sessions expose `next_cursor` and
 `has_more`; some operations return arrays and cursor metadata in `X-Next-Cursor` and
@@ -33,17 +25,34 @@ available now. Request a large batch within the operation's documented limit and
 worker's response capacity. Where supported, `pageSize` is the API parameter for batch
 size; modified-cursor scans advance with `cursor`, never `pageNum`.
 
-1. Scope a checkpoint to hub/account/project, entity, filters and contract version.
+Keep each record under its ProjectUID and the endpoint's documented key:
+
+| Entity | Identifier in the response |
+|---|---|
+| Device | DeviceUID in `uid` |
+| Event | EventUID in `event` |
+| Session | SessionUID in `session`, associated with DeviceUID in `device` |
+
+For other entities, use the key named in the operation's response schema.
+
+## 2. Read and commit successive batches
+
+1. Scope a checkpoint to the account, ProjectUID, entity, filters and contract version;
+   include DeviceUID for per-device Session streams.
 2. Fetch one batch with the saved cursor through the chosen authenticated transport.
 3. Validate the response and its cursor metadata. With `has_more=true`, a missing,
    repeated or cyclic next cursor is an error, not completion.
-4. Apply records by their documented stable identity, including documented deletion
-   tombstones, and commit the returned cursor in the **same transaction**.
+4. Apply records by the keys above, including documented deletion tombstones, and
+   save the returned cursor only after the batch is accepted. A persistent cache commits
+   records and cursor in the **same transaction**. A foreground analysis can accumulate
+   its bounded results in memory or temporary storage; it needs no persistent database.
 5. Fetch the next batch immediately while `has_more=true`. When `has_more=false`,
    the scan is complete; keep the returned cursor for the next scheduled poll. There
    is no need for an extra request just to obtain an empty batch. An empty successful
    batch can still advance the checkpoint and freshness. Never advance it on a failed
    fetch, invalid batch or failed transaction.
+
+## 3. Verify what the completed scan covers
 
 A cursor orders **modifications**, not capture time. Old records may be corrected now;
 late events may describe old measurements. Retention and analytical windows are separate
@@ -56,3 +65,5 @@ per device with `GetDeviceSessions`; `_session.qo` is not a replacement. Notefil
 use `GetNotefileSchemas`; where no modified cursor is documented, refresh a complete
 snapshot and compare only after a successful complete fetch. Never invent a cursor
 parameter or infer deletion from a partial snapshot.
+
+Return the saved checkpoint and actual coverage to the calling query or acquisition worker.

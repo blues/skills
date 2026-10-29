@@ -5,6 +5,10 @@ different evidence. Keep **Notecard firmware** and **host firmware** separate. A
 version is only as current and meaningful as what the host has reported to the Notecard.
 An uploaded binary or desired environment value is not an installed version.
 
+| For an end-to-end procedure | Read | Then |
+|---|---|---|
+| Explore firmware or manage updates for Devices and Fleets | [Explore and manage Firmware Updates](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-firmware/SKILL.md) | Apply these field meanings while inspecting, changing and verifying the selected Project's firmware |
+
 ## The public structures
 
 | Surface / field | Semantic meaning |

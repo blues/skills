@@ -1,16 +1,14 @@
-# Notehub Cache Database: efficient queries with explicit coverage
+# Build and verify the cache data model
 
-This is the data contract for the Notehub Cache Database and the Notehub Cache Maintenance
-Task that keeps it current. Access prepares both; each newly referenced project joins
-their registry. Use prepared questions to choose useful projections.
+Use Steps 1–2 while creating or verifying the database. Steps 3–6 supply the data
+rules for the maintenance worker and project enrollment. Apply the section needed by
+the calling procedure, then return there. Preserve an existing sound organization.
 
-The current database of choice is DuckDB. Cached Notehub records and derived projections
-can be rebuilt; private assistant state stored alongside them must be preserved.
-Notehub remains the owner of shared product meaning. Install DuckDB in a harness-managed
-environment and keep one writer per database.
-Use the selected authenticated connection for every acquisition. Read product skills
-before choosing projections; retain raw JSON and stable IDs so corrections can rebuild
-views without reacquiring everything.
+## 1. Choose and verify database access
+
+Use DuckDB in the worker runtime established during harness preparation. Cached source
+records and projections can be rebuilt; private state and shared product meaning have
+separate owners. Use the selected authenticated connection for acquisition.
 
 For concurrent Q&A and polling, choose an actual database-access design: one owning
 process handles reads and writes, cooperating processes serialize database opens under
@@ -18,21 +16,7 @@ a lock, or the writer publishes stable read snapshots. Merely opening another pr
 read-only does not make it compatible with a process holding the database for writing.
 See [DuckDB concurrency](https://www.duckdb.org/docs/2.0/connect/concurrency) for the runtime contract.
 
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Create the database, register its maintenance task or enroll another project | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the shared infrastructure and verify per-project readiness |
-| Decide what to persist beyond cached data | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Add only what later runs need and preserve it during cache rebuilds |
-| Run the acquisition worker | [Acquisition job contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#acquisition) | Execute bounded work with persisted scope and checkpoints |
-| Choose typed projections from product meaning | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Project only grounded fields and calculations needed by useful questions |
-| Acquire or refresh stored product knowledge | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | List names and kinds, read relevant documents or the full set, and reuse unchanged content |
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Use each endpoint's exact cursor and deletion contract |
-| Maintain schemas and optimize the fields actually queried | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Track field usage and review physical design daily |
-
-## Choose the database organization
+## 2. Create or verify the tables and keys
 
 Reuse the shared cache established during Cache preparation. Read its folder's README
 before querying, then check live coverage/freshness records and follow its access mechanism.
@@ -40,22 +24,27 @@ All of the user's bots in the same verified Notehub scope use this cache and mai
 task; a bot or channel does not get its own copy. Choose physical organization for the
 workload and record it in the registry. These logical tables are a useful starting point; adapt names and physical
 organization while preserving the identities and relationships. All keys are additionally
-scoped to the verified hub/account, either in columns or by an isolated database binding.
+scoped to the verified account, either in columns or by an isolated database binding.
 
 | Logical table | Suggested key | Main contents |
 |---|---|---|
-| Projects | `project_uid` | Project metadata, enrollment state and cache location |
-| Devices | `project_uid`, `device_uid` | Current native Device data, raw JSON and deletion/freshness state |
-| Sessions | `project_uid`, `session_uid` | Full Session data and its `device_uid`; include device identity in the key if required by the source's uniqueness contract |
-| Events | `project_uid`, `event_uid` | Raw Event data, device/session/Notefile references, capture/modified times and tombstones |
+| Projects | `project_uid` | AccountUID, human-readable Project name, associated ProductUIDs, other Project metadata, enrollment state and cache location |
+| Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships preserving any `smart:` prefix, raw JSON and deletion/freshness state |
+| Sessions | `project_uid`, `session_uid` | Full Session data and the DeviceUID of the one Device that generated it |
+| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture/modified times and tombstones |
 | Schemas | `project_uid`, `notefile_id` | Current full schema, fetch time and change hash, with history where needed |
-| Monitor/alert state | `project_uid`, `monitor_id`, plus incident/delivery identity where needed | Definitions, baselines, transitions and delivery state for requested monitors |
+| Monitors | `project_uid`, `monitor_id` | What is watched, requested or inferred origin, checking and notification preferences, pause state and progress needed to resume |
 
-Use separate typed key columns, rather than building a `projectUID:entityUID` string.
-A project can have many monitors and alerts; project UID alone cannot identify each one.
-Keep private monitor/incident/outbox state distinct from Notehub source records and shared
-product skills. Enforce idempotent ingestion by the actual stable keys; declare constraints
-where needed for correctness rather than assuming each composite key improves query speed.
+Here `project_uid` stores ProjectUID (also called AppUID); those names refer to the
+same unique project GUID. The project's multiple ProductUID strings identify
+customer product types or SKUs feeding that project and do not create separate
+project cache entries. Use separate typed key columns, such as `project_uid` and
+`device_uid`, rather than concatenating ProjectUID and DeviceUID into one string. A
+Project can have many monitors; ProjectUID alone cannot identify each one. Keep private
+monitor preferences and progress distinct from Notehub source records and shared product
+skills. Enforce idempotent ingestion by the actual stable keys;
+declare constraints where needed for correctness rather than assuming each composite
+key improves query speed.
 
 Retain scoped stream checkpoints, coverage, schema/meaning versions and query-usage
 records as those workflows run. Source refreshes must
@@ -64,14 +53,33 @@ are not replaced by an API metadata snapshot. Raw JSON plus typed native columns
 workload-driven product projections is a practical combination. Choose the physical layout
 to suit the workload while preserving transactional checkpoints and raw evidence.
 
-## Streams and initial coverage
+### State that survives rebuilds
+
+Start with the project registry. As workers and queries run, add only the records they
+need: exact acquisition checkpoints, coverage/freshness, task definitions and run results.
+When monitors are used, retain their definitions, last valid comparisons, check and
+notification progress, interests and pauses. Let the agent choose the organization;
+there is no separate required assistant-state schema. Reuse information reliably
+available from the harness.
+
+Keep structured state in the database rather than a parallel directory of JSON files.
+Worker scripts, engine files and temporary transfers still belong in the filesystem.
+The harness needs only enough bootstrap information to locate the database and invoke
+the worker. Keep credentials in the selected tool.
+
+Commit source records with their checkpoints, and monitor comparisons with any pending
+notifications. Rebuilding source caches must preserve operational state, user choices and
+delivery history. Task registration and successful runs/delivery are distinct evidence.
+The folder README and shared memory locate the cache; live state stays in the database.
+
+## 3. Define streams and verify initial coverage
 
 | Entity | Acquisition and retention |
 |---|---|
 | Projects | Retain metadata for enrolled projects; refresh on first use and during daily maintenance |
-| Devices | Complete project scan with modified cursor `0`; upsert by `uid`, apply documented `deleted` tombstones; keep the full current population |
+| Devices | Complete Project scan with modified cursor `0`; upsert by DeviceUID in `uid`, apply documented `deleted` tombstones; keep the full current population |
 | Events | `GetEvents`, upsert by `event`, apply its `deleted` tombstones; retain at least the latest 30 days and prune only after 45 days |
-| Full Sessions | `GetDeviceSessions` for each device, upsert by `session` within project/device scope; updates replace prior session estimates; same recent retention |
+| Full Sessions | `GetDeviceSessions` for each DeviceUID, upsert by SessionUID in `session` within the ProjectUID and DeviceUID; updates replace prior session estimates; same recent retention |
 | Notefile Schemas | Complete `GetNotefileSchemas` snapshot on enrollment and daily by default, sooner when needed; no modified cursor; swap only after a successful full response |
 | Product skills | Read the catalog and needed content, or a complete content snapshot; check metadata periodically, reuse unchanged documents and recheck dependent views/monitors when meaning changes |
 
@@ -93,16 +101,22 @@ Consult the live schema for each stream's tombstone support. In particular, do n
 a Session `deleted` field or interpret absence in an incremental response as deletion.
 Schema snapshot replacement is a separate complete-snapshot operation, not a cursor scan.
 
-## Incremental work, every 15 minutes
+## 4. Commit incremental changes with their checkpoints
 
-Use modified-cursor rules.
-Namespace checkpoints by hub/account/project/entity/device/filter and projection contract.
-Each maintenance task's fill phase rereads the registry and budgets work fairly across active projects.
-Commit a batch's upserts/tombstones and its exact returned cursor in one transaction.
-Bulk-load JSON; don't issue per-row requests or SQL inserts. A retry replays safely by
-stable identity. Persist last attempt, last completed scan, cursor, partial/error state,
-coverage boundaries and the time basis for those boundaries. An empty successful final
-batch advances freshness; a failed request never does.
+Implement the batch transaction below using the endpoint's current cursor contract.
+
+| For the acquisition contract | Read | Then |
+|---|---|---|
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Apply exact cursor, batching and deletion semantics |
+
+Namespace checkpoints by account, ProjectUID, entity, DeviceUID, filters and
+projection contract. Each maintenance task's fill phase rereads the registry and
+budgets work fairly across active projects. Commit a batch's upserts/tombstones and
+its exact returned cursor in one transaction. Bulk-load JSON; don't issue per-row
+requests or SQL inserts. A retry upserts by the ProjectUID and DeviceUID, EventUID
+or SessionUID keys defined above. Persist last attempt, last completed scan, cursor,
+partial/error state, coverage boundaries and the time basis for those boundaries. An
+empty successful final batch advances freshness; a failed request never does.
 
 Bound work per invocation. If a backlog exceeds the budget, retain the committed cursor,
 mark incomplete and schedule a continuation through the real scheduler. Back off rate
@@ -110,33 +124,40 @@ limits with jitter, respecting Retry-After. Do not let a retry loop consume the 
 scheduler or flood the API. Keep the previous usable data on failure, labeled stale or
 partial. Log counts and failure classes rather than raw customer records or credentials.
 
-## Raw evidence and typed views
+## 5. Build typed views from verified meaning
 
-Partition by project and entity. Keep native IDs for joins and names/serials for display.
-Build typed per-Notefile views using confirmed product units, scaling, sentinel rules and
-version/cohort boundaries. A JSON type conversion failure is a quality flag, not zero.
-Preserve raw suspect records; do not delete outliers to make a chart smooth. Cache
-coverage and measurement freshness are distinct; a poll can succeed while a sensor has
-not reported for days.
+Read the relevant product knowledge before choosing product projections. Create or
+verify only views required by actual questions; raw records can be acquired first.
 
-Equal values are not duplicates. Deduplicate replay only when the actual identity or
+Partition by ProjectUID and entity. Join Devices by DeviceUID, Events by EventUID
+and Sessions by SessionUID; use names and serial numbers for display. Build typed
+per-Notefile views using confirmed product units, scaling, sentinel rules and
+version/cohort boundaries. A JSON type conversion failure is a quality flag, not
+zero. Preserve raw suspect records; do not delete outliers to make a chart smooth.
+Cache coverage and measurement freshness are distinct; a poll can succeed while a
+sensor has not reported for days.
+
+Equal values are not duplicates. Deduplicate replay only when EventUID or a
 confirmed source/session/sequence mechanism supports it. Track counter resets and
-corrected full Session values; don't add a new estimate to an old cumulative estimate.
-Current-state queries select latest first and then validity, while period aggregates use
-their documented recipe. Product skill changes invalidate derived projections and any
-monitor thresholds that depended on the changed rule.
+corrected full Session values; don't add a new estimate to an old cumulative
+estimate. Current-state queries select latest first and then validity, while period
+aggregates use their documented recipe. Product skill changes invalidate derived
+projections and any monitor thresholds that depended on the changed rule.
 
-## Retention
+## 6. Apply retention without losing required state
 
 Maintain at least 30 days of recent Events/Sessions; keep a 45-day buffer and purge only
 records strictly older than that bound using the documented analytical timestamp. Don't
 purge rows with unknown/invalid time as if they were old. Preserve ongoing sessions,
-monitor evidence, open incidents and required baseline state beyond that window when
+evidence still needed by monitors and required comparison state beyond that window when
 needed. Pruning a cache record is not a Notehub deletion. A late modification can reinsert
 an older record; apply it idempotently, then evaluate retention independently.
 
 Devices and schemas are full current snapshots, not 45-day histories. Store historical
 bindings separately when recipes require them and the evidence supports them. A request
-beyond cache coverage goes to a suitable repository or live API; never label the cache's
-oldest row as the service's retention policy. Verify bootstrap completeness, schema
+beyond cache coverage uses the Project Repository when MCP access and an enabled
+Repository are available, or the ordinary Notehub API. Never label the cache's oldest
+row as the service's retention policy. Verify bootstrap completeness, schema
 snapshots, retention and all-device orchestration as part of the maintenance task.
+
+Return the verified model or coverage result to the procedure that called this resource.

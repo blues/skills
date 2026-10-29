@@ -112,11 +112,16 @@ continues to mean how the customer's machine is worked, not cellular byte accoun
 | `sentinels` | 2 | What absence, zero and placeholders mean - absent is not zero - and whether a sentinel can ever be a real reading |
 | `scenarios` | 2 | What situation produces what data: which conditions make a note appear, at what cadence, carrying which fields, and what its absence means. This is the **data** side of `usage` - the machine being worked is knowledge area 1, the notes that result are this |
 | `population` | 2 | Which devices are real, which are test rigs, gateways, or long dead |
-| `config` | 2 | Project identity, fleets, environment variables, smart fleet rules, routes: what each controls, which are dead letters, and this project's rough scale (devices, notes per day, history available), so a plan can be sized before it is run |
+| `config` | 2 | ProductUID applicability, Fleets, environment variables, Smart Fleet rules and Routes: what each controls, which are inactive, and the deployment scope of those rules. Dated scale assumptions may help size a plan; current counts and available history must be checked at query time |
 | `recipe` | both | A question in the customer's words, the semantic bridge to the data that answers it, and how to prove an answer right (recipes) |
 | `anomalies` | both | Everything that does not fit - where what you were trained and what you observed disagree - each written as a question for the person who can explain it |
 | `questions` | both | Prioritized unanswered questions for this and later sessions: a live worklist that shrinks as they answer it |
 | `index` | both | Start here: what this project is in a paragraph, what the other skills cover, the pointers a reader needs to query, and in one line which questions this set can answer and which it cannot |
+
+Keep runtime ProjectUIDs, connection and cache state in private execution context.
+Preserve identifiers needed for an explicitly authorized deployment-specific rule,
+with their scope and refresh owner; do not remove useful configuration meaning
+merely to make a document generic.
 
 `questions` deserves discipline, because a later run reads it to know what to ask: every claim
 marked `assumed`, every unfinished lesson's concrete knowledge gap, and every question the
@@ -132,7 +137,7 @@ project that holds nothing yet, start with six files - `index.md` (`index`), `no
 (`notefiles,derivation,sentinels`), `product.md`
 (`product,usage,mission,audiences,vocabulary,presentation,constraints`), `operations.md`
 (`population,config,scenarios`), `recipes.md` (`recipe`) and `questions.md` (`questions,anomalies`)
-- splitting one only when a topic becomes independently useful. **Readers load the index and relevant documents, and training reads the whole set, so it has a budget:** the index fits on a screen, and a set past
+- splitting one only when a topic becomes independently useful. **Both Q&A and Training read the whole set, so it has a budget:** the index fits on a screen, and a set past
 roughly a hundred kilobytes has become a research log. Consolidate duplicates, keep the fact and
 drop the narrative that produced it, never store transcripts or raw dumps, and record in `index.md` the source-sharing restrictions relevant to the published knowledge (source handling).
 

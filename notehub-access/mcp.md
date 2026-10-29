@@ -1,6 +1,6 @@
 # Notehub MCP: an authenticated request proxy
 
-Prefer the hosted server at `https://mcp.notehub.io/mcp`. Use the harness's supported MCP
+Use the hosted server at `https://mcp.notehub.io/mcp`. Use the harness's supported MCP
 connection and browser authorization flow; keep credentials inside the connection. Reuse
 an existing session. If MCP registration is not available to the agent, explain the
 specific connection step the person must take. Do not fabricate harness configuration
@@ -10,25 +10,16 @@ per-function tool permissions; discover the tools actually exposed in that mode.
 After connecting, discover `search`, `execute`, `execute_write` and
 `execute_destructive` and read their current schemas. Tool names may carry a harness
 prefix. Search finds server functions, including repository functions absent from the
-public OpenAPI paths. For the general Notehub API, read the live OpenAPI and
-map its `operationId` to `call_tool`. When the operationId and resolved parameters are
-known, skip per-operation `search`/`get_schema` calls; code mode can combine bounded
-related calls and return just the needed evidence:
+public OpenAPI paths. For the general Notehub API, use the current OpenAPI contract to
+map the selected operation's `operationId` to `call_tool`. When the operationId and
+resolved parameters are known, skip per-operation `search`/`get_schema` calls; code mode
+can combine bounded related calls and return just the needed evidence:
 
 ```python
 # Inside the server's code-mode execute tool, not a local Python process:
 result = await call_tool("get_devices", {"projectOrProductUID": "app:EXAMPLE"})
 return result
 ```
-
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Map a general Notehub API operation into code mode | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Resolve the live operationId and parameters before invoking it |
-| Prepare a Cloud Computer after connecting MCP | [Cloud Computer preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer-for-access) | Return the verified environment context to Access, then resume the caller |
 
 ## Exact mapping
 
@@ -79,11 +70,3 @@ Specific guards still apply:
   delete operation, not an empty string or `-`.
 - Use dedicated single-device enable/disable/provision operations rather than
   constructing a `create_job` for one device.
-
-For cloud acquisition, use the same authenticated connection in a documented scheduled
-agent/tool context or a supported programmatic bridge. An interactive code-mode tool is
-not automatically callable from a local Python script. A scheduled agent that retains
-MCP and workspace tools can acquire data and invoke deterministic scripts; account for
-that model-execution cost and prefer a worker bridge where available. If neither path
-exists, keep foreground MCP working and identify the missing unattended capability.
-Do not silently add a second CLI login. Continue with the Cloud Computer preparation route above.

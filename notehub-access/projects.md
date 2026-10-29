@@ -1,95 +1,169 @@
 # Select and verify the project
 
-Use the connection established by Access. This step owns project resolution, read
-verification, data-versus-skill-owner scope and the binding carried into Chat or Training.
-Complete only what is missing, then return to the caller with that project context.
+Follow these steps when choosing, resuming or switching projects. Use the connection
+established by Access and complete only what is missing. The result is a verified
+project context, plus cache enrollment and known readiness on a Cloud Computer. Then
+continue to reading the product's skills and the user's requested work.
 
-## Resolve the intended project
+## 1. Choose the intended project
 
-| Current context | Do this | Result |
-|---|---|---|
-| Project already verified under the same hub/account and the user has not changed scope | Reuse the selection; do not list projects or ask again | Continue with the existing binding |
-| The user supplies a project UID or an unambiguous project name | Resolve and verify that project through the selected connection | Retain the canonical UID and human-readable name |
-| The user supplies a product name, product UID, alias or deployment description | Resolve the candidate projects and their actual relationship | Choose the intended data scope; a product can span deployments |
-| Several projects match, or no project is specified | List accessible candidates with useful distinguishing names/context and ask which one | Wait for the user's selection rather than taking the first result |
-| The user explicitly requests work across projects | Verify each intended project and retain separate bindings | Keep identities, queries and results partitioned by project |
+Reuse the current or last-used Project under the same account unless the user asks for
+another or requests a list. When in doubt about the intended or available Projects, or
+when the user asks to see them, call `GetProjects` through the established authenticated
+connection to determine and list the Projects available to that user's account. Show
+their human-readable names and ProjectUIDs, with useful distinguishing context.
 
-Use the current project read/list operations (`GetProjects` lists accessible projects)
-when resolution is needed. Reuse metadata already fetched during Access where it settles
-the lookup. Once resolved, verify the selected project through a read; do not confirm an
-explicit, unambiguous selection with the user again. Do not treat API failure as an empty
-project or silently substitute another project when the requested one is inaccessible.
-
-## Keep the scopes distinct
-
-| Scope | Meaning | What to preserve |
-|---|---|---|
-| Product | The product identity/grouping, potentially spanning deployments | The user's product name, verified aliases and any product UID used to resolve the project |
-| Data project | The concrete scope whose devices, events and configuration answer the request | Canonical project UID and name, bound to the verified hub/account |
-| Skill-owning project | The project that owns the product/project skills being read or maintained | The verified owner and any parent/subproject inheritance relationship |
-
-Product skills are also called project skills because they are stored in the product's
-project. A subproject can inherit them from a parent. Resolve that owner when the task
-uses stored skills, and carry it separately from the data project. An inherited skill
-owner does not expand the scope of queries or device actions. Record whether a shared
-parent means a knowledge change could affect other subprojects; the calling activity
-uses that scope when reviewing its work.
-
-A product UID found in a document or firmware is evidence to check, not permission to
-switch the selected project. Use canonical UIDs in API paths and joins, human names in
-conversation. Keep runtime bindings in private context rather than copying them into
-portable product knowledge. API access does not establish the person's product expertise
-or ownership.
-
-## Verify the permissions the task needs
-
-Use service responses and available role metadata. Read access can support Q&A and
-training drafts; publishing or an operational change needs the corresponding permission.
-Do not probe permission by making a write or demand write access before beginning useful
-read-only work. Unknown permission is distinct from denied. A 403 identifies a scope or
-permission problem, not an empty result or an invitation to obtain different credentials.
-
-Repository availability and monitor delivery are checked by the workflows that need them.
-On a Cloud Computer, a verified selection also triggers the cache enrollment below;
-waiting for the entire cache to fill is not a prerequisite for useful work.
-
-## Enroll the project in the Cloud Computer cache
-
-For each project the user first references or starts using, enroll the verified
-hub/account/project binding in the Notehub Cache Database and Notehub Cache Maintenance
-Task prepared by Access. This applies
-to Chat and Training. Reuse existing enrollment and preserve pauses/exclusions. An inherited
-skill owner or a project merely appearing in a list does not expand the data scope.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Add a newly referenced project or recover its existing cache binding | [First-use cache enrollment](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md#enroll-a-project-on-first-use) | Add it to the maintenance task's registry, queue a bounded initial fill, and retain its readiness state |
-
-Continue product reading and the requested task while initial history loads. A foreground
-agent carries the verified project context without creating persistent cache jobs.
-
-## Return and preserve the project context
-
-| Context | What to retain |
+| Current context | Do this |
 |---|---|
-| Account binding | Hub/account from Access under which the project was verified |
-| Data binding | Canonical project UID/name and any resolved product/alias context |
-| Skill binding | Verified owning project/inheritance when relevant; unresolved ownership stays explicit |
-| Permission | Observed read/write capabilities and any limitation relevant to the requested task |
-| Cloud cache | Enrollment/scope, database location and initializing/ready/degraded/paused state, or the precise missing capability |
+| The user asks which Projects are available | Call `GetProjects` and show the returned Projects; if listing is the whole request, return the list without requiring a selection |
+| A current or last-used Project is known, with no uncertainty, scope change or request to list Projects | Reuse that selection; do not list Projects or ask again |
+| The user supplies an AppUID/ProjectUID or an unambiguous project name | Resolve that project through the selected connection |
+| The user supplies a ProductUID | Resolve the project associated with that customer product type or SKU |
+| The user supplies a product name, SKU description, alias or deployment description | Find the matching project using its name and associated ProductUIDs; clarify any ambiguity |
+| Several Projects match, availability is uncertain, or no Project is specified and no preference is known | Call `GetProjects`, list the available Projects with useful distinguishing names/context and ask which one; wait for the selection |
+| The user explicitly requests work across projects | Apply the remaining steps to each intended project and keep identities, queries and results separate |
 
-Return to the calling step; the entry guide places product reading after selection,
-checks cloud cache readiness, and routes into Chat or Training.
-Keep the binding until the user changes it or evidence shows it no longer applies.
-On a project or hub/account switch, resolve the new scope before reusing product knowledge,
-query plans, caches or cursors. Keep existing projects' jobs attached to their original
-bindings; switching the current conversation does not retarget a monitor.
+For other lookups, use the current Project read operations and reuse metadata already
+fetched when it settles the lookup. Do not take the first match
+or ask the user to reconfirm an explicit, unambiguous selection. A ProductUID found in
+a document or firmware is evidence to check, not permission to switch projects.
 
-## Resolve missing prerequisites or contracts
+**Complete when:** the intended project is unambiguous, or each intended project is
+identified for an explicit request across projects.
+
+## 2. Verify access and record the project's scope
+
+Read the selected project through the established connection. Reuse a successful
+read already made under the same account when the scope is unchanged. Retain its
+ProjectUID and human-readable project name. An API failure is not an empty project;
+if the requested project is inaccessible, explain the problem rather than
+substituting another.
+
+| If this verification needs | Read | Then |
+|---|---|---|
+| A missing connection or authentication | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Resume here with the verified account and selected connection |
+| An unfamiliar project/product lookup contract | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Use the current read contract to verify the returned scope |
+
+Record the project's name and identifiers from the lookup:
+
+| Identity | Meaning and what to retain |
+|---|---|
+| Project name | Every project has a human-readable name; use it in conversation |
+| AppUID / ProjectUID | Synonymous names for the project's unique programmatic GUID; retain the ProjectUID returned by the API |
+| ProductUIDs | Every project has multiple unique ProductUID text strings representing customer product types or SKUs whose data flows into that project; retain the associated strings, including any used in selection |
+
+Bind the selected project to the verified account. Keep its ProductUIDs as associated
+identifiers, not additional projects or alternate names for its AppUID/ProjectUID.
+
+A subproject can inherit its product skills from a parent Project. Retain the
+ProjectUID of the Project that owns those skills when verified by Project metadata
+or a previous Skills API response; otherwise resolve it during product reading next.
+Keep that ProjectUID separate from the selected ProjectUID. Inheritance does not
+expand the query scope or enroll the parent Project in the cache. Carry the
+relationship into Training: changes to shared parent knowledge may affect other
+subprojects.
+
+Record permissions from service responses and available role metadata. Read access is
+enough for Q&A and training drafts; the later workflows verify publishing, operational
+changes and monitor delivery when needed. Do not test permission by making a write or
+require write access before useful read-only work. Unknown permission is distinct from
+denied. A 403 is a scope or permission problem, not an empty result or a reason to obtain
+different credentials. API access does not establish product expertise or ownership.
+
+Use ProjectUID in project API paths and joins. Keep the selected account and
+ProjectUID in private context rather than copying them into portable product
+knowledge.
+
+### Identify the Project Repository
+
+A **Project Repository** is Notehub's historical storage and analytical query capability
+for a Project. It holds archived Events and provides queryable tables for analysis over
+the full available history, beyond any Notehub Cache. **This special query capability
+requires both MCP access and a Repository enabled for the Project.** It works for
+foreground agents as well as Cloud Computer agents using MCP. Some callers say
+“Project Dataset”; use **Project Repository** for this capability. A `DataSet` in the
+API is a particular table/projection within the Repository.
+
+When using MCP, check whether this Project has a Repository enabled using its Repository
+read/list operations or already verified information. Match `project_uids` to ProjectUID
+and retain its RepositoryUID, name and availability. When using the CLI, record that
+Repository querying is unavailable through this access method and continue selection.
+Keep absence, denied access and an unavailable query capability distinct. Inspect the
+tables and historical coverage when a question needs them; selection need not scan the
+archive. Lack of a Repository does not block work using the cache or ordinary API.
+
+Use the Repository when a question concerns the whole dataset or no Notehub Cache is
+available. Its queries are slower than querying a local Notehub Cache, but faster than
+querying the Notehub APIs directly. Chat introspects the Repository through MCP and
+combines Notehub Skills with Product Skills to craft the query.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return here with the verified hub/account and selected transport |
-| Resolve an unfamiliar project/product lookup operation | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Use the current read contract and verify the actual returned scope |
-| Read inherited product skills and identify their owner | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain the verified skill owner separately from the data project |
-| Understand the selected product after Project Selection was invoked alone | [Entry guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#3-read-the-products-skills) | Read its product skills, then complete the preparation for the requested activity |
+| Determine Repository availability when using MCP | [Repository access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/repositories.md) | Retain the matching RepositoryUID and query availability for Chat |
+
+**Complete when:** a successful read verifies the Project under the selected account,
+and known relationships, Repository availability and permission limits are recorded.
+Unknown write permission or a parent Project awaiting verification during product
+reading does not block continuing.
+
+## 3. Enroll the project and check its cloud cache
+
+**If this agent is not running on a Cloud Computer, skip to Step 4.** Otherwise, use the
+Notehub Cache Database and Notehub Cache Maintenance Task prepared during Cloud Computer
+setup. Enrollment applies to both Chat and Training whenever the user first references
+or starts using a verified project. Projects merely appearing in a list are not enrolled.
+
+| If you need to | Read | Then |
+|---|---|---|
+| Repair missing shared cache infrastructure | [Cloud Computer setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer) | Complete the missing database or maintenance-task setup, then resume this enrollment |
+| Establish initial streams and coverage | [Cache model, Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#3-define-streams-and-verify-initial-coverage) | Use the required entities, full Sessions, fixed bounds and coverage rules for the first fill |
+
+1. **Find or create the enrollment.** Look up the verified account and ProjectUID
+   in the shared registry. Reuse its existing cursors, coverage and jobs; otherwise add
+   it. Preserve pauses and exclusions. A paused or excluded enrollment remains so unless
+   the user asks to resume it; skip its fill and schedule checks below.
+2. **Start only the missing acquisition.** For a new active enrollment, queue a bounded
+   first fill of project/Device metadata, recent Events, full per-device Sessions and
+   the complete Notefile Schema snapshot. Apply the cache's coverage and retention
+   rules; record the first schema refresh and next daily due time. For an existing
+   enrollment, continue from committed progress rather than restarting its history.
+3. **Verify ongoing maintenance.** Check that the actual registered task reads the live
+   registry and includes this project in its next scheduled run. It must discover new
+   enrollments rather than use a fixed project list copied from its creation prompt.
+   Create only missing project-specific subtasks if the implementation needs them.
+4. **Check this project's evidence.** Inspect recorded coverage, last successful
+   acquisition, schema refresh and gaps. For a new enrollment, verify that bootstrap has
+   started or is queued for a real scheduled run. Record whether the cache is ready,
+   initializing, degraded, paused or excluded, and what data is usable now. A healthy
+   shared task alone does not prove this project's data is fresh or complete.
+
+**Complete when:** the verified project is in the durable registry and its actual
+maintenance coverage and readiness are known, or its pause, exclusion or missing
+capability is recorded. Continue product reading and useful Chat or Training while history
+fills; report an initializing cache as initializing.
+
+## 4. Summarize the selection and continue
+
+Carry the verified account, ProjectUID, associated ProductUIDs and any parent
+ProjectUID, relevant permissions, RepositoryUID and query availability, and, on a Cloud
+Computer, cache location and readiness into the next step.
+
+Briefly identify the selected project and summarize recent activity when current metadata
+or a small bounded read supports it. Include any cache or access limitation that affects
+the user's request. Do not invent activity from an empty or incomplete cache. For an
+unchanged project already in use, carry the context forward without repeating an
+introduction.
+
+| Selection is complete | Continue with | Then |
+|---|---|---|
+| A Project has been chosen, resumed or switched | [Entry guide — Step 5](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#5-read-the-products-skills) | Read or reuse its current product skills, verify which Project owns them, then continue the requested work |
+
+Keep the selected account and ProjectUID until the user changes projects or access
+changes. On a project or account switch, repeat these steps for the new scope before
+reusing product knowledge, query plans, caches or cursors. Earlier projects' caches
+and jobs stay attached to their original accounts and ProjectUIDs; switching the
+conversation does not retarget a monitor.
+
+**Complete when:** the selected project and any material limits are clear, and its context
+has been handed to product reading. Project selection ends here; the following activity
+owns answering questions, interviewing the user or creating monitors.

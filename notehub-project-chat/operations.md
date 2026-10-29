@@ -1,36 +1,54 @@
-# Requested operations
+# Explore or change Project state
 
-Use the live schema and current selected transport for project, device, fleet, route,
-configuration, note and firmware operations. Don't constrain the agent to Q&A simply
-because the original skills were written for it.
+Explore or investigate state of Devices, Fleets, or other Project entities. Make changes
+if authorized. Reuse the selected Project, established MCP or CLI connection and product
+knowledge. Follow Steps 1–2 for investigation; continue through Steps 3–5 for a change.
 
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
+| If the task is specialized | Procedure | Result |
 |---|---|---|
-| Perform the change through MCP | [Notehub MCP: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use the correct execution tier and operation-specific guards |
-| Perform the change through the CLI | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Use the installed agent guide and authenticated API proxy |
-| Resolve the current request or response contract | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Check operation parameters and verification evidence |
-| Configure a requested monitor or alert | [Monitors and alerts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Define it and follow activation through verified execution |
+| Explore versions, investigate update progress or manage firmware | [Explore and manage Firmware Updates](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-firmware/SKILL.md) | Apply the Device and Fleet firmware cookbook |
+| Resolve an unfamiliar operation's parameters or response | [OpenAPI contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml) | Use the current contract through the already selected tool |
 
-1. Resolve the exact target and inspect its state. For a bulk action, enumerate or count
-   the selected population and verify the filter. An empty filter must never silently
-   mean all devices. Keep product, project and parent skill-owner scope distinct.
-2. Check the intended change against the user's request and prior authorization. For an
-   ambiguous or consequential action outside that scope, present the proposed targets,
-   settings and effect before asking. Do not repeatedly ask for work already authorized.
-3. Use dry runs, conditional revisions and dedicated single-device operations where
-   available. Follow MCP guards or the installed
-   CLI guide. Fetch the current contract; do not invent a `confirm` argument.
-4. Execute a bounded change. Record resource IDs, returned status and partial failures,
-   without credentials. A batch is not a transaction. After a timeout, inspect the
-   actual resource before retrying; a duplicate request can have a second effect.
-5. Read back server state. For a device change, distinguish accepted, queued, delivered,
-   acknowledged and effective according to the actual operation. Firmware target,
-   last-reported firmware and DFU result are separate evidence. Report what is verified
-   and what still awaits the device; don't claim success from inactivity.
+## 1. Identify and inspect the target
 
-Project Chat monitoring uses harness-owned scripts and the monitor workflow above,
-rather than Notehub-native Monitors/Alerts APIs.
+Resolve the entity and actual identifier: ProjectUID, DeviceUID, FleetUID, RouteUID or
+the key the operation requires. Use the cache for exploration when it covers the question;
+read current API state for gaps or before a change. Check relationships and effective
+configuration where settings can be inherited.
+
+For a bulk action, enumerate or count the intended population and verify filters. An
+empty filter must not expand a Device or Fleet request to the whole Project. ProductUID
+filters and inherited product skills do not change which ProjectUID owns the operation.
+
+## 2. Explain the state and decide whether a change is requested
+
+Explain the observations, discrepancies, freshness and missing evidence. For a question
+or investigation, return these findings to Chat. A suspected problem does not itself
+request a repair.
+
+For a change, make the target, proposed modification and expected effect concrete.
+Reuse existing authorization; ask only about unresolved decisions or actions outside
+that scope. Preserve unrelated settings and working entities.
+
+## 3. Apply the operation's contract
+
+Use the selected proxy and current request definition. Apply dry runs, conditional
+revisions or a dedicated single-Device operation when available and appropriate. Do not
+invent a confirmation parameter or assume that a bulk request is a transaction.
+
+Execute the bounded change and retain identifiers, returned state and any partial
+failures. After a timeout, inspect actual state before retrying so a repeated request
+does not produce an unintended second effect.
+
+## 4. Verify the effect
+
+Read back the changed state. For a Device command, distinguish accepted, queued, delivered,
+acknowledged and effective according to the operation's actual contract. A service
+acceptance does not prove that the Device applied it. If effect depends on a later
+contact, report what is verified and what remains pending.
+
+## 5. Return to the conversation
+
+Give Chat the findings or verified change, affected identifiers and remaining limitation.
+Return to Step 3 of the Chat loop. That loop handles follow-up questions, requested
+monitoring and ongoing interests; an operation does not start a second conversation loop.

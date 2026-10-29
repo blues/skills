@@ -1,20 +1,11 @@
 # Maintain schemas and optimize the queries people actually use
 
 Run this review daily for enrolled projects, and when a newly needed field, schema change
-or slow query warrants it. It is part of the Notehub Cache Maintenance Task created during Access.
+or slow query warrants it. It is part of the Notehub Cache Maintenance Task created during Cloud Computer setup.
 The agent chooses the physical layout using actual workload evidence, retaining correct
 product meaning and the raw data needed to rebuild derived structures.
 
-## Choose the relevant reference
-
-| If you need to | Read | Then |
-|---|---|---|
-| Create the cache database and maintenance task | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify both deliverables and enroll projects on first use |
-| Choose entity identities and retention rules | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Keep records project-scoped and preserve raw evidence |
-| Run the task's daily review phase | [Maintenance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#maintenance) | Refresh schemas, purge eligible history and record optimization results |
-| Interpret a queried product field | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Apply units, validity and recipe dependencies before changing a projection |
-
-## Keep a record of fields queried
+## 1. Create or verify query-usage records
 
 Record usage when Q&A, training analysis, prepared questions or monitor evaluators query
 project data and store the usage records in the Notehub Cache Database. Include bounded
@@ -37,18 +28,18 @@ reconstruct it from conversation history. For generated SQL, record the resolved
 mapping when constructing the plan; do not guess it from arbitrary SQL using a fragile
 regular expression. Bound telemetry retention and preserve aggregate usage history.
 
-## Refresh each project's schemas daily
+## 2. Refresh and compare project schemas
 
 Fetch `GetNotefileSchemas` on enrollment and at least daily by default, using the selected
 authenticated connection. A user's cadence takes precedence. Refresh sooner when a
 question needs an unknown field or actual data contradicts the stored schema. Refresh
 project metadata too; neither resource acquires an invented modified cursor.
 
-Stage and validate the full schema response before replacing its snapshot. Store project
-UID, Notefile ID, exact schema, fetch time and a local content hash; preserve relevant
-schema history or change records. A failed or partial fetch leaves the prior snapshot
-available with its real freshness. Compare added, removed and changed fields/types with
-both the query-usage records and product definitions.
+Stage and validate the full schema response before replacing its snapshot. Store
+ProjectUID, Notefile ID, exact schema, fetch time and a local content hash; preserve
+relevant schema history or change records. A failed or partial fetch leaves the
+prior snapshot available with its real freshness. Compare added, removed and changed
+fields/types with both the query-usage records and product definitions.
 
 A schema describes structure, not the customer's units or business meaning. Keep raw
 values and historical interpretations when fields disappear or change type. Mark affected
@@ -56,7 +47,7 @@ views, query plans and monitors for reconciliation; do not silently cast failure
 rewrite shared product skills or discard old evidence. Build replacements in staging and
 validate their results before switching readers.
 
-## Choose and verify useful optimizations
+## 3. Choose and verify useful optimizations
 
 Start with repeated or costly queries and their actual plans. Measure representative,
 bounded read-only queries with `EXPLAIN` and, when useful, `EXPLAIN ANALYZE`; the latter
@@ -87,6 +78,10 @@ recoverable staging. Retain the old valid layout until the replacement is verifi
 defer work that would monopolize the runtime or exhaust temporary storage. Maintenance
 may legitimately make no physical changes when current plans already perform well.
 
+## 4. Record the result and next review
+
 Record which schema/fields were reviewed, optimizations applied or deferred, before/after
 results, coverage and meaning checks, and the next review time. Query speed never substitutes
 for correct units, population, history coverage or freshness.
+
+Return to the maintenance worker with the recorded results; a review may correctly make no changes.

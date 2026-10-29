@@ -15,7 +15,7 @@ Read the rows that apply to the current step; reuse context already established.
 | Review citations and sharing restrictions | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Resolve source restrictions before publishing derived knowledge |
 | Write, replace or delete stored skills | [Training skill writes](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/skill-writes.md) | Use conditional revisions, dependencies first, index last and exact readback |
 
-## Confirm meaning and consequence
+## 1. Confirm meaning and consequence
 
 **Use this rhythm at the end of every lesson: update drafts and handoff, read back,
 review, publish within scope, verify, then return to the interview.** Do not accumulate
@@ -40,7 +40,7 @@ check by asking whether a stranger would understand them. Incorporate correction
 their vocabulary. Make the confirmed sentences and their promotion to `stated` an
 explicit check now rather than deferring it to a later draft review.
 
-## Prepare a reviewable change
+## 2. Prepare a reviewable change
 
 Read recipes alongside their owning rules. Check units, thresholds, per-note reductions,
 windows, precision, population, vocabulary and constraints. Do not duplicate an owning
@@ -52,6 +52,12 @@ Read each recipe against the audience, constraints and presentation rules as wel
 its field definitions. A mathematically valid result can still make a forbidden claim,
 use the wrong recipient's vocabulary or suggest an action the product rules exclude.
 No high-confidence conclusion may silently depend on an unanswered question.
+
+Review the intended API `kinds` beside each document's content. Retain all applicable
+kinds, including unfamiliar valid kinds already present; one document can cover
+several kinds. A reorganization must preserve the field mappings, exceptions,
+provenance and answer rules that made the old set useful. Compare meaning against
+the baseline, not just filenames or length.
 
 Review source handling, citations and sharing restrictions. Explain each
 new/replaced/retired file and what changed in meaning, not just a list of filenames.
@@ -65,12 +71,15 @@ the same unresolved question IDs. A conditional recipe's title must not become a
 unconditional promise in the index. Include training status, the last useful lesson,
 solid/thin/unreached areas, and the first actionable question for next time. Reconcile the
 question worklist against answers already given; don't fabricate unfinished work.
+Apply the output contract's reader check to the proposed set before writing: try
+new question wording, follow its meaning dependencies, and verify internal links.
 
-## Publish with revisions
+## 3. Publish with revisions
 
 Use the standard Skills API:
 conditional creates, revision-checked replacements/deletions, exact UTF-8 content and
-explicit intended `kinds`. Re-read and compare against the preserved baseline when
+explicit intended `kinds`. Use the last verified revision of each affected skill as
+the write condition. Re-read and compare against that saved version when
 concurrent edits are possible; the server's precondition closes the race after the read.
 A conflict is a merge task, not a reason for an unconditional overwrite.
 
@@ -81,10 +90,25 @@ of a name; keep the baseline and honor its authorized scope.
 
 There is no multi-file transaction. On partial failure, stop dependent removals, inspect
 the server, and report exactly which changes landed. Recovery is a new revision-aware
-write, not a blind replay of the whole batch. Verify names, exact contents and kinds from
-Notehub, including unexpected/missing documents. Report what is published and what is
-still a draft, and where the resumable handoff lives. Complete already authorized writes
-when the user ends the interview; do not open a new investigation or ask new lesson
+write, not a blind replay of the whole batch.
+
+## 4. Verify the checkpoint and continue
+
+Read back names, exact contents, kinds and resulting revisions from Notehub,
+including unexpected or missing documents. Check that the index, recipes and
+question worklist describe the same saved knowledge: answered questions are
+resolved, conditional recipes retain their gaps, and the next training question
+points to an unanswered, actionable item. Verify that the service holds the same
+consistent set you reviewed, including the handoff.
+
+Retain the verified content, kinds and revisions as the baseline for the **next**
+lesson's writes. Keep the original session snapshot untouched for comparison; do
+not reuse its old revision after a successful replacement. On a later conflict,
+compare the new draft, this last saved version and the current service version.
+
+Report what is published versus still in draft, and where the resumable handoff
+lives. When the person ends the interview, complete already authorized writes
+unless they also cancel saving. Do not open a new investigation or ask new lesson
 questions after a request to stop.
 
 Keep the person informed at each stage: what changed in the drafts, what the proposed
@@ -97,4 +121,5 @@ readback. A successful write is an improvement checkpoint, not completion of tra
 
 | If you need to | Read | Then |
 |---|---|---|
+| Verify that the saved set works without the training conversation | [Output contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/output-contract.md) | Check routes, dependencies, answerability and the next training question |
 | Continue after review and publication | [Lesson loop](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md) | Ask the next useful question and build on what was just learned |

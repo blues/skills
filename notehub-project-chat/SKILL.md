@@ -1,104 +1,144 @@
 ---
 name: notehub-project-chat
-description: Work with a Notehub project through questions, investigations, operations, periodic monitors, alerts and ongoing engagement. Uses platform knowledge, stored product/project skills or both; optimizes Q&A and turns requested follow-ups into verified recurring work. Shared-knowledge training is a separate dedicated activity.
+description: Continue work with a selected Notehub Project through an ongoing loop of questions, investigations, operations and monitors that keep the user informed. Reuses established access and internalized product knowledge, answers from the Notehub Cache when it covers the question, and carries follow-ups into verified actions or recurring work. Shared product-knowledge training is a separate activity.
 ---
 
-# Chat about the project, act and keep the user informed
+# Chat about the Project and keep the user informed
 
-Project Chat carries the conversation from a question to its answer, a requested action,
-a monitor of that answer, and useful follow-up. Access establishes the connection and
-execution environment first; the project is selected before working with its data.
-Reuse that context. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
+Arrive here after the entry cookbook has established access, taught the API, prepared
+any Cloud Computer, selected ProjectUID and loaded the complete product skill set.
+Reuse that connection, product understanding and known cache readiness. Follow
+[working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
-## Complete only missing prerequisites
+A **monitor watches something and alerts the user according to their monitoring
+preferences**: periodically, when a result changes, when a threshold is crossed, or under
+another agreed rule. Its notifications can be messages, graphs or both, delivered in the
+chat stream, WhatsApp, SMS, Slack or another supported channel. These preferences belong
+to the monitor, whether requested directly or inferred from an ongoing interest.
 
-| If you need to | Read | Then |
+**For ordinary data questions, use the Notehub Cache when it has the required fields,
+population, history and freshness.** If the question concerns the whole dataset or no
+cache is available, use the **Project Repository when access is through MCP and the
+Project has a Repository enabled**. Repository queries are slower than the local cache
+but faster than direct Notehub API queries. The question and Repository procedures below
+apply Notehub and Product Skills to the chosen source; direct API reads supply missing
+evidence or current service state.
+
+| Only if preparation is missing | Read | Then |
 |---|---|---|
-| Install/connect a tool, authenticate or prepare a Cloud Computer | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return with one secure connection and the environment's actual capabilities |
-| Choose or disambiguate the project | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Retain the verified data project and skill-owning parent |
-| Understand the selected product if its knowledge is not already loaded | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Discover its skills and read the index and product overview before choosing task-specific material |
-| Reuse an established connection, project and environment | No repeated setup | Continue with the user's question or follow-up |
+| This skill was entered without the required context, or a prerequisite has become unavailable | [Entry cookbook](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md) | Complete or repair the first missing step, preserve working context, then resume Chat |
 
-## Choose the knowledge the question needs
+## Repeat this conversation loop
 
-Platform knowledge explains native Notecard/Notehub data. Product skills (also called
-project skills) explain the customer's product, its firmware-generated Event bodies,
-vocabulary and rules. Load the relevant knowledge for the question; use both when needed.
+Follow Steps 1–4 for each user turn or monitor finding brought into the conversation.
+Follow one matching procedure in Step 2, reading its supporting references only where
+needed. A supporting procedure returns to its caller; after the work is complete, return
+here to explain the result and carry it forward. Apply the **along-the-way** actions as their
+triggers arise. Completing one answer does not end Project Chat.
 
-| The question concerns | Read | Use it to establish |
+### 1. Understand the next request
+
+Use the conversation to resolve what the person means, including “this,” “those Devices,”
+or “notify me when that changes.” Carry forward the question's population, filters, units
+and time window. Ask only about ambiguity that changes the work. A notification request
+can reuse the calculation just answered; it does not require repeating setup or inventing
+a different question.
+
+Handle a change of activity immediately:
+
+| The user says | Continue with | Result |
 |---|---|---|
-| Devices, location, time, coverage, battery, firmware, sessions or other native data | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Which native records and fields answer the question and what they mean |
-| Customer measurements, custom Event bodies, product context or business meaning | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | The stored product index, relevant recipes, field definitions and all consequential dependencies |
-| A product measurement constrained by native location, time, identity, health or other metadata | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) and [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Combine both meanings in one query over the same records and scope |
+| Done or stop, referring to the conversation | [Entry cookbook — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | End this loop, preserve a brief resumable context and wait for the user's next request |
+| Switch Projects | [Entry cookbook — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | Select the requested Project, read its product skills and enter the requested activity |
+| Teach or revise shared product knowledge | [Project Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Carry the current knowledge and relevant evidence into the dedicated interview and publication workflow |
 
-The producer determines which knowledge applies: native system Notefiles also have bodies,
-and a familiar field name does not establish a customer's measurement semantics.
+A request to stop a particular monitor applies to that monitor in Step 2. Ending Chat
+or switching Projects keeps existing caches and monitors attached to their ProjectUIDs;
+it does not cancel or retarget background work.
 
-For example, “radiation data in the last two weeks within 100 km of Kyiv” needs product
-knowledge for the radiation field, units, validity and interpretation, plus platform
-knowledge for capture time, location provenance and geographic filtering. Establish the
-requested spatial reference, select the two-week window and associate the appropriate
-location with each measurement. Do not substitute today's Device location for historical
-Event location or assume every radiation field is a comparable dose-rate measurement.
+### 2. Complete the requested work
 
-## Prepare data access for the selected project
+Choose the matching procedure and follow its steps. For questions, the order is:
+understand the meaning → choose the cache, Repository or API → acquire any missing evidence →
+calculate and verify. A follow-up reuses completed work where it still applies.
 
-On the user's Cloud Computer, Access prepares the Notehub Cache Database and Notehub
-Cache Maintenance Task, currently using DuckDB;
-Project Selection enrolls each project on first use. Reuse that infrastructure and
-verify the project's cache state. Honor user-requested pauses and schedules. This baseline
-supports ordinary Q&A as well as later monitors. Answer from verified available evidence
-while initial history loads, and record fields queried so daily maintenance can optimize
-the workload.
-
-| If you need to | Read | Then |
+| The person wants to | Procedure | Complete by |
 |---|---|---|
-| Create missing cache infrastructure or enroll a newly referenced project | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the database and maintenance task and verify this project's enrollment |
-| Prepare queries and check the project's cache coverage | [Cloud project setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Use actual acquisition runs and product knowledge to prepare grounded answers |
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Read successive batches through MCP or CLI; cloud workers resume the saved checkpoint on each poll |
-| Answer in a foreground session or while cache coverage is incomplete | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use a suitable repository or bounded live read for the missing evidence |
+| Ask a question or investigate a finding | [Answer a question](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Calculating a grounded result from suitable evidence, using the cache first when it covers the question |
+| Get ready for fast Q&A or improve repeated questions | [Optimize Q&A](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/optimizing-qa.md) | Preparing or reusing verified queries against the existing data sources |
+| Query about 100% of historical data (beyond any Notehub Cache), or answer when no cache is available | [Query the Project Repository](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-repository/SKILL.md) | Introspecting and querying the Repository through MCP using Notehub Skills and Product Skills; requires MCP access and a Repository enabled for this Project |
+| Watch something, receive periodic updates or graphs, or be alerted when a result changes or a threshold is crossed | [Create or change a monitor](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#create-or-change-a-monitor) | Reusing the question's calculation, setting when and where to notify, and verifying scheduled checks and notification delivery |
+| Explore or investigate state of Devices, Fleets, or other Project entities. Make changes if authorized. | [Operations](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/operations.md) | Explaining the observed state and, when requested and authorized, making changes and verifying their actual effect |
+| Explore and manage Firmware Updates for Devices and Fleets | [Explore and manage Firmware Updates](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-firmware/SKILL.md) | Explaining reported and desired firmware, investigating update progress, and carrying authorized updates through verification |
+| Pause, resume or remove a monitor or interest | [Manage existing work](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/lifecycle.md#pause-resume-or-remove-work) | Verifying the requested change in saved state, actual execution and delivery |
 
-## Choose the work within Chat
+Questions may need platform meanings, the product knowledge already internalized, or
+both. Use the product's terminology and its mappings from NotefileID and Event `body`
+fields to database columns. Consult Platform for native metadata or system Notefiles;
+the question procedure places these resources at the point they are needed.
 
-| If the person wants to | Read | Complete the work by |
+A question about a monitor's notification uses the same question procedure and its saved
+calculation and evidence. A request to change its timing, threshold or channel changes
+that monitor through the create/change procedure.
+
+Recurring execution requires verified Cloud Computer capabilities. Foreground agents can
+answer questions and perform supported operations through the established connection;
+distinguish a prepared monitor from one that is registered and running.
+
+### 3. Explain the verified result
+
+Give the answer or outcome first, its practical meaning, and any useful next action.
+Choose a concise explanation, table, graph or other output that fits the question. State
+the population, time window, evidence freshness and limits that affect the decision.
+Distinguish unknown from zero and incomplete coverage from an empty result.
+
+For an operation, distinguish accepted, queued and effective state; an accepted request
+is not proof that a Device applied it. For recurring work, say what will run, how often,
+what triggers a notification and where it will arrive. Name any remaining limitation;
+a saved definition alone is not an active monitor.
+
+For a readiness request, report actual readiness and offer a few questions grounded in
+the loaded platform or product knowledge. An initializing cache can still support useful
+answers within its verified coverage.
+
+### 4. Carry the context into the next turn
+
+Keep the question's calculation, filters, units, time semantics, evidence coverage and
+meaning revisions available. Retain relevant operation results and monitor IDs so a
+follow-up such as “show the data” or “pause this” resolves to the right work. Reuse query
+plans while refreshing the evidence; do not reuse an old numeric answer as current data.
+
+Carry forward what the conversation teaches you about the user's ongoing interests.
+Apply the engagement action below when an interest warrants continued attention.
+
+**This turn is complete when** the requested answer or action has a verified result, or
+its specific missing information or capability is explained. Wait for the next user turn
+or a finding from registered background work, then repeat from Step 1. Do not manufacture
+more questions to keep the conversation going.
+
+## Along the way in the loop
+
+**Recognizing and following up on the user's ongoing interests is a core responsibility
+of Project Chat.** Throughout the conversation, actively notice recurring questions,
+specific concerns, goals and outcomes the user cares about. On a Cloud Computer, turn
+useful interests into monitors that bring back relevant findings, status or graphs under
+the established notification preferences. **Do not wait for an explicit “watch this”
+request.** Keep interests current as the conversation develops, and respect corrections,
+declines and pauses. The engagement procedure below makes this part of the ongoing loop.
+
+Apply these actions as their triggers arise:
+
+| When this happens | Do this | Supporting procedure |
 |---|---|---|
-| Ask or investigate a question | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Returning a grounded answer with the relevant scope, freshness and uncertainty |
-| Get ready for fast Q&A or improve repeated questions | [Optimize Q&A](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/optimizing-qa.md) | Reusing validated plans and suitable evidence; preparing maintained caches on a capable Cloud Computer |
-| Consider useful monitors after a question | [Suggest monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#suggest-a-useful-monitor) | Proposing a concrete recurring question, benefit and notification behavior |
-| “Keep checking,” “watch this,” or “notify me when the result changes” | [Create a monitor](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#create-or-change-a-monitor) | Writing the evaluator, registering the periodic job and verifying the requested delivery path |
-| Receive alerts or understand an existing alert | [Alerts from monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#alert-the-user-and-close-the-loop) | Explaining the monitor finding with current evidence and handling delivery, recovery or correction |
-| Receive periodic status, graphs or relevant context | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Giving useful updates tied to monitors and interests, including unchanged status when appropriate |
-| Change project, device or other operational state | [Operations](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/operations.md) | Performing the authorized change and verifying its actual effect |
-| Explicitly teach or revise shared product knowledge | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Switching to the dedicated training activity with the existing context |
+| **The conversation reveals an ongoing interest** through repeated questions, a specific concern or a goal | **Act on the interest.** On a Cloud Computer, record what matters and why, reuse or create a monitor within the established scope and notification preferences, and verify it is running. Use it to bring back useful updates without waiting for another request | [Interest-driven engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) |
+| A query uses fields or exposes a slow or repeated calculation | Record the fields, query plan and observed performance in private workload history; reuse a verified plan where meaning still matches | [Optimize Q&A](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/optimizing-qa.md) |
+| Live reads are needed to fill an evidence gap or follow changes | Use modified cursors where supported, with the exact checkpoint and batch contract; keep the cache's coverage honest | [Poll for changes in Events, Sessions, Devices, and more](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) |
+| An answer reveals a useful recurring question | Suggest the concrete question, benefit, cadence and notification behavior; respect a decline. An explicit monitoring request goes straight to Step 2 | [Suggest a useful monitor](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#suggest-a-useful-monitor) |
+| A monitor's notification rule or periodic schedule is due | Send a relevant explanation, graph or both to its configured destination; follow its preferences, including unchanged status when requested | [Monitor notifications and replies](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#notify-the-user-and-handle-replies) |
+| Product knowledge changes or evidence reveals an incorrect interpretation | Reconcile affected calculations, monitors and prior conclusions; shared skill changes go through Training when requested | [Reconcile changed meaning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/lifecycle.md#reconcile-a-changed-product-rule-or-correction) |
 
-## Answer, investigate or act
-
-1. Identify the quantity, population, time basis and intended decision. Reuse explicit
-   context; ask only about ambiguity that changes the answer. Analytical times default
-   to UTC unless the user specifies otherwise. Use stable IDs for joins and names/serials
-   for display; partition identities and results by project.
-2. Apply the relevant platform definitions and product recipe/dependencies. For an unmatched
-   product question, derive a bounded interpretation from its inventory. Preserve status,
-   units, validity, version/cohort rules, reductions and population definition. A blocked
-   recipe can support a narrower answer or focused clarification without starting training.
-3. Choose evidence: fresh complete cache when it covers the question; a suitable repository
-   for missing history or analytics; live API for current/missing state. Keep the selected
-   authenticated transport and use modified cursors for change scans where supported.
-   Inspect representative rows and edge cases before relying on
-   an unfamiliar aggregate. Answer a supported first question while larger history initializes.
-4. Give the result and practical meaning in the right form, with scope/window, freshness
-   and limits that affect the decision. Distinguish full Sessions from `_session.qo`,
-   requested from effective state, and unknown from zero. Do not invent thresholds or
-   hide unobserved populations behind a fleet-wide conclusion.
-5. For a requested change, resolve the target, use the current operation and relevant
-   guards, perform the authorized change, then verify its actual effect. An accepted
-   request is not proof a device applied it.
-6. Carry the question's meaning into follow-ups. A request for notification can turn the
-   same calculation into a monitor; a useful monitor can support later status updates.
-   Preserve its population, filters, units and time semantics rather than starting over.
-
-For a bare readiness request, offer useful questions supported by actual platform or
-product knowledge and report cloud preparation accurately. Foreground agents answer
-through repositories or bounded live calls; recurring execution requires a verified
-Cloud Computer capability. Personal interests, query plans, monitor state and delivery
-history remain private harness state, separate from shared product skills.
+Cache maintenance continues on its existing schedule. Preserve user-requested pauses and
+use available evidence while missing history fills. Personal interests, query plans,
+monitor state and delivery history remain private harness state, separate from shared
+product skills. Useful engagement can include unchanged status or relevant outside
+context; an isolated question is not an unlimited standing alarm.

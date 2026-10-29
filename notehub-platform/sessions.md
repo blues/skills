@@ -22,9 +22,12 @@ present on session-begin Events. Use the API when required fields or history are
 
 ## Session field meanings
 
+Each Session has a SessionUID and is tagged with the DeviceUID of the one Device that
+generated it.
+
 | Fields | Meaning and unit |
 |---|---|
-| `session`, `device`, `sn`, `product`, `fleets` | Session identity and associated device/product/fleet context. Join Events by project, device and session. Count distinct sessions, not start plus end rows. |
+| `session`, `device`, `sn`, `product`, `fleets` | SessionUID, DeviceUID, device serial number, ProductUID and FleetUIDs. Join Events by ProjectUID, DeviceUID and SessionUID. Count distinct sessions, not start plus end rows. |
 | `session_began`, `session_ended` | Session open and close times, Unix seconds. Missing/zero close is not a zero-duration completed session. |
 | `why_session_opened`, `why_session_closed` | Descriptive reasons. Preserve the text and its context; do not assume a permanent exhaustive enum. |
 | `continuous`, `tls`, `transport` | Connection mode, TLS use and transport description. Persistent/packet transports need not follow one TCP connection per session. |

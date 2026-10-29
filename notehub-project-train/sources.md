@@ -50,6 +50,11 @@ the missing source. At a session pause, identify promised sources that are still
 
 ## Scope material to the data it explains
 
+Inspect supplied source read-only. Understanding it does not require changing the
+source tree, running its code or deploying firmware. Trace templates, producers,
+conditions and formulas into reusable product meanings, with the source version
+and the records it explains.
+
 A newer or unreleased firmware version can help explain a product without establishing
 how deployed devices behave. Ask which version produced the records and which derived
 details may be shared. Keep confirmed differences at their owning fields with version,
@@ -69,12 +74,13 @@ and product/variant names needed to decode and discuss the data. They are interf
 product vocabulary even when source code also uses them as symbols. Removing private
 implementation detail must not erase the decoder that makes the skills useful.
 
-Prefer role descriptions and reusable population rules over personal names and deployment
-identifiers. Keep runtime project/device IDs, account details, private interests, monitor
-recipients, connection readiness and cache state in the agent's private context. If an
-identifier is essential to an explicitly authorized deployment-specific rule, label its
-scope and refresh owner rather than pretending it is portable product knowledge. Never
-publish a credential. Remove unnecessary identifying details without erasing the rule.
+Prefer role descriptions and reusable population rules over personal names and
+deployment identifiers. Keep runtime ProjectUIDs and DeviceUIDs, account details,
+private interests, monitor recipients, connection readiness and cache state in the
+agent's private context. If an identifier is essential to an explicitly authorized
+deployment-specific rule, label its scope and refresh owner rather than pretending
+it is portable product knowledge. Never publish a credential. Remove unnecessary
+identifying details without erasing the rule.
 
 Before publication, review against the actual readership and access settings, including
 parent/subproject inheritance and any public-read configuration. Don't promise “viewer

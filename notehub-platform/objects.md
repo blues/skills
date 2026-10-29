@@ -37,20 +37,20 @@ subsets; inspect the response, including any route transform or column mapping.
 
 | Fields | Meaning and interpretation |
 |---|---|
-| `event` | Event identity. Deduplicate history by project and EventUID, not by body or coordinates. |
-| `app`, `product`, `device` | ProjectUID, ProductUID and DeviceUID. `app:` identifies the project; ProductUID is not a project display name. Use DeviceUID for joins. |
+| `event` | EventUID. Deduplicate history by ProjectUID and EventUID, not by body or coordinates. |
+| `app`, `product`, `device` | AppUID (synonymous with ProjectUID), ProductUID and DeviceUID. `app:` identifies the Project; ProductUID identifies a customer product type or SKU feeding that Project; DeviceUID identifies the one Device that generated the Event. |
 | `sn`, `best_id` | Device serial and a display identifier preferring serial over DeviceUID. Neither guarantees a unique join key; serials can change or collide. |
-| `sensor` | An associated sensor identity, when supplied. Different from `body.sensor` in tracking, which can name a sensor type. |
-| `file`, `note` | Notefile and note identity. A database note can produce multiple update Events; Event count is not distinct-note count. |
+| `sensor` | SensorUID, when supplied. Different from `body.sensor` in tracking, which can name a sensor type. |
+| `file`, `note` | Notefile ID and Note ID. A database note can produce multiple update Events; Event count is not distinct-note count. |
 | `req`, `updates`, `deleted` | Operation, note update count and deletion indication. `note.add`, `note.update`, `note.delete` and platform operations have different meanings. A deleted Event is not a new reading. |
 | `body`, `payload`, `details` | JSON note data, optional binary data (base64 in JSON), and optional additional details. A body need not be customer-defined: native system files have their own schemas. Details are producer-specific, not a universal sensor schema. |
 | `payload_length` | Size indicator when payload bytes were removed for storage reasons. Not an independent transfer-usage counter. |
 | `when`, `when_ms`, `received` | Capture/event time, optional millisecond time information, and arrival at Notehub. See the time rules below. |
-| `session`, `session_began`, `tls`, `continuous`, `transport` | Communication context. `session` joins a Session object. TLS/continuous describe the connection; transport can identify hub-generated events and noncellular sources. None describes the machine's duty cycle. |
+| `session`, `session_began`, `tls`, `continuous`, `transport` | Communication context. `session` joins a Session object. TLS/continuous describe the connection; transport can identify Notehub-generated events and noncellular sources. None describes the machine's duty cycle. |
 | `platform` | Administrative/platform classification, not a guarantee that the row is irrelevant to the product. Health and connectivity questions often need these rows. |
 | `batch_received`, `batch_number`, `batch_total` | Context for decoding an uploaded batch. Capture times within one batch can span an offline interval. Do not count the batch fields as additional readings. |
 | `bulk`, `queued`, `status` | Internal/route-facing processing fields on some surfaces. Externalization can remove them. Route status is not device health and absence does not prove successful delivery. Consult route execution data for delivery questions. |
-| `environment`, `fleets` | Routed environment context and associated fleet identifiers when included. Environment metadata concerns routed variables (the `$` convention), not the full effective device configuration. Do not substitute today's fleets/environment for historical Event context silently. |
+| `environment`, `fleets` | Routed environment context and associated FleetUIDs when included. Environment metadata concerns routed variables (the `$` convention), not the full effective device configuration. Do not substitute today's fleets/environment for historical Event context silently. |
 | `err` | An error associated with the operation or processing. Read its scope; a lookup failure need not mean the device failed. |
 | `firmware_host`, `firmware_notecard` | Last-known reported firmware strings attached when available. Not proof of an update at Event capture time. See firmware. |
 | `best_*`, `where_*`, `tower_*`, `tri_*`, `triangulate` | Location families and lookup inputs. See location; they carry separate timestamps and provenance. |
@@ -83,9 +83,12 @@ subsets; inspect the response, including any route transform or column mapping.
 
 ## Device fields
 
+A Device may belong to many Fleets. Its `fleet_uids` lists their FleetUIDs; Smart Fleet
+memberships have a `smart:` prefix. Preserve those returned values in the cache.
+
 | Fields | Meaning |
 |---|---|
-| `uid`, `serial_number`, `best_id`, `product_uid`, `fleet_uids` | Current device identity and memberships. API names differ from Event `device`, `sn`, `product`, `fleets`. |
+| `uid`, `serial_number`, `best_id`, `product_uid`, `fleet_uids` | DeviceUID, serial number, preferred display ID, ProductUID and FleetUIDs. API field names differ from Event `device`, `sn`, `product`, `fleets`. |
 | `provisioned`, `last_activity` | Provisioning time and last known service communication activity. Recent communication does not prove recent customer sensor data; old activity does not by itself prove power loss. |
 | `sku`, `disabled`, `tags`, `contact` | Hardware SKU, administrative disable state, configured tags and contact metadata. `disabled` is not a detected hardware fault. Tags and contacts are not measurements. |
 | `voltage`, `temperature` | Last reported supply volts and device temperature in degrees Celsius. These are snapshots; temperature may be internal rather than ambient. |
@@ -98,12 +101,20 @@ subsets; inspect the response, including any route transform or column mapping.
 
 ## Project, Fleet and configuration semantics
 
-Project identity (`uid`/ProjectUID in its endpoint), display name and permitted ProductUIDs
-serve different purposes. A ProductUID routes/provisions a product's devices into a
-project; a human product description in firmware metadata is a different value.
-A Fleet is a grouping/configuration scope and devices may belong to several. Membership
-can be assigned or rule-driven; it is not proof of a physical installation or location.
-Use the project's product knowledge for those meanings.
+Accounts, identified by AccountUID, contain Projects. Each Project contains Devices,
+Fleets, Routes, Events and Sessions.
+
+Every Project has a human-readable name and one unique programmatic GUID, called either
+AppUID or ProjectUID (`uid` in the project response). Those two names mean the same
+identifier. Each project also has multiple unique ProductUID text strings representing
+customer product types or SKUs whose data flows into it. A ProductUID routes/provisions
+that product's devices into the project; a human product description in firmware metadata
+is a different value.
+
+A Fleet, identified by FleetUID, is a list of DeviceUIDs. A Device may belong to several
+Fleets. Smart Fleets automatically add or remove Devices based on dynamic characteristics.
+Membership is not proof of a physical installation or location, or of membership at an
+earlier time. Use the Project's product knowledge for those meanings.
 
 Environment responses distinguish variables set at that scope, defaults and effective
 values. For example, device responses expose `environment_variables`,

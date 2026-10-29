@@ -60,15 +60,29 @@ Work down the list rather than jumping to the firmware: until you can say what t
 how it is used, you are building an inventory nobody can aim. Spend the person's early attention there and read the machine-readable
 sources around it, because those keep and the person does not.
 
-Each pass: **choose the uncertainty that most changes an answer somebody actually wants**; **read
-one bounded piece of evidence**, reusing what has been supplied, and inspect something independent
-while they go and find a document; **say what you learned in their language**, separating
-established behaviour from hypothesis; **ask one focused question, or a small group of related
-ones** - *"does this gap mean a delayed upload or a missed measurement?"* beats *"tell me everything
-about cadence"*; **write it down now**, with its scope and evidence, updating every recipe the
-answer changes; then **read back and publish within the agreed scope** (publication), and propose the next useful lesson. Never
-re-ask for anything already in this conversation, never make a non-engineer answer a firmware
-question you could answer by reading code, and build up rather than handing over homework.
+### Follow these steps on each pass
+
+1. **Choose the uncertainty that most changes an answer somebody actually wants.**
+   Use the saved worklist and what the person just taught you.
+2. **Read one bounded piece of evidence.** Reuse what has been supplied, and inspect
+   something independent while the person finds a document. A human answer can be
+   the evidence; do not delay a useful question just to find another artifact.
+3. **Say what you learned and ask a focused question.** Use their language and
+   separate established behavior from hypothesis. “Does this gap mean a delayed
+   upload or a missed measurement?” is more useful than “tell me everything about
+   cadence.” A small group of related questions is appropriate within the limit below.
+4. **Write it down now.** Record scope and evidence at the owning rule, update every
+   recipe the answer changes, and reconcile the question worklist. Briefly name
+   the drafts and meanings that changed.
+5. **Read back and save a checkpoint within the agreed scope.** Include the next
+   actionable question in the handoff. Follow publication's meaning review,
+   conditional writes and exact readback; preserve applicable kinds as well as text.
+6. **Continue.** Ask the next useful question after the checkpoint or its pending
+   confirmation. Choose another ready question if a source is unavailable.
+
+Never re-ask for anything already in this conversation, never make a non-engineer
+answer a firmware question you could answer by reading code, and build up rather
+than handing over homework.
 
 **One turn is not the whole lesson.** The lesson lists below are a coverage checklist across the
 session, not a questionnaire to deliver in a paragraph: **at most three closely related questions
@@ -81,15 +95,23 @@ count as one each, as written - and a turn over three sends the three that matte
 the rest. Start a lesson from one concrete thing the person just said, go deep on it, and collect the rest over later
 passes; park what you did not ask in `questions` so the next pass and the next run can find it.
 
-**The initial coverage floor.** The first baseline requires **knowledge area 2 to have an entry for every Notefile carrying
-data anyone might ask about** (inventory); until `product`, `usage`, `vocabulary`, `audiences`,
-`presentation`, `constraints`, `population`, `scenarios` and `config` each hold something a stranger
-could act on; and until at
-least one `recipe` exists - including four things every run misses: **one current-state recipe**
-and **one fleet-or-period recipe** (recipes), or a statement of why this project has neither; **the
-receiving surface** (lesson E); and **the dimensions this product does not have** (knowledge organization, rule 5).
-You will usually not reach that floor; what *is* failure is ending without saying which parts you
-did not reach, and leaving thin files looking finished rather than marked `[rungs:1 only]`.
+### Check coverage and maintain the handoff
+
+**The initial coverage floor.** Check these before describing an initial baseline
+as broadly usable:
+
+- An inventory entry for **every Notefile carrying data anyone might ask about**.
+- Actionable knowledge for `product`, `usage`, `vocabulary`, `audiences`,
+  `presentation`, `constraints`, `population`, `scenarios` and `config`.
+- **A current-state recipe and a fleet-or-period recipe**, or an explanation of why
+  either does not apply. These may be explicit branches of one flexible family.
+- **The receiving surface**: what people already see and use (lesson E).
+- **The dimensions the product does not have**, so an agent will not invent them
+  (knowledge organization, rule 5).
+
+A session may pause before reaching this floor. Say which parts were not reached;
+mark thin fields explicitly, such as `[rungs:1 only]`, rather than making them look
+finished. Useful, accurately scoped knowledge can be saved along the way.
 Reaching that floor starts deeper passes: test new question wording, investigate edge
 cases, improve explanations and reconcile new evidence. It does not end the interview.
 
@@ -97,15 +119,18 @@ cases, improve explanations and reconcile new evidence. It does not end the inte
 the `index` training status with where the interview stopped and link its first question
 for next time to the matching ID in `questions`. Keep the remaining questions concrete and
 prioritized, including topics not yet reached; reconcile them against answers already
-recorded. Include this handoff in the normal review and push, so resumption does not depend
+recorded. Include this handoff in the normal review and publication, so resumption does not depend
 on the last chat message or on getting one more turn after the person says stop.
 
-**How a session pauses.** The person controls when to pause, stop or change direction;
+### Pause or stop
+
+The person controls when to pause, stop or change direction;
 do not end merely because a lesson or baseline is complete. Honor an explicitly limited
 task. When they say
 stop, **stop asking**: open no new investigation and write no new claims. Recording answers and
 confirmations they have *already* given is not new work - promote what they just agreed, write the
-closing status and the handoff from gaps already identified, and complete a push they approved.
+closing status and the handoff from gaps already identified, and complete a publication
+they approved unless they also cancel saving.
 Only a verified publication is available to other agents from Notehub; draft persistence depends on the harness. If the latest handoff remains an
 unapproved draft, say that it was not saved to Notehub; do not imply a closing chat summary updated
 the project. Then say plainly where you got to:
@@ -118,6 +143,22 @@ the project. Then say plainly where you got to:
 - **the one question you would ask first next time.**
 
 Never let a session end with a silent implication that the project is now fully trained.
+
+## Choose the lesson topic
+
+Use these topics over successive passes, not as a questionnaire to send at once.
+Start with A–D during initial training; later passes follow the useful gap.
+
+| If the next gap concerns | Read | Develop |
+|---|---|---|
+| What the product is for and what documents explain it | [A. Product materials](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#a-product-materials) | Product, mission, vocabulary and constraints |
+| Who needs answers and how they use them | [B. Audiences](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#b-audiences) | Audience, presentation and sharing rules |
+| Which questions the product knowledge should answer | [C. Real customer questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#c-real-customer-questions) | Grounded recipes and their answer shapes |
+| How the machine is worked and what happens in the field | [D. Operator knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#d-operator-knowledge) | Usage, lifecycle breaks and practical experience |
+| What the Project's records and configuration reveal | [E. Project evidence](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#e-project-evidence) | Field inventory, population and receiving surfaces |
+| What produces or consumes each field and when | [F. Host firmware](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#f-host-firmware) | Formulas, validity, cadence and configuration behavior |
+| Whether the sources and observed behavior agree | [G. Reconcile evidence](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#g-reconcile-evidence) | Scoped explanations and unresolved anomalies |
+| A reported correction or changed behavior | [H. Revisit stored knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#h-revisit-stored-knowledge) | Consistent revisions without losing established knowledge |
 
 ### A. Product materials
  *(Knowledge area 1.)* Ask for a website, datasheets, manuals,
@@ -176,9 +217,17 @@ will this one be due*. Run each recipe's clarifications against the
 real utterance: if the identity rule cannot resolve something an asker actually said, the rule is
 wrong, not the asker. Feeds `recipe`, `presentation`, `audiences`, `vocabulary`.
 
+If the person wants flexible exploration rather than a fixed set of reports, teach
+a recipe family with variable windows, populations, geography or statistics.
+Ground it in the product's meanings and examples; keep distinct calculations
+explicit. A proposed example must be labeled as proposed, not attributed to a
+customer. Lack of a remembered customer utterance must not stall other lessons.
+
 ### D. Operator knowledge
- *(Knowledge area 1.)* You ask the questions, and three of them are always asked. If the
-person announces their last minutes, ask the first in one sentence before anything else is written.
+ *(Knowledge area 1.)* These three themes deserve attention in every initial
+interview. Reuse answers already given; in a continuation, ask only about remaining
+gaps or new experience. If the person announces their last minutes and the first
+theme is still unknown, ask it in one sentence. If they say stop, stop asking.
 First: *who works this machine day to day, and what do they do to it?* Not the service crew - the
 operators. Ask what a normal week looks like and what an abnormal one looks like; what the modes are
 and what switches between them; whether it is seasonal; what people do when they are in a hurry, and
@@ -197,8 +246,9 @@ as anything but an unexplained step.
 
 Third: *what did you learn the hard way, what have you had to explain to a customer, and what
 changed afterwards?* Each incident becomes a `usage` or `scenarios` entry with its data signature
-and a `constraints` entry with its wording. This is the highest-yield question in the document: ask it in every run, whatever else is
-skipped, and if it was never asked the closing summary says so by name. Then hunt the gaps, because
+and a `constraints` entry with its wording. This is one of the highest-yield questions
+in the interview: make sure it is covered, and if it was never reached the closing
+summary says so by name. Then hunt the gaps, because
 anything marked `assumed` is a question waiting to be asked.
 
 ### E. Project evidence
@@ -206,7 +256,7 @@ anything marked `assumed` is a question waiting to be asked.
 sample of recent events covering the variants that matter, the fleets and how devices are
 distributed among them, the routes, the environment variables at every level, and the earliest event
 the interface still returns. "Exploring the live project" says how, and what will mislead you.
-Classify streams by behaviour, not name, and write what you find into the inventory inventory.
+Classify streams by behaviour, not name, and write what you find into the inventory.
 
 Two things here are skipped almost every time. **The system Notefiles** - the ones the Notecard and
 Notehub maintain themselves, whose names usually begin with an underscore - carry the connectivity,
@@ -245,10 +295,12 @@ Training observes mechanisms; it never sends test commands to devices. Feeds `no
 product is for, the firmware says how and above all *when* it senses, the data says which of those
 situations really occur, and the schema says what Notehub inferred. Where they agree you have
 learned a mechanism, and it belongs in `scenarios` and the inventory; only a genuine conflict
-belongs in `anomalies`, and a mismatch earns a cheap check of generation, time filter, paging and
+belongs in `anomalies`, and a mismatch earns a cheap check of generation, time filter,
+batch completeness, cursor coverage and
 cohort first, because a schema entry missing from a small sample is "not observed in this sample",
 not "never sent". A cadence you observed should correspond to a tier you read in the firmware. So
-once you have both A and C, compare them in a small table - concept, documented mechanism, what was
+once you have Project evidence and host firmware (E and F), compare them with the
+product materials in a small table - concept, documented mechanism, what was
 observed and over what coverage, agree or conflict, effect on a query, next check - and take the
 conflicts to the person (anomalies), reporting without resolving anything yourself: fields the
 firmware sends that never arrive, fields arriving that no current firmware produces, Notefiles whose

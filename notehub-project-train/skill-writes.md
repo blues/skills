@@ -13,12 +13,12 @@ wrapping, timestamp-based filename or manual old-version cleanup.
 | Read the original baseline or current documents before merging | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain exact content, kinds and revisions for every affected document |
 | Review meaning, publication scope and the continuing interview | [Training publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Follow the lesson's review, publish, verify and continue cycle |
 
-## Address the skill owner and document
+## Address the Project and skill
 
-For subprojects, writes must target the documented parent owner. Make that shared effect
-clear and keep the owner distinct from the selected project for data queries. Discover
-actual access settings; do not promise that shared skills are visible only to a particular
-role or that a public-readable project is private.
+For subprojects, writes must target the parent Project that owns the skills. Use its
+ProjectUID and make the shared effect clear; queries still use the selected
+ProjectUID. Discover actual access settings; do not promise that shared skills are
+visible only to a particular role or that a public-readable project is private.
 
 Use the returned `links.self`, or encode the **entire** skill name as one path component,
 including any `/`. MCP code mode accepts the original unencoded `skillName`; preserve
@@ -42,7 +42,8 @@ required. Content is limited to 1 MiB and the encoded JSON request to 2 MiB plus
 
 Create/replace returns 201/200 with `outcome` and the resulting `skill`; an identical
 write can be unchanged. A 412 means the
-precondition failed: fetch the current document, compare it to the preserved baseline,
+precondition failed: fetch the current document, compare it and the draft to the
+last verified saved version,
 merge nonconflicting changes and resolve substantive conflicts before retrying with its
 new revision. A 428 means a required precondition is missing. Never retry unconditionally.
 DELETE returns 204 and removes all versions of that name; retaining a local baseline
@@ -53,5 +54,7 @@ publish dependencies/replacements first, publish the derived index last, and ret
 names only after replacements are read back and inbound references are fixed. On partial
 failure, stop dependent deletions and report exactly what reached the service. Read back
 names, kinds and exact content after publication; local drafts are not verification.
-Training publication supplies the
-meaning-review and consistency workflow.
+Retain the resulting verified revisions and content for the next lesson's writes;
+the original session snapshot remains an immutable comparison copy, not the write
+condition after a replacement. Training publication supplies the meaning-review
+and consistency workflow.

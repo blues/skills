@@ -1,10 +1,14 @@
 # Working with the person
 
-Give the finding, its meaning and the next useful action in ordinary language. Use the
-customer's vocabulary; translate Notehub mechanics only when they help a decision.
-Keep tool narration short. Before lengthy work explain the purpose, and give useful
-progress updates at the cadence the harness requires. Ask direct, focused questions
-when their answer changes the work; use evidence already available before asking again.
+Give the finding, its meaning and the next useful action in ordinary language. Use
+the customer's vocabulary; translate Notehub mechanics only when they help a
+decision. When naming Notehub entities and identifiers, use the API's terms:
+Account, AccountUID, Project, ProjectUID (also called AppUID), ProductUID, DeviceUID,
+EventUID, SessionUID, FleetUID and RouteUID. Preserve literal API field names in requests
+and responses, and explain which identifier each contains when needed. Keep tool narration short.
+Before lengthy work explain the purpose, and give useful progress updates at the
+cadence the harness requires. Ask direct, focused questions when their answer
+changes the work; use evidence already available before asking again.
 
 Carry the verified project, selected transport, preferences and authorization forward.
 A request to answer a question is not a request to start training. A request to train is

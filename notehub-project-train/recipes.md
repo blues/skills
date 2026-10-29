@@ -11,7 +11,7 @@ Read the rows that apply to the current step; reuse context already established.
 | If you need to | Read | Then |
 |---|---|---|
 | Check how a later agent finds and uses a recipe | [Reader workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Verify that all consequential meaning dependencies are reachable |
-| Turn a semantic recipe into a private cloud query plan | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Keep executable plans and runtime state outside shared product knowledge |
+| Turn a semantic recipe into a private cloud query plan | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/prepared-questions.md) | Keep executable plans and runtime state outside shared product knowledge |
 | Learn from an existing customer screen or project evidence | [Project evidence lesson](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#e-project-evidence) | Record the expected answer shape and its actual data source |
 | Check consistency and publish recipes | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Verify owning rules, dependency gates and index statuses together |
 
@@ -72,10 +72,24 @@ than heard is `assumed`**, and goes in `questions` like any other.
 A recipe teaches **what an asker's question means here, what data answers it, what may not be
 concluded from it, and what the answer should look like**. It is a semantic bridge, not a runbook:
 it must stand alone for an agent holding the skills and its own access - no trainer, no firmware,
-no dependency on the trainer's machine, scripts or credentials - and that agent derives its own calls. All six parts, or it is not done:
+no dependency on the trainer's machine, scripts or credentials - and that agent derives its own calls.
 
-1. **The question, in the customer's words**, as somebody actually said it, who is asking, and the
-   status: verified within stated bounds, conditional on something named, or blocked.
+A recipe may teach a **family of questions**, such as comparisons across a chosen
+time window, population or geographic area. This supports exploration beyond a
+fixed report menu. Name its parameters and allowed calculations, preserve the
+meaning and validity rules, and separate current-state from period calculations.
+One family can contain both branches; it need not be split into many files or
+near-identical recipes. Each branch still needs the six parts below and its own
+answerability where the dependencies differ. New wording can reuse meaning;
+it cannot silently introduce a new formula or inference.
+
+All six parts, or it is not done:
+
+1. **The question or family, in the customer's words.** Preserve actual wording
+   when supplied. If there is no remembered example, label your proposed wording
+   explicitly and check that it captures the person's intended questions; never
+   invent a customer quotation. Name who is asking and the status: verified within
+   stated bounds, conditional on something named, or blocked.
 2. **The ambiguities that must be resolved before it can be answered at all**, each either citing a
    rule in the set by file and heading or reading *"ask the asker X first"*. **Identity**: how this
    asker names the thing - short forms, partial numbers, their own names for sites and units - and

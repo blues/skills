@@ -36,11 +36,11 @@ Near the top of the index, include a documentation routing table rather than cop
 | Read endpoint explanations and examples | [Notehub API reference](https://dev.blues.io/api-reference/notehub-api/) | Check the applicable operation and behavior |
 | Interpret native fields or system Notefiles | [Shared native-field meanings](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Combine the relevant platform interpretation with product-specific meaning |
 
-Approved public product citations may also be useful; apply source handling.
-The reader already holds the project it fetched these skills from. Runtime UIDs, access
-instructions, credentials, repository availability and cache readiness belong to runtime
-context. Product rules should survive a new deployment; label unavoidable deployment
-scope explicitly.
+Approved public product citations may also be useful; apply source handling. The
+reader already holds the project it fetched these skills from. Runtime ProjectUIDs
+and DeviceUIDs, access instructions, credentials, repository availability and cache
+readiness belong to runtime context. Product rules should survive a new deployment;
+label unavoidable deployment scope explicitly.
 
 For an unmatched question, say how to reuse a recipe's meaning only when its quantity,
 population, time and assumptions match; when to ask for clarification; and when to derive
@@ -74,8 +74,9 @@ not announce a permanent end to training.
 Use explicit routing tables wherever a product document branches into other skills,
 recipes or topics: **if you need to do or understand X, read Y, then continue with Z**.
 Place the table at that decision point; a narrative hyperlink alone is not sufficient
-navigation. Keep supporting citations inline. Read only the routes needed for the task,
-except that all consequential dependencies of the chosen recipe must be resolved.
+navigation. Keep supporting citations inline. After reading and internalizing the whole
+set, use these routes to revisit the material needed for the task; resolve all
+consequential dependencies of the chosen recipe.
 For a recipe, a dependency table can name the required meaning, its owning document/heading
 and how it affects the answer. Preserve existing useful organization and confirmed content.
 

@@ -1,56 +1,61 @@
 # Read product skills through the standard Skills API
 
 Project skills and product skills are the same shared knowledge. Reading them is part
-of ordinary Project Chat, Q&A, monitors and cloud preparation. Use the live OpenAPI
-`GetSkills` and `GetSkill` operations through the selected MCP or CLI connection.
-The reading workflow is the same for both; only the invocation syntax differs.
-Choose between a complete metadata catalog followed by relevant documents, or the
-whole collection with content in one call. Reuse current material already fetched.
+of ordinary Project Chat, Q&A, monitors and cloud preparation, as well as Training.
+Load the complete set with **`GetSkills` and `includeContent=true`** through the selected
+MCP or CLI connection. This includes every document's exact content and `kinds` tags in
+one API call. The reading workflow is the same for both connections; only the invocation
+syntax differs. Reuse a complete, current snapshot already fetched.
 
-## Choose the relevant reference
+This is the API contract supporting the product-knowledge cookbook. After acquiring or
+refreshing content, continue that cookbook's current step; an API download alone does
+not establish that the agent has read and understood the skills.
 
-| If you need to | Read | Then |
-|---|---|---|
-| Use stored knowledge to answer questions or prepare monitors | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Follow the product index, relevant recipes and their meaning dependencies |
-| Teach or revise shared knowledge at the user's request | [Project Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Enter the dedicated interview and publication workflow; skill writes belong there |
+## Read the complete skill set
 
-## Choose how to read
+Use `GET /v1/projects/{projectOrProductUID}/skills?includeContent=true`, supplying the
+selected ProjectUID as `projectOrProductUID`. Preserve the complete response and read
+all documents, including unlinked skills. Both Q&A and Training need the product
+understanding; Training also preserves the snapshot as its immutable baseline.
 
 | Reading need | API operation | What to do with the result |
 |---|---|---|
-| Discover the set and select relevant documents | `GetSkills`, omitting `includeContent` or setting it to `false` | List all names and inspect `kinds`, sizes and links; fetch the index and needed documents with `GetSkill` |
-| Read one selected document or follow a product link | `GetSkill` with the catalog's skill name | Read its exact content and follow consequential dependencies in the same set |
-| Get a modest set in one call, prepare broad Q&A or acquire a complete training baseline | `GetSkills` with `includeContent=true` | Retain the complete snapshot, then read the relevant documents; Training examines all documents, including unlinked ones |
-| Reuse knowledge in a later question or scheduled run | Reuse fetched content; check `GetSkills` metadata when freshness requires it | Keep unchanged documents and fetch new or changed content only as needed |
+| Initial product knowledge for Q&A or Training | `GetSkills` with `includeContent=true` | Acquire all content and metadata in one consistent snapshot, then read and understand every skill |
+| The full-content request returns 413 | `GetSkills` with `includeContent=false`, followed by `GetSkill` for each catalog entry | Acquire the complete set through individual reads, preserving consistent revisions as described below |
+| Reuse knowledge in a later question or scheduled run | Reuse the complete snapshot; check `GetSkills` metadata when freshness requires it | Keep unchanged documents, read all new or changed documents and reconcile removals |
+| Refresh one changed document or complete the fallback | `GetSkill` with the catalog's skill name | Read its exact content and recheck affected dependencies; a link to already loaded content needs no API call |
 
-Metadata-first reading is a normal choice for a focused question or a large collection,
-not merely an error fallback. A full-content call is simpler when the set is small or
-most documents will be useful. Fetching a complete set does not require putting every
-document into model context at once; retain it in private task storage when available.
+Fetching a complete set does not require putting every document into model context at
+once. Retain it in private task storage where available and read it in groups until the
+whole set is understood. This reading workflow does not publish changes; skill writes
+remain part of the dedicated Training workflow.
 
-## List the catalog and inspect kinds
+## Inspect the response and kinds
 
-`GET /v1/projects/{projectOrProductUID}/skills` returns the entire metadata catalog:
-`project_uid`, `set_revision`, `total`, `skills` and `complete: true`. There is no list
-pagination or modified cursor. Each entry includes `name`, `kinds`, `size_bytes`,
-`revision`, timestamps and `links`. An empty `skills: []` is a valid untrained set;
-an API failure is not an empty catalog.
+`GetSkills` returns `project_uid`, `set_revision`, `total`, `skills` and `complete: true`.
+There is no list pagination or modified cursor. Each entry includes `name`, `kinds`,
+`size_bytes`, `revision`, timestamps and `links`, plus exact UTF-8 `content` when
+`includeContent=true`. Omitting `includeContent` or setting it to `false` returns metadata
+only, useful for change checks and the 413 fallback. An empty `skills: []` is a valid
+untrained set; an API failure is not an empty catalog.
 
 `kinds` are API metadata independent of Markdown front matter. A document may have
 several kinds. Inspect them locally to locate an `index`, product context, field
 definitions and recipes; do not invent a server-side kind filter. Use the index and
-actual content to decide relevance. Missing or unfamiliar kinds do not make a document
-irrelevant, and a tag alone does not establish what its content means.
+actual content to organize reading and recognize which rules apply to a question.
+Missing or unfamiliar kinds do not exclude a document from the full reading, and a tag
+alone does not establish what its content means.
 
-For subprojects, reads inherit parent-owned skills. Retain the returned owner separately
-from the selected data project. Use the project's actual access settings when explaining
-who can read the knowledge; shared does not mean private to a particular role.
+For subprojects, reads inherit skills from the parent Project. Retain the returned
+`project_uid` separately from the selected ProjectUID. Use the Project's actual
+access settings when explaining who can read the knowledge; shared does not mean
+private to a particular role.
 
-## Read selected documents or the complete set
+## Handle individual reads and content errors
 
 `GET .../skills/{skillName}` returns one document's metadata and exact UTF-8 `content`.
-Use the catalog's relative `links.self` as an API path on the selected hub, or encode
-the **entire** skill name once as one URL path component, including any `/`. For example,
+Use the catalog's relative `links.self` as an API path through the selected connection,
+or encode the **entire** skill name once as one URL path component, including any `/`. For example,
 `references/devices.md` becomes `references%2Fdevices.md`. Pass the original unencoded
 name as `skillName` to MCP code mode. Resolve document links within this project-owned
 catalog, not as files on the public skills site.
@@ -66,9 +71,9 @@ report the problem rather than attempting an undocumented legacy fallback during
 Retain `set_revision` with the catalog and each document's `revision` with its content.
 These opaque values let a reader avoid downloading unchanged skills and recognize when
 the meaning behind a question or monitor has changed. Refresh the catalog at the task's
-freshness boundary, compare names and revisions, and acquire only the needed new or
-changed documents. Reconcile removed entries in the private copy and recheck affected
-query plans or monitors. Reading or refreshing this knowledge does not publish anything.
+freshness boundary, compare names and revisions, and acquire and read all new or changed
+documents. Reconcile removed entries in the private copy and recheck affected query plans
+or monitors. Reading or refreshing this knowledge does not publish anything.
 
 When assembling documents from separate calls, require each catalog revision with
 `GetSkill`'s optional `If-Match`, or compare the returned revision to the catalog. Recheck

@@ -1,49 +1,76 @@
-# Verify the harness before promising ongoing work
+# Establish how background work runs
 
-Use this during Access's Cloud Computer preparation or step 1 of project Setup. Record
-the result privately and return to the caller. Before project selection, retain an
-environment capability record so Access can create the Notehub Cache Database and register
-the Notehub Cache Maintenance Task;
-bind individual project cache state on first use.
+Before creating the cache, determine how this Cloud Computer will run durable,
+efficient background work. Use the harness's actual tools and documentation, and
+reuse any working setup. Leave this step with concrete paths, commands and hooks.
 
-## Choose the relevant reference
+## 1. Locate persistent code and its runtime
 
-Read the rows that apply to the current step; reuse context already established.
+Choose where worker scripts and their dependencies live so scheduled jobs can find
+them after a restart. Use the standard shared workspace when available, independent
+of any one bot. Identify the Python interpreter or other supported runtime, how to
+install dependencies, and the exact command and working directory a job will use.
+Distinguish durable storage from temporary execution space. If the runtime is recreated
+on restart, determine how its dependencies are restored before jobs resume.
 
-| If you need to | Read | Then |
-|---|---|---|
-| Record verified capabilities and their actual invocation paths | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Keep durable nonsecret configuration and receipts |
-| Resolve project scope for a project-bound capability check | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified project; general environment preparation can use an account-level read |
-| Create the cache database and maintenance task during Access | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Complete database installation and scheduled execution checks |
-| Configure project-specific capabilities requested by Chat | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Resume the first incomplete step using existing context |
+## 2. Check storage capacity and low-space warnings
 
-Establish this capability record with actual tool documentation and a harmless read/test:
+Check the capacity and currently available space in the durable workspace and temporary
+storage, including any account/workspace quotas. Determine whether other bots share
+those limits and how to inspect usage. Record the actual measurements and any limits
+the harness does not expose.
 
-| Capability | Evidence needed |
+Identify the harness's low-space or quota-warning mechanism, its warning thresholds,
+and how a warning can wake the agent to investigate and free space. Check whether that
+notification path still works when local storage cannot accept writes. If there is no
+native warning, identify how a lightweight periodic check could detect low space and
+trigger the agent. This step verifies available capabilities; the later Cache
+Maintenance Task incorporates storage monitoring and the low-space response.
+
+## 3. Establish programmatic Notehub access
+
+Prefer ordinary Python workers that call the API, update the cache and evaluate
+conditions without invoking an LLM. Reuse the connection chosen during Access:
+
+| Selected connection | How a worker calls Notehub |
 |---|---|
-| Durable storage | The user's standard shared workspace where available, with verified visibility across bots/channels and persistence beyond the creating bot's deletion; otherwise record the supported storage scope |
-| Shared memory and task ownership | A supported way to publish the cache location to every bot, and whether a shared/user-level maintenance task can survive deletion of its creating bot |
-| Unattended authenticated acquisition | A successful read from a scheduled execution environment using the already selected Notehub identity/hub |
-| Scheduler | A real job API with cadence/timezone, next-run status, failure reporting, cancellation and overlap control |
-| Notehub Cache Database | Current implementation: DuckDB installed in the worker environment, a persistent scratch write/read/reopen check, recorded interpreter/version and bounded resource limits |
-| Delivery | A supported user-facing destination and receipt/failure signal; recipients and external sends within the user's authorization |
+| CLI | Python invokes `notehub api` in the same authorized OS environment and parses its response. The CLI supplies authentication and handles supported credential renewal. |
+| MCP | Use the harness's documented programmatic bridge to the existing authenticated connection. An interactive MCP tool alone does not give a Python process this access. |
 
-MCP: the harness must supply a documented scheduled agent/tool context or programmatic
-bridge to the same authorized MCP connection. A scheduled agent with MCP and workspace
-tools is a usable path, with its model-execution cost recorded; prefer a deterministic
-worker bridge where available. A tool available in conversation is not automatically an executable shell
-command or a background credential. Don't export MCP credentials, invent SDK methods or
-silently add a CLI login. CLI: run `notehub --help-agent`, verify `auth status --json` in
-the job's OS environment, and test its normal stored-login refresh. Don't copy tokens.
+Identify the actual invocation and verify a harmless read from the worker environment
+when available; otherwise verify it during the first task run. If only scheduled agent
+turns can invoke the connection, record that fallback and its model cost before building
+the workers. Keep credentials in the selected tool and retain one authenticated path.
 
-Partial capability is useful. Durable acquisition plus scheduling can maintain a cache
-without notifications. Delivery without unattended acquisition cannot make a live monitor.
-A foreground session can answer robustly with repositories or bounded API reads, but
-must not promise persistent cache refresh or periodic engagement. State the actual missing
-capability and continue the useful supported work. Do not require a cloud migration just
-to answer a question.
+## 4. Determine scheduling and restart recovery
 
-Return the observed capabilities, invocation paths and gaps to the caller. This capability
-check is one part of preparation: Access must continue through Cache preparation to
-create and verify the database and maintenance task. Project Setup later reuses that
-infrastructure for enrolled projects and requested monitors.
+Identify how to register, list, invoke, update and cancel periodic jobs. Determine the
+supported cadence, timezone, runtime limits, run-status reporting and overlap behavior.
+Prefer a scheduler that launches the worker directly rather than starting an LLM turn
+for every poll.
+
+Check what survives a Cloud Computer restart. If schedules persist, verify how they
+resume. If registrations are lost, identify a supported startup hook that can restore
+them from durable definitions. Restoration must reuse matching jobs, register missing
+active jobs and preserve pauses/cancellations. The recovery hook must work even when
+all periodic registrations are gone. Record any missing automatic recovery capability.
+
+## 5. Determine how workers wake the agent
+
+Find the harness's supported way for code to enqueue or trigger an LLM task in the
+right user/project context, and its notification mechanism for the user. Ordinary
+polls, SQL calculations and comparisons stay in code. Wake the LLM when a finding
+needs reasoning, a message or graph, or a question for the user. An unchanged routine
+check should finish without a model turn.
+
+A worker saves a pending finding before requesting that wake-up. Pass a compact job or
+finding ID and evidence location so the agent can recover the context. Identify how
+failed wake-ups are retried without losing the finding or duplicating user messages.
+If the harness only schedules agent turns, use that supported path and state the cost;
+do not describe it as LLM-free polling.
+
+Return to the cookbook with the script/runtime location, available storage and warning
+capabilities, authenticated invocation, scheduling commands, restart mechanism and
+agent wake-up/delivery path identified.
+Record gaps and pending checks. The following steps implement and verify these paths
+as they create the cache and tasks; no separate configuration hierarchy is required.

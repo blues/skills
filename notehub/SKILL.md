@@ -1,106 +1,105 @@
 ---
 name: notehub
-description: Start or resume Notehub work by establishing secure access, selecting a project and reading its product knowledge, then continue with Project Chat or Project Training. Use when the user asks to load Notehub or needs the overall workflow.
+description: Start or resume Notehub work by establishing secure access, learning the API, checking Cloud Computer setup, selecting a project and reading its product knowledge. Continue in Project Chat or Project Training; return to project selection when the user finishes or switches projects.
 ---
 
 # Start working with Notehub
 
-> Establish access, choose a project and read its product skills. Cloud Computers prepare
-> a Notehub Cache Database and Notehub Cache Maintenance Task during Access, then enroll
-> projects on first use. Then chat or train: Chat covers questions, operations,
-> monitors, alerts and engagement.
+Establish access, understand how to use Notehub, prepare the Cloud Computer when available,
+then choose a project, read its product skills and do the requested work.
+Keep the user's actual request in view. A question should lead to an answer; a request
+for continuing assistance should lead to working, verified jobs; training should improve
+shared product knowledge.
 
-Keep the user's actual request in view. “Load Notehub” means become ready to help.
-A question should lead to an answer; a request to configure continuing assistance should
-lead to working, verified jobs; a training request should lead to shared product knowledge.
-Read the complete pages linked for your path, rather than fetching the whole corpus.
-Use the routing tables to select the relevant path, not as a checklist to read every page.
-Complete the prerequisites in order, reusing any connection, environment or project
-already verified for this task.
-Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md) throughout.
+Complete the prerequisites in order, reusing verified context. Read the instructions
+for your path in full; use the routing tables to choose relevant references rather than
+fetching the whole corpus. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md) throughout.
 
 ## 1. Establish access
 
-Access owns connection setup, authentication and preparation of the execution environment,
-including a Notehub Cache Database and Notehub Cache Maintenance Task on the user's
-Cloud Computer. DuckDB is the current database of choice.
+Use one authenticated request proxy: prefer Notehub MCP, or use the `notehub` CLI when
+MCP is unavailable or the user chooses it. Access owns installation/connection,
+authentication and verification. Reuse an already verified connection.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish missing connection or environment prerequisites | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Carry the verified access context into project selection |
+| Install or connect a tool, authenticate and verify access | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Retain the selected connection, verified account and invocation method |
 
-## 2. Choose the project
+## 2. Read Notehub's skills
 
-Project Selection owns which project's data and shared skills the task uses. On a Cloud
-Computer, each project the user first references is enrolled in the existing cache
-database and maintenance task, including projects used during Training.
+**All agents must complete API discovery**, regardless of how they accessed Notehub.
+Read the complete OpenAPI specification and survey its available operations. Then read
+**only one** of the MCP or CLI guides, matching the connection established in Access:
+the MCP guide for MCP access, or the CLI guide for CLI access. Reuse what you learned
+during authentication. Resolve detailed request and response contracts when needed.
+Load Platform's native data meanings later according to the work.
+
+| If you are using or need to understand | Read | Then |
+|---|---|---|
+| Notehub's API capabilities through either connection | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Read and retain the current OpenAPI contract before learning the selected tool's invocation syntax |
+| Notehub MCP: an authenticated request proxy | [MCP guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use 'code mode' to map OperationId and parameters to an 'execute' MCP tool |
+| Notehub CLI: an authenticated request proxy | [CLI guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Use the tool's CURL-like syntax as an API proxy; read `notehub --help-agent` |
+
+## 3. Check Cloud Computer setup
+
+A subset of agent harnesses run on Cloud Computers with persistent storage, such as
+Grok Bot, Muse, Dots, or 'claws'. If and only if this agent is running on a Cloud Computer,
+ensure that a **Notehub Cache Database** and **Notehub Cache Maintenance Task** are
+configured properly and that the maintenance task is running.
+
+| Operating capability | Read | Then |
+|---|---|---|
+| This agent is running on a Cloud Computer | [Cloud Computer setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer) | Verify the setup, then continue to project selection |
+| This agent is not running on a Cloud Computer | No cloud setup | Continue to project selection |
+
+## 4. Choose the project
+
+A Notehub project is the place where customers manage their fleets of physical
+hardware products as well as the data flowing out of those devices. Users and their
+agents only work on one project at a time, and if possible prefer to be brought
+immediately back into the context of the last project they worked on. If their
+preferred project is not yet known, users prefer to see a list of their projects
+from which to choose.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish or change the project binding | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Carry the verified project context into product reading and the requested activity |
+| Resume or choose a Project | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Verify the ProjectUID and summarize the Project's name, associated ProductUIDs and recent activity |
 
-## 3. Read the product's skills
+## 5. Read the product's skills
 
-Understand the selected product before working with its data. Reuse its current catalog
-and knowledge if already loaded; otherwise discover the stored skills, read the index
-and product overview, and follow the material relevant to the task.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Understand the selected product and find its knowledge | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | List all skill names and kinds, then fetch needed documents, or read a full-content snapshot; retain the product context |
-
-An empty skill set is a knowledge gap, not a reason to invent product meaning or start
-an unsolicited interview. Platform questions can still use verified native knowledge.
-Training reads the complete baseline, including unlinked files, in its own workflow.
-
-## 4. Check cloud cache readiness
+Understand the hardware products whose data flows into the selected Project, their
+terminology and how product concepts map to Event `body` fields or database columns.
+Read all skills and their `kinds` tags in one `GetSkills` call with `includeContent=true`,
+or reuse a complete, current snapshot already read. Internalize the entire set and
+carry that understanding into both Q&A and Training.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Check a newly enrolled project's cache or repair missing infrastructure | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify the database, maintenance task, project enrollment and actual readiness; complete missing setup |
-| Prepare useful questions and requested recurring work for the project | [Cloud project setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Build on the maintained cache, product knowledge and actual coverage |
+| Load and understand the selected Project's product knowledge | [Product knowledge cookbook](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Acquire the complete skill set with content and kinds, read every skill, and connect product terminology to the data |
 
-Reuse the working maintenance task and respect pauses. Begin supported Q&A or the training interview
-while initial history loads; user-facing monitors follow the requested Chat workflow.
-Foreground agents use bounded reads without persistent cache jobs.
+An empty skill set is a knowledge gap, not a reason to invent product meaning or
+start an unsolicited interview. Even without product skills, useful platform
+questions can still be asked - and sometimes the nature of products can be
+determined by notefile and field names in the JSON data.
 
-## 5. Do the requested work
+## 6. Do the requested work
 
-There are two high-level activities. Access, Platform and Cloud Computer are supporting
-skills used within these workflows.
+**Both activities are ongoing loops.** The user may spend a long time asking questions,
+refining monitors, or improving product skills. Keep working within the selected activity
+and project, reusing context across turns; completing an answer or lesson is a checkpoint.
+When the user says they are done, says “stop,” or wants to switch projects, end the current
+loop and return to **Step 4**. Preserve any unfinished work and a brief resumable handoff;
+in Training, keep confirmed knowledge and unpublished drafts distinct. A stop directed
+at a particular monitor or task applies to that work; ending the conversation does not
+cancel existing monitors or cache maintenance.
 
-| The person wants | Continue here | A useful completion looks like |
+| The person wants | Continue here | Work within the loop |
 |---|---|---|
-| Ask questions, investigate, act, monitor answers, receive alerts or get ongoing updates | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Grounded answers using platform and/or product knowledge; requested operations and monitors completed and verified |
-| To teach, resume training or revise shared product meaning | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Preserved knowledge, reviewed changes, verified publication and a resumable handoff |
+| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Answer using platform and/or product knowledge; carry follow-ups into operations and monitors that notify according to the user's preferences |
+| Teach, resume training or revise shared product meaning | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Interview, investigate, review, publish verified improvements and continue with the next useful lesson |
+| Finish, stop or switch projects | [Project selection — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | End the current activity; wait after a stop, or select the requested project and continue through Steps 5 and 6 |
 
 For a bare “load” request, say which project is ready and, when helpful, give a few example
-questions grounded in its actual knowledge. State cloud readiness accurately. Do not
-invent product capabilities, start an unsolicited interview, or create alerts from a
-question alone.
-
-## Reading the documentation
-
-Fetch raw text with a tool that returns the whole page, for example:
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md
-```
-
-Every documentation link points to a complete Markdown file in the public GitHub
-repository. An agent restricted to GitHub Raw can follow the whole workflow there;
-no documentation-server access or skill installation is required. When a documentation
-server serves these files, it rewrites their public source URLs to its own address.
-Fetch only the references your current step requires; completing a prerequisite
-returns you to the task that called it.
-
-This top-level `notehub` skill routes to two activity skills and three supporting skills.
-An older project-access entry remains for compatibility and routes to Access or Project Selection.
-
-| If you need | Use | Purpose |
-|---|---|---|
-| Compatibility with an older project-access installation | [Project-access entry](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-access/SKILL.md) | Follow its route to the missing access or project prerequisite |
-| Install live skill pointers or use optional generated indexes on a documentation server | [Documentation server features](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/serving.md) | Use server-only installation and discovery features when that server is accessible |
-
-If a required page is unavailable, identify it rather than improvising its
-instructions. Public documentation downloads do not require Notehub credentials.
+questions grounded in its actual knowledge. State cloud readiness accurately and wait
+for the user's work. Do not invent product capabilities, start an unsolicited interview,
+or activate a monitor from a bare load request.

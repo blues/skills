@@ -1,36 +1,42 @@
-# Repositories and analytical queries
+# Authenticated access to a Project Repository
 
-Use a repository for historical data beyond a cloud cache, or fast Q&A when no suitable
-cache exists. Discover the repository tools the **selected authenticated connection**
-actually offers. In MCP use the server's search function and inspect the returned tool
-schemas. The public OpenAPI may contain repository-related types without exposing the
-server's analytical query functions. Do not invent operation names or assume CLI parity.
+This is the MCP interface reference used by the Project Repository cookbook. It requires
+MCP access and a Repository enabled for the selected Project. Reuse the existing
+connection; authentication stays inside MCP.
 
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
+| For the question workflow | Procedure | Result |
 |---|---|---|
-| Resolve the product meaning needed by the query | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Load the relevant recipe and meaning dependencies |
-| Interpret native fields in the dataset | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Verify the data surface and its semantics |
-| Choose live evidence when repository coverage is unsuitable | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use the selected transport and disclose remaining coverage limits |
+| Select tables, establish meaning and coverage, then calculate an answer | [Query the Project Repository](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-repository/SKILL.md) | Return a verified result for the requested population and history |
 
-Bind the repository/dataset to the verified project. Inspect its schema and bounded
-sample before writing a query: Event envelopes, flattened bodies, full Sessions and
-transformed views are different evidence. Check ingestion freshness, time coverage,
-filters, deletions and any retention limits. A dataset name is not a completeness claim.
+## Discover the supported functions
 
-Build typed, bounded queries using product recipes and native platform definitions.
-Use stable device IDs for joins and serials/names for display. Partition by project and
-account; use UTC unless the user specifies another analytical timezone. Parameterize
-inputs, inspect a small result and aggregate server-side before returning large data.
-Show missing populations or uncovered periods separately. A query returning zero rows
-is meaningful only when the dataset covers the requested scope and time.
+Use MCP search and read the returned schemas for Repository functions. These can include
+`list_repositories`, `describe_schema`, `get_table_sample` and `query_repository`; use
+what the connected server exposes. These functions may exist beyond the public OpenAPI
+paths. Reuse interface definitions already discovered while they remain valid.
 
-Repository provisioning, transformations and replacement are writes, not prerequisites
-for answering. Do not create or replace a dataset just to discover whether one exists.
-If suitable repository capability is absent, use bounded live API calls through the same
-transport and state any coverage limitation. Don't seek an `X-Repository-Key`, database
-password or raw API token. Fresh cloud caches take priority when they fully support the
-question; direct API reads still serve current state and requested operational changes.
+Match the selected ProjectUID to the Repository's `project_uids`, and retain RepositoryUID
+from `uid`. Pass it explicitly under the tool's actual parameter name, such as
+`repository_uid`. Keep any FleetUID restrictions with that scope; do not rely on a tool
+defaulting to the first Repository.
+
+## Apply the query engine's contract
+
+Inspect actual schemas, supported syntax and response metadata. When MCP exposes
+ClickHouse SQL, these details matter:
+
+| Detail | Apply |
+|---|---|
+| Table `time` column | Read its projection's time expression. Use efficient time bounds without substituting upload time for the requested measurement time |
+| Generated `location` Point, when present | Its coordinate order is longitude, latitude; verify the actual columns before spatial calculations |
+| Loading and optimization state | Account for unfinished backfill or replay deduplication before trusting counts |
+| `statistics.truncated`, when returned | Check it before treating returned detail as complete; aggregate or split the requested range when needed |
+
+“Recent” retains the user's intended wall-clock window. Do not shift it to the latest
+available observations to hide ingestion lag. Follow the cookbook for full-history
+coverage and interpretation of transformed rows.
+
+The existing Repository supplies read queries. Provisioning, replacing tables or changing
+projections is separate requested work. If query access is unavailable, return that
+limitation to the caller rather than obtaining a second connection, a Repository key or
+raw credentials.

@@ -1,45 +1,36 @@
 # Jobs that work without conversation memory
 
-Access creates the Notehub Cache Maintenance Task using the acquisition and daily review
+Cloud Computer setup creates the Notehub Cache Maintenance Task using the acquisition and daily review
 contracts below; first-use project enrollment supplies the scopes it maintains. Implement them
 with the harness's actual worker/scheduler tools and database state.
 Use deterministic code and SQL for routine work, in a language supported by the harness.
+Prefer directly scheduled Python workers when supported; reserve LLM turns for findings
+that need reasoning or user interaction.
 The pseudocode below describes behavior; its names are not callable APIs or a prescribed
 database schema. Implement and validate it using the selected authenticated transport,
 database and scheduler.
 
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Prepare project queries or requested monitor jobs | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Reuse the cache workers and verify the requested project capabilities |
-| Create the cache database and maintenance task during Access | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify database persistence and scheduled execution before project enrollment |
-| Recover durable execution inputs and state | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Use the recorded scope and configuration rather than conversation memory |
-| Implement monitor comparisons and alert delivery | [Monitor pseudocode](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#evaluation-and-delivery-pseudocode) | Adapt the algorithm to the requested monitor and actual delivery tools |
-| Establish bootstrap, coverage, concurrency or retention rules | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve per-stream coverage and atomic checkpoints |
-| Fetch incremental changes for the acquisition job | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Use the exact saved cursor, process successive batches and persist progress |
-| Refresh the knowledge used by questions and monitors | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Check the metadata catalog and fetch needed changes without rewriting shared skills |
-| Define or revise a calculation before evaluating it | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Use its validated meaning revision and evidence requirements |
-| Choose relevant findings and tone for engagement | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Produce due status reports or useful updates, respecting user preferences |
-| Refresh schemas and optimize recurring queries | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Use daily schema checks, field-usage records and measured query plans |
+This is an implementation resource, not another setup workflow. Implement or verify
+the sections named by the calling cookbook step, then return there. The pseudocode
+and verification cases below remain the contracts for the workers you create.
 
 ## Common execution context
 
-Store the worker's actual executable/script path or tool invocation, database locator,
-project/monitor scope and configuration version in database job records. Give the harness
-enough bootstrap information to open the database safely and find that job record.
-The worker reads configuration and product revisions from the database,
-verifies the selected identity/hub, obtains the appropriate lock, performs bounded work,
-commits state and returns a small machine-readable run result. No credential is placed in
-a command, task prompt, script or database record.
+Store the worker's actual executable/script path or tool invocation, database
+locator, ProjectUID, monitor ID and configuration version in database job records.
+Give the harness enough bootstrap information to open the database safely and find
+that job record. The worker reads configuration and product revisions from the
+database, verifies the selected account and ProjectUID, obtains the appropriate
+lock, performs bounded work, commits state and returns a small machine-readable run
+result. No credential is placed in a command, task prompt, script or database
+record.
 
 The Notehub Cache Maintenance Task reads the current enrolled-project registry on
 every run, including enrollments made after it was created. Process active scopes
-only; preserve pauses/exclusions and isolate failures by project. An empty registry is
-an idle success. Keep per-project budgets and continuation state so a large backlog does
-not monopolize the service. By default the task runs every 15 minutes, with per-project
+only; preserve pauses/exclusions and isolate failures by project. With an empty registry,
+run the storage check and skip acquisition. Keep per-project budgets and continuation state so a large backlog does
+not monopolize the service. Aim for a 15-minute refresh interval; if the background
+scheduler cannot meet that goal, use its fastest supported interval. Keep per-project
 due times for daily review. If the implementation uses separate scheduled subtasks,
 record them under the maintenance task, reconcile the same registry and avoid duplicate work.
 Bots sharing the workspace reuse this task and its registry. After each cache run, refresh
@@ -55,21 +46,74 @@ has both the chosen connection and database/worker access. Don't paste an entire
 on chat history in every scheduled prompt.
 
 A run summary records job ID, start/finish, status (`complete`, `partial`, `failed`,
-`paused`), relevant project/monitor, counts, evidence freshness/coverage and continuation
-need. Include error class/action, not secrets or raw customer dumps. A success marker
-written before all required steps complete is not a successful run. Persist registration
-and execution receipts separately.
+`paused`), ProjectUID and monitor ID when applicable, counts, evidence
+freshness/coverage and continuation need. Include error class/action, not secrets or
+raw customer dumps. A success marker written before all required steps complete is
+not a successful run. Persist registration and execution receipts separately.
+
+## Storage monitoring
+
+Storage monitoring is an implicit part of the Notehub Cache Maintenance Task, requiring
+no separate user monitor. On every run, before acquisition or other substantial writes,
+check free space and applicable quotas for durable and temporary storage. Use the
+mechanisms identified during harness verification. Set warning reserves for expected
+growth and temporary working space, accounting for other bots sharing the quota.
+
+Normal checks run in code without waking an LLM. On low space, apply established
+housekeeping within its retention rules and verify the space actually recovered.
+Preserve checkpoints, pending findings/deliveries, protected history and unrelated files.
+If space remains low or an allocation fails, defer further growth and wake the agent
+with the measurements and cleanup results so it can investigate and free space.
+Deduplicate repeated warnings while surfacing material worsening or recovery.
+
+If local writes are already failing, use the harness warning/wake-up path identified
+in Step 1; reporting a full disk must not depend on writing to that same disk. Test
+the response with simulated low-space readings, including unavailable local writes.
+Keep any native harness storage warnings enabled as an additional signal between runs.
+
+## Wake the agent only for work that needs it
+
+Use the worker-to-agent mechanism identified during harness preparation. The ordinary
+path is code calling the authenticated API, updating the cache and evaluating queries.
+Only a finding needing interpretation, composition or user input wakes an LLM task.
+Already prepared routine deliveries can use the delivery worker without another model turn.
+
+```text
+run due acquisition and query work in the worker
+save new findings needing reasoning or user interaction with stable finding IDs and evidence
+for each due pending finding, including retries from earlier runs:
+    request an agent task through the harness's supported wake-up mechanism
+    pass the finding ID and context to locate its project, meaning and evidence
+    on wake-up failure: retain pending work and retry with the same finding ID
+if no findings need attention: finish quietly
+```
+
+The agent claims the pending work, rereads its current state and evidence, then
+reasons, composes or asks the user as needed. Repeated wake-ups must not process the
+same finding concurrently or create new delivery IDs. Scheduling a turn does not
+mark a finding handled or a message delivered; use the existing durable evaluation
+and delivery state. Test a quiet result, a useful candidate, a failed/repeated
+wake-up and recovery of pending work using a disposable case and no external
+notification.
 
 ## Acquisition
 
-The maintenance task's fill phase normally runs every 15 minutes across enrolled projects. For each due project,
-serialize writes per database, keep stream definitions stable, and budget work across
-streams/devices so a large Event backlog cannot starve other entities or projects.
+| Needed for this worker | Resource | Apply |
+|---|---|---|
+| Stream definitions and initial coverage | [Cache model, Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#3-define-streams-and-verify-initial-coverage) | ProjectUID, entity keys and required history |
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Exact endpoint cursor, batching and deletion contract |
+| Refresh product knowledge used by queries | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Reuse unchanged knowledge and fetch relevant changes |
 
-1. Validate context. An account/hub/project mismatch stops this scope; do not reuse its
-   cursor under another identity. A network failure does not initiate repeated login.
+The maintenance task's fill phase runs at the configured refresh interval across
+enrolled projects. For each due project, serialize writes per database, keep stream
+definitions stable, and budget work across streams/devices so a large Event backlog
+cannot starve other entities or projects.
+
+1. Validate the account and ProjectUID. A mismatch stops work for that Project; do not
+   reuse its cursor under another account or ProjectUID. A network failure does not
+   initiate repeated login.
 2. Poll Devices through the saved modified cursor using transactional batch ingestion.
-   Enroll new device identities into Session streams. Preserve historical records when
+   Enroll new DeviceUIDs into Session streams. Preserve historical records when
    a Device is deleted and track historical-device coverage gaps separately.
 3. Poll Events and each due full-Session stream with their own saved exact cursors.
    Commit each batch with its checkpoint. A batch budget leaves a resumable partial stream.
@@ -79,8 +123,9 @@ streams/devices so a large Event backlog cannot starve other entities or project
    refreshes these thereafter; a new field need can trigger an earlier refresh. A failed
    or partial response retains the previous snapshot and freshness. An authoritative
    empty snapshot is different from an error. Schemas do not acquire an invented cursor.
-5. Read product-skill metadata to check for changes. Reuse unchanged documents; fetch
-   needed new or changed content individually, or get a full snapshot when simpler.
+5. On first acquisition, fetch all product skills with `GetSkills` and
+   `includeContent=true`. For later refreshes, compare metadata and reuse unchanged
+   documents; fetch all new or changed content individually, or get a full snapshot.
    Reconcile the private copy only after validation; mark affected query plans/views/
    monitors for review instead of silently running old semantics. This is a read workflow.
 6. Publish coverage/freshness from committed state. Update typed projections only under
@@ -94,9 +139,12 @@ and a healthy product are separate conclusions.
 
 ### Batch ingestion pseudocode
 
-Apply this to each due modified-cursor stream. Use the database access design chosen in
-Cache, including serialization of overlapping work. Each attempt belongs to the verified
-hub/account/project and stable stream definition.
+Apply this to each due modified-cursor stream. Use the database access design chosen
+in Cache, including serialization of overlapping work. Each attempt belongs to the
+verified account, ProjectUID and saved stream definition. Use DeviceUID for Device
+upserts, EventUID for Event upserts and SessionUID for Session upserts, retaining
+the associated DeviceUID for per-device Session streams. These are the record keys
+below.
 
 ```text
 cursor = saved exact cursor, or the stream's fixed bootstrap cursor
@@ -105,12 +153,12 @@ while this stream has time and batch budget:
     claim the current attempt for this stream and cursor; mark the scan in progress
     fetch a batch through the selected authenticated connection
     retain the actual fetch-completion time
-    validate records, stable identities, deletion markers and cursor metadata
+    validate records, record keys, deletion markers and cursor metadata
     reject a repeated/cyclic cursor, except an unchanged cursor with has_more=false
 
     in one database transaction:
         verify this attempt and its scope/cursor are still current
-        bulk upsert records and documented tombstones by stable identity
+        bulk upsert records and documented tombstones by ProjectUID and record key
         save the exact next_cursor and actual fetch time
         mark the scan complete only if has_more is false
         retire this attempt
@@ -126,19 +174,22 @@ while this stream has time and batch budget:
 retain the committed cursor, mark incomplete and arrange continuation; return partial
 ```
 
-Normalize the endpoint's documented body or header metadata without inventing missing
-values. Reject malformed records and conflicting duplicate identities within a batch;
-equal measurements with different identities remain separate. An empty final batch may
-keep the same cursor or advance it; commit its successful freshness either way. A failed
-or unfinished scan retains the last complete success and its coverage limits.
+Normalize the endpoint's documented body or header metadata without inventing
+missing values. Reject malformed records and conflicting duplicate keys within a
+batch; equal measurements with different EventUIDs remain separate. An empty final
+batch may keep the same cursor or advance it; commit its successful freshness either
+way. A failed or unfinished scan retains the last complete success and its coverage
+limits.
 
-When only scheduled agent turns can invoke MCP, the turn performs the fetch through that
-same connection and passes the response to its database worker using a supported harness
-mechanism. Carry the scope, requested cursor, current attempt identity and actual fetch
-time with the response. Reject superseded results and late failures, including when a
-newer empty scan kept the same cursor. Never relabel an old response with ingestion time.
-Resolve abandoned attempts after the worker timeout. Choose a direct bridge when supported;
-do not assume MCP tools are local imports or add a CLI login to work around that limitation.
+When only scheduled agent turns can invoke MCP, the turn performs the fetch through
+that same connection and passes the response to its database worker using a
+supported harness mechanism. Carry the ProjectUID, stream definition, requested
+cursor, current attempt ID and actual fetch time with the response. Reject
+superseded results and late failures, including when a newer empty scan kept the
+same cursor. Never relabel an old response with ingestion time. Resolve abandoned
+attempts after the worker timeout. Choose a direct bridge when supported; do not
+assume MCP tools are local imports or add a CLI login to work around that
+limitation.
 
 ### Validate the implemented acquisition worker
 
@@ -147,76 +198,91 @@ activation. These cases test behavior without customer credentials:
 
 | Case | Expected result |
 |---|---|
-| Updates, documented tombstones and equal values under different IDs | Updates replace by identity, tombstones apply, distinct records survive |
+| Updates, documented tombstones and equal values under different EventUIDs | Updates replace by the record key, tombstones apply, distinct Events survive |
 | Empty final batch, including an unchanged cursor | Successful scan and freshness are committed; no extra empty request |
-| Missing metadata, conflicting identities, cursor cycle or failed transaction | Failing batch advances nothing; earlier commits survive |
+| Missing metadata, conflicting duplicate keys, cursor cycle or failed transaction | Failing batch advances nothing; earlier commits survive |
 | Budget exhaustion, process restart or changed project/filter scope | Resume exactly from the committed cursor; a different scope uses its own checkpoint |
 | Late MCP result/failure or replay after a newer completion | No overwrite, freshness regression or degradation of the newer success |
 
 ## Evaluation
 
-For each due monitor, periodic status report or engagement candidate, load its prepared question,
-meaning revision, latest coverage and persisted state. Check that its data satisfies the
-specified freshness, scope and time window; fetch bounded fresh evidence through the
-same transport if needed and authorized. A five-minute monitor cannot obtain five-minute
-freshness by querying an unchanged 15-minute cache.
+Run each due monitor using its prepared calculation, meaning revision and preferences.
+Use the cache when its scope, coverage and freshness suffice; otherwise acquire bounded
+fresh inputs through the selected connection. Record fields and query performance during
+execution. A faster evaluator cannot make stale evidence fresh.
 
-Compute the result and its quality/coverage metadata. Record the fields and query plan
-used by each evaluator for daily performance review. For a condition monitor, the
-predicate yields true, false or unknown. Apply product-specific dwell/hysteresis before the incident transition;
-unknown/stale evidence cannot close a condition. Follow the Monitor pseudocode for the
-requested comparison mode. Persist the resulting incident state and
-pending candidate in the **same transaction** so a crash cannot lose a notification while
-advancing the state that would suppress it on retry.
+| For this routine | Resource | Apply |
+|---|---|---|
+| Calculate the question | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/prepared-questions.md) | Reuse the verified meaning, parameters and evidence requirements |
+| Define what to watch and when and where to notify | [Monitor preferences](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#2-set-the-monitoring-preferences) | Use the same definition for requested and interest-driven monitors |
 
-For a result-change subscription, compare the current valid result with its saved
-baseline using the configured equality/significance rule. Every meaningful difference
-gets its own change ID, even on consecutive polls; atomically persist the new baseline
-and outbox candidate. Unknown results do not advance the baseline. Condition transitions
-and result comparisons use their respective rules.
+### Evaluation and delivery pseudocode
 
-A candidate carries stable monitor/incident/transition IDs, relevant evidence timestamps,
-query and meaning revisions, population/window/units, severity, unknowns, relevance expiry
-and intended destination. Deduplication includes project and monitor scope. Repeated
-unchanged conditions ordinarily produce no candidate; reminders or renewed escalation
-follow the configured rule. A due status report is a separate candidate keyed to its
-reporting interval; unchanged incident state does not suppress it. Do not call the model just to decide whether a number crossed
-a confirmed threshold. Model reasoning is useful when a candidate needs explanation,
-source reconciliation or a consequential user question.
+Implement the following behavior with the harness's runtime and scheduler. This is one
+monitoring routine; the harness may split execution where needed. Keep concurrent runs
+from evaluating or sending the same work twice.
+
+```text
+load the monitor's current definition, preferences and saved progress
+if paused or removed: stop
+
+if a check or periodic notification is due:
+    evaluate the question; record evidence time, coverage and meaning revision
+    compare valid results with the last valid result using the agreed rule
+    on the first valid result, follow the initial-send preference
+    if evidence is unknown, preserve the last valid comparison
+    require valid evidence for a condition or change notification
+    identify notifications due under the preferences, including periodic updates
+    combine overlapping reasons when one message serves them
+    save the new comparison, check progress and pending notifications together
+
+for each due pending notification, including retries:
+    recheck current preferences, pause state, quiet hours and relevance
+    cancel obsolete messages; refresh evidence needed for claims about current state
+    explain unknown evidence in a due status update; never claim an unverified recovery
+    compose from verified results, waking the agent only when useful
+    send to the configured channel and record the actual outcome
+    on known failure, retain pending work for a bounded retry
+    on uncertain delivery, reconcile provider status before retrying
+```
+
+Preserving comparison progress and pending notifications together prevents a restart
+from losing a change that has already advanced the baseline. Use a stable notification
+identity across retries and the provider's idempotency support when available. Keep due
+periodic updates identifiable by interval so unchanged results are delivered when requested
+and the same update is not sent twice. Supersede stale messages after a prolonged outage.
 
 ## Delivery
 
-Use the scheduler's completion hook or a bounded delivery worker to drain pending items.
-Apply pauses, quiet hours, authorization, suppression and expiry before composition.
-Recheck fresh evidence and incident state immediately before sending; cancel/supersede
-an obsolete closeout or an alert whose premise changed. Recompute reported quantities
-with the original threshold/population/window, not a neighboring statistic.
+Use the notification path verified during monitor preparation, as part of the routine
+above or through the harness's existing hook. A queued or composed message is not a send;
+retain its actual outcome and reconcile retries as the pseudocode specifies.
 
-Compose a useful message from verified evidence when needed. Deliver to the recorded
-surface using the actual harness API, with a stable idempotency key if supported. Mark
-acknowledged only after the provider's receipt; a timeout leaves an uncertain send to
-reconcile, not a new incident. Persist attempted sends and provider IDs. Exactly-once
-delivery requires provider support; otherwise use the best available reconciliation and
-state the limitation when it affects behavior. Expired candidates are not replayed as
-fresh news after a prolonged outage.
-
-Closeouts and coverage-failure notices follow the same durable delivery path. Third-party
-recipients need applicable explicit authorization. A useful correction updates dependent
-state and prior conclusions, not just the next message's wording.
+| For message content and replies | Resource | Apply |
+|---|---|---|
+| Explain the finding or status and handle the user's response | [Monitor notifications](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#notify-the-user-and-handle-replies) | Keep the message tied to its evidence, calculation and monitoring preferences |
 
 ## Engagement
 
-At each configured local-time opportunity, consult the interest/exclusion profile and
-recent feedback/delivery history, run the relevant prepared queries, and check for due
-status reports as well as meaningful changes. Use Engagement for relevance and tone.
-A requested periodic status report can contain unchanged results, a graph or both;
-report missing/stale evidence honestly rather than asserting stability. Bundle related
-findings. Outside a requested status cadence, no useful candidate means no message.
-Explicit monitor urgency/cadence remains separate
-from these check-in windows. Write down outcomes so repeated quiet runs do not become
-repeated suggestions or stale questions.
+At each configured opportunity, read the current interests and their monitors, including
+those added since registration. Skip paused, declined or expired interests; an empty set
+is a successful idle check. Run due calculations through the routine above. Requested
+monitor cadence and urgency continue independently of engagement opportunities.
+
+Use recent results and notification history to identify due or potentially useful updates.
+Wake the agent only when judgment, composition or interaction is needed. Retain outcomes
+so quiet runs do not become repeated suggestions or stale questions.
+
+| When an update needs judgment | Resource | Apply |
+|---|---|---|
+| Decide what to bring back | [Engagement opportunities](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md#3-decide-what-to-bring-back-at-each-opportunity) | Honor requested periodic updates and send inferred-interest updates when useful |
 
 ## Maintenance
+
+| Needed for this phase | Resource | Apply |
+|---|---|---|
+| Daily schema and performance review | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Usage recording, schema refresh, measured optimization and its result |
+| Retention boundaries | [Cache retention](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#6-apply-retention-without-losing-required-state) | Preserve protected evidence and operational state |
 
 This is the task's daily review phase: purge, schema refresh, query optimization and
 health checks. Run daily by default for every active enrolled project, with additional review after
@@ -251,7 +317,7 @@ refresh optimizer statistics after substantial changes when useful, and record a
 or deferred work. Schema discovery alone does not show which columns deserve an index.
 
 Prune Events/Sessions only beyond 45 days using the documented analytical timestamp and
-preserve unknown-time rows, active sessions, open incident evidence and needed baselines.
+preserve unknown-time rows, active sessions, evidence still needed by monitors and needed baselines.
 Retain complete current Devices and Schemas. Pruning is a local cache operation and does
 not change an API checkpoint. Rebuild invalidated projections in staging, verify them,
 then switch readers atomically. Reconcile affected monitor rules before reactivating them.

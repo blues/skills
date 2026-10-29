@@ -6,17 +6,9 @@ not a replacement for that guide. If the executable is absent, use the official
 [Note CLI installation instructions](https://github.com/blues/note-cli) for the host.
 Do not guess download URLs or run a privileged install without a need.
 
-## Choose the relevant reference
-
-Read the rows that apply to the current step; reuse context already established.
-
-| If you need to | Read | Then |
-|---|---|---|
-| Resolve an unfamiliar endpoint, method or response | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Use the current schema for the intended operation |
-
 ## Authenticate without handling credentials
 
-Run `notehub auth status --json`. Inspect `signed_in`, the hub/account and any
+Run `notehub auth status --json`. Inspect `signed_in`, the reported `user` and any
 `reason`/`action`; exit zero alone does not mean signed in. A network failure does not
 mean the user must log in again. Reuse a working login in the same OS user/environment.
 
@@ -39,12 +31,11 @@ value and follow the guide; do not silently change the user's environment. Log o
 when requested. Unattended jobs must run in an environment where this same authorized
 login works and refreshes; do not copy secrets into job configuration.
 
-## Discover, then call
+## Call the API
 
-Fetch the public schema with `notehub api --spec` or download
-[the mirrored YAML](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml). For another supported hub, use
-`--spec --hub HUB` and keep that hub consistent in status, login and every call.
-Resolve the operation as described in API discovery.
+Use the selected operation's method, path and parameters from the current schema.
+Reuse the schema already obtained during API discovery; `notehub api --spec` retrieves
+it when needed.
 
 ```sh
 notehub api GET /v1/projects
@@ -66,10 +57,10 @@ operation's parameter names and permitted values.
 
 | Need | CLI behavior |
 |---|---|
-| Typed scalar | `--field key=value` interprets JSON scalar types |
+| Typed scalar or file contents | `--field key=value` interprets numbers, booleans and null; `@file` or `@-` reads text from a file or stdin |
 | Exact string, especially an opaque cursor | `--raw-field key=value` |
 | Query parameters on GET/HEAD | Fields become query parameters |
-| Fields on POST/PUT/PATCH/DELETE | Fields become JSON body properties; put query parameters in the encoded path |
+| Fields on methods other than GET/HEAD | Fields become JSON body properties; put query parameters in the encoded path |
 | Nested/complete JSON | `--input request.json` or `--input -`; cannot mix with field flags |
 | Repeated query keys | Encode them in the path; repeated fields are not a substitute |
 | Conditional read | `--header 'If-None-Match: "ETAG_FROM_THIS_REPRESENTATION"'` reuses an unchanged cached response; never add an Authorization header |
@@ -85,9 +76,10 @@ responses rather than one JSON document, and fails on incomplete cursor metadata
 nonadvancing cursors with more data. Omit it when the calling worker needs control over
 each batch and its checkpoint; use individual API requests instead.
 
-The CLI's API proxy covers the OpenAPI surface; MCP-specific repository functions are
-not automatically CLI commands. Do not establish a second authentication path to obtain
-one.
+The CLI's API proxy covers the OpenAPI surface. The special Project Repository query
+capability requires MCP access and a Repository enabled for the Project; it is unavailable
+through the CLI. Use the Notehub Cache or ordinary Notehub APIs for supported questions.
+Do not establish a second authentication path to obtain Repository access.
 
 On 401 check status/refresh; on 403 check permissions; on 400/404 check the current
 contract and resource. Back off for rate limits. After an uncertain write, inspect the

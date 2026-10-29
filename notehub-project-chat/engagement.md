@@ -1,75 +1,106 @@
-# Be useful between questions
+# Follow the user's ongoing interests
 
-Engagement continues Project Chat between questions, using the user's monitors, question
-history and interests. Configure this through cloud Setup; scheduled checks follow
-the engagement job contract. Reuse prepared questions and the
-private interest profile, rather than inventing a new investigation at every wake-up.
+Recognizing and following up on ongoing interests is part of Project Chat. On a Cloud
+Computer, use the prepared engagement schedule and monitoring routine to bring back
+useful findings, status or graphs without waiting for a separate “watch this” request.
+Reuse existing monitors and the user's notification preferences.
 
-## Choose the relevant reference
+An interest-driven monitor is the same kind of monitor as one requested directly. This
+procedure decides what deserves continued attention and what makes an update useful.
+The monitor procedure owns its calculation, checking cadence and notifications.
 
-Read the rows that apply to the current step; reuse context already established.
+## 1. Recognize and retain the interest
 
-| If you need to | Read | Then |
+Notice recurring questions, specific concerns, goals, unresolved issues and outcomes the
+user cares about. Use the conversation and existing private interest records. Record
+what matters and why, the Project and population, and whether the interest was expressed
+or inferred. Keep only information useful for follow-up.
+
+Use established preferences for timing, destination and what to send or exclude. Keep
+interests user-editable and preserve corrections, declines and pauses. A useful continuing
+interest warrants action; a passing mention need not become a standing monitor.
+
+**Complete when:** the interest has a clear purpose and scope, or no continuing action
+is warranted. In a foreground session, retain useful context without promising background
+follow-up.
+
+## 2. Create or update the monitor
+
+Within an enrolled Project, reuse a matching monitor or create one for the useful
+interest. Keep the inferred origin visible. Reuse an existing requested monitor's results
+without changing its cadence or rules. Add new interest-driven monitors to the prepared
+engagement task, which reads current interests on each run.
+
+| What is needed | Procedure | Result |
 |---|---|---|
-| Configure authorized engagement opportunities and delivery | [Activation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md#activate-recurring-work) | Register the real schedule and verify the delivery path |
-| Run a scheduled engagement opportunity | [Engagement job contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#engagement) | Evaluate prepared questions, record the outcome and send only useful findings |
-| Define or change the monitor behind an update | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Keep the question, evaluator, alert rule and status preferences connected |
+| Turn the interest into a running check | [Create or change a monitor](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#create-or-change-a-monitor) | A verified calculation and scheduled monitoring under the established preferences |
+| Engagement scheduling is missing or has failed | [Engagement preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/engagement-preparation.md) | Repair the missing setup, then return to this interest |
 
-The purpose is to help the person notice relevant changes and make better decisions,
-not to fill a notification quota. Maintain a small, user-editable interest record:
-what they care about, why, affected projects/populations, explicit versus inferred origin,
-what to tell them, what never to send, when/how to deliver and when an interest expires.
-Repeated or specific questions can reveal an interest; one casual query does not authorize
-an intrusive standing monitor. Use inferred interests for proportionate, low-cost checks
-and helpful suggestions. Confirm consequential thresholds, expanded scope or external sends.
-Respect “not now,” declines, quiet hours and pauses without arguing or repeatedly proposing
-the same thing. Give the person a simple way to inspect, correct or remove interests.
+Act within the enrolled scope and established notification preferences. Resolve missing
+consequential thresholds, a wider scope or a new recipient/channel before relying on
+them. No separate monitoring request is needed for useful engagement within that scope.
 
-Unless they specify a schedule, register three daily **evaluation opportunities** in
-their timezone: morning, early afternoon and evening, at reasonable local hours. Resolve
-an unknown timezone before scheduling local-time delivery; handle daylight saving through
-the scheduler's timezone support. These are not three mandatory messages. Query scripts
-first; call the model only for a meaningful candidate that needs interpretation or writing.
-Explicit monitors keep the requested cadence and urgency instead of being delayed to
-these engagement windows.
+**Complete when:** the interest has a verified running monitor, or a specific missing
+meaning or capability is recorded. Return to the conversation; Steps 3–4 govern later
+opportunities and feedback.
 
-## Choose the useful kind of update
+## 3. Decide what to bring back at each opportunity
 
-| User need | Deliver | Keep distinct |
+Read current interests, fresh monitor results and recent notification/feedback history.
+Use the monitor's rules and the following distinctions:
+
+| Monitoring preference | Bring back | Apply |
 |---|---|---|
-| Know when a monitored condition changes | An alert when its condition, escalation or recovery rule fires | The monitor's requested cadence and freshness govern it |
-| Receive regular status, including when unchanged | A fresh periodic report at the agreed cadence: current result, trend, coverage and a concise explanation | “No material change” can be useful; a status report is not a new incident |
-| Follow an interest without requesting a fixed report | A relevant finding or occasional useful status check at an engagement opportunity | Evaluate usefulness and recent delivery history; do not send a message merely to fill a slot |
+| Notify on a change or condition | The verified result when its rule fires | Preserve the monitor's requested urgency and freshness |
+| Send regular status, including when unchanged | Current result, trend, coverage and a concise explanation or graph | Deliver at the agreed interval even when the result is unchanged |
+| Follow an interest without a fixed report | A relevant finding or occasional useful status update | Send when it helps the user's understanding or next action; a scheduled opportunity need not produce a message |
 
 A regular status preference can be explicit (“send me a daily graph even if it is stable”)
-or already established in the user's continuing-assistance settings. Respect that cadence:
-do not suppress a due report just because the monitor's alert state is unchanged. Without
-such a preference, send unchanged status only when it adds value, such as reassuring the
-user during a watched rollout or showing sustained stability after an incident.
+or established in continuing-assistance settings. Without that preference, unchanged
+status can still be useful during a watched rollout or after a problem. Missing or stale
+evidence must not appear as stable performance.
 
-Use a short message, a graph or both according to the question and delivery surface.
-A graph should show the relevant time window, units, baseline/threshold when established,
-and gaps or stale evidence. Explain what the person should notice. A stable graph with
-fresh complete coverage and a flat line caused by missing data are different reports.
+### Choose relevant findings
 
-For each opportunity, read the interest state and recent delivery/feedback history, inspect
-fresh results, and check whether a requested status report is due or an update usefully
-informs the person's view or next action. Use baseline, magnitude, persistence and product significance together;
-24 hours, 40 percent, two times normal and similar example thresholds are not universal
-rules. Rank and bundle related findings; suppress repeats and weak speculation. Carry
-uncertainty forward rather than laundering an estimate into certainty with repetition.
+Consider magnitude, persistence, baseline and product significance together. Example
+thresholds such as 24 hours or 40 percent are not universal rules. Bundle related
+findings, suppress repeated or weak speculation, and preserve uncertainty. Connect to a
+live concern: Device recovery, a rollout reaching its target, a change in a population
+the user follows, or new evidence that settles an earlier question.
 
-Connect to a live thread: a device recovery after a discussed outage, a rollout reaching
-its agreed target, a change in a repeatedly asked-about population, or newly available
-evidence that settles a question. Outside context such as weather or an advisory is
-useful only when relevant to that thread; retrieve current authoritative evidence, date
-and cite it, and explain the connection as an inference where appropriate. Do not insert
-unrelated news or a speculative cause just to sound proactive.
+Outside context such as weather, an advisory or news is useful when it relates to that
+concern. Retrieve current authoritative evidence, date and cite it, and distinguish an
+inferred connection from a demonstrated cause. Leave unrelated news out.
 
-Write as an attentive colleague: the development or current status first, its significance, and a useful
-next step or focused question. Avoid dashboards in prose, exaggerated urgency, guilt,
-false familiarity and claims of continuous watching. Silence is a valid result. Record
-what was delivered and the response so future checks can adapt. Track periodic reports by
-their reporting interval so alert deduplication does not suppress a requested status
-report, and retries do not send the same report twice. Close useful loops with
-verified recovery or completion; don't keep reminding someone about a resolved issue.
+### Present the useful update
+
+Lead with the development or current status, its significance and a useful next action
+or focused question. Choose a short message, a graph or both for the destination. A graph
+shows the relevant window, units, confirmed baseline or threshold, and evidence gaps.
+Explain what to notice. Avoid exaggerated urgency, guilt, false familiarity and claims
+of continuous watching. Silence is a valid result when no useful update is due.
+
+| To send the update | Procedure | Result |
+|---|---|---|
+| Apply the monitor's timing, destination and notification progress | [Monitor notifications](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#notify-the-user-and-handle-replies) | An evidence-based update under the user's preferences, with its actual send outcome recorded |
+
+**Complete when:** a due or useful update is delivered through its monitor, or the reason
+for silence, deferral or failed delivery is retained. Routine checks run in code; use an
+LLM turn when interpretation, composition or user interaction adds value.
+
+## 4. Learn from replies and keep interests current
+
+Record useful feedback so later checks reflect what the user values. A reply asking for
+explanation returns to the Chat question loop with the monitor's calculation and evidence.
+Adjust the same monitor when the user changes timing, scope, format or destination.
+
+Close useful loops with verified recovery or completion. Review whether an interest still
+matters and retire it when resolved, declined or expired; do not keep sending reminders
+about a finished issue or recreate a removed interest.
+
+| For a control request | Procedure | Result |
+|---|---|---|
+| Pause, resume or remove an interest and its monitoring | [Manage existing work](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/lifecycle.md#pause-resume-or-remove-work) | Verify the change while preserving unrelated monitors and cache maintenance |
+
+Return to Project Chat with the updated context. Personal interests, preferences and
+notification history remain private; product Training owns changes to shared knowledge.

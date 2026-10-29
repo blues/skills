@@ -12,33 +12,43 @@ Read the rows that apply to the current step; reuse context already established.
 |---|---|---|
 | Recover the overall training workflow or missing prerequisites | [Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Resume at the relevant step without restarting completed setup |
 | Acquire the full baseline, including unlinked files | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain exact contents, kinds and revisions beside drafts |
+| Make the initial, brief data scan | [Bounded reconnaissance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/reconnaissance.md) | Use schemas and a small sample to frame questions, keeping observed shapes separate from assumed meanings |
 | Continue after the opening or resume a saved lesson | [Lesson loop](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md) | Ask the next useful unresolved question |
 | Address a reported change, correction or explicit review | [Revisit stored knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#h-revisit-stored-knowledge) | Trace the specific change through owning claims and recipes |
 | Request source material or explain how it will be handled | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Explain actual handling before asking for restricted material |
 | Confirm meaning or publish the resulting changes | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Separate fact confirmation from authorization and verify exact writes |
 
-## Read the existing set and choose the opening
+## 1. Verify the baseline and private drafts
 
-Read every skill the project holds, contents and all, in one request - the skill store says how. Make a **drafts folder** for this session in your harness's
-own scratch or temporary space - never inside a source tree you have been given to read, and never
-in a repository somebody might commit - and write each skill into it exactly as it came back. Keep
-that first copy untouched beside the drafts: it is what lets you say, at any moment, exactly what you
-have changed. Then list what is there, including any file nothing links to - that is how a stale
-skill survives unnoticed.
+Reuse the complete baseline and drafts prepared by the Training setup. If missing,
+read every skill the Project holds, contents and all, in one request. Make a
+**drafts folder** in your harness's own private scratch or temporary space, outside
+any supplied source tree or repository somebody might commit. Keep the original
+content, kinds and revisions untouched beside working drafts: this is how you know
+exactly what changed. Account for every document, including files nothing links to.
 
-Keep an immutable baseline of content, kinds and revisions beside working drafts in
-harness-owned private workspace. Explain where drafts live and what persistence the
-harness actually provides; never promise automatic deletion or session-only retention.
+Explain where drafts live and what persistence the harness actually provides;
+never promise automatic deletion or session-only retention.
 Say what changes in meaning as drafts evolve. Before publishing, use the conditional
 revision workflow in publication; preserve concurrent edits.
 Name the affected drafts and the change in meaning briefly as each lesson updates them,
 so the person can distinguish working knowledge from what Notehub already holds.
 
-**Choose the opening from the person's request and the saved state.** Read the `index`
-training status and the whole `questions` worklist first, then the remaining skills.
+## 2. Choose the opening
+
+Use the person's request and the saved state. Having read the whole set, review
+the `index` training status and the whole `questions` worklist to choose the opening.
 Existing skills mean there is something to build on; they do not mean the product changed.
 
-**Continuation: resume the unfinished interview.** When the project already holds skills
+| Situation | Follow | Then |
+|---|---|---|
+| Existing skills, with no reported change | [Continuation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/interview.md#continuation) | Resume a concrete unanswered question |
+| A specific correction, changed behavior or new material | [Revision](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/interview.md#revision) | Trace that change through existing knowledge |
+| No skills are stored | [Initial training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/interview.md#initial-training) | Follow the opening sequence below |
+
+### Continuation
+
+Resume the unfinished interview. When the Project already holds skills
 and the person says "resume", "continue training", or returns without reporting changes,
 give a short recap of the last
 lesson and the unresolved gap, then ask the saved first question for next time. Check it
@@ -58,12 +68,19 @@ and ask it. Briefly identify the gap that led to it. The agent chooses the next 
 question; the person should not have to reconstruct the previous interview or invent an
 agenda. A proposed question is not evidence that a customer actually asked it.
 
-**Revision: work on a reported change.** When the person brings changed behavior, new
+### Revision
+
+Work on a reported change. When the person brings changed behavior, new
 material, a correction or a request to re-check existing knowledge, begin with that
 specific change and revisiting stored knowledge. Ask what changed only to fill a relevant gap they have not
 already explained. Keep the unfinished question queue available for when that work is done.
 
-**Initial training: the following opening sequence applies only when no skills are stored.**
+### Initial training
+
+The following opening sequence applies only when no skills are stored.
+
+#### First, establish expertise and make a brief scan
+
 Say so, and ask what part of the product the person knows firsthand if that is not already
 clear. Do not assume they are the developer: an operator may know the thresholds, customers
 and consequences best. Once that scope is clear, **if any data has arrived, spend two
@@ -101,6 +118,8 @@ one nobody can correct: if your guess about an array's order decides which eleme
 uses, that guess is a sentence, not an assumption. Keep the whole thing to a short paragraph you
 can say aloud, and then stop. Every word of it is `assumed` until a person confirms it, and
 confirming is a read-back like any other (publication).
+
+#### Next, listen to the product story
 
 If nothing has arrived yet, say that plainly - it is itself worth knowing - and go straight to the
 question. Either way, ask this next, and listen to the whole answer:
@@ -143,8 +162,10 @@ find out today* is how you discover the dashboard, the alert or the spreadsheet 
 skills have to match, because whatever people already read is the vocabulary they will phrase their
 questions in.
 
-Then, in the **next** turn, **make the source handling promise, and only then ask for the
-documents** - in that order, because the promise is the reason they can say yes. In your own words:
+#### In the next turn, explain source handling and request useful material
+
+Then, in the **next** turn, **explain source handling, and only then ask for the
+documents** - in that order, so they can decide what to share. In your own words:
 you will write down the meanings you understood, never the source text, its comments, paths or
 symbols; they can review the resulting draft before publication within the agreed scope; anything sensitive that survives the
 paraphrase stays out until they say so. Then one short invitation - firmware, requirements or design
@@ -158,6 +179,7 @@ turn what you find into questions as you go - *"there is a Notefile called `env.
 field called `lvl` every hour; what is it?"* - because what you find alone means something only
 once you know which question it must serve.
 
+## 3. Enter the lesson loop
 
 After the opening, continue with the lesson loop. A continuation can
 start at its saved lesson; a revision can go directly to revisiting stored knowledge.
