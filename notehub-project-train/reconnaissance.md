@@ -1,7 +1,7 @@
 # Bounded reconnaissance for training
 
 Reuse access and the verified project. Never retrieve a
-token or build an Authorization header. Read [the live schema](https://api.notefile.net/openapi.yaml)
+token or build an Authorization header. Read [the mirrored schema](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml)
 for current contracts. The agent needs API mechanics; the project's product knowledge
 needs the durable meaning learned from them.
 

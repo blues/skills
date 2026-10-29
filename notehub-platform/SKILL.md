@@ -62,7 +62,7 @@ platform manual or repeat meanings already verified in the current context.
 
 Use these references for native field meanings and the current
 [API reference](https://dev.blues.io/api-reference/notehub-api/) and
-[OpenAPI specification](https://api.notefile.net/openapi.yaml)
+[OpenAPI specification](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml)
 for endpoint contracts. Apply the documented meanings directly. Check device firmware,
 hardware or configuration when a specific field depends on them, especially when
 interpreting historical records. If an actual

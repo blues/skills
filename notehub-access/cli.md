@@ -42,7 +42,7 @@ login works and refreshes; do not copy secrets into job configuration.
 ## Discover, then call
 
 Fetch the public schema with `notehub api --spec` or download
-[the live YAML](https://api.notefile.net/openapi.yaml). For another supported hub, use
+[the mirrored YAML](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml). For another supported hub, use
 `--spec --hub HUB` and keep that hub consistent in status, login and every call.
 Resolve the operation as described in API discovery.
 

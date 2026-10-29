@@ -1,6 +1,8 @@
-# Discovering and using the live API
+# Discovering and using the Notehub API
 
-The primary contract is [https://api.notefile.net/openapi.yaml](https://api.notefile.net/openapi.yaml).
+The primary contract is the [Notehub OpenAPI specification](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml).
+This unmodified mirror of the production schema is checked for updates every 30 minutes;
+scheduled checks can be delayed, so the copy can lag behind the service.
 Download the complete YAML without summarization, cache it for the task, and record its
 retrieval time/hub. Refresh it when changing hubs or when a response contradicts the
 contract. Public schema retrieval needs no credential. It does not authorize API writes.

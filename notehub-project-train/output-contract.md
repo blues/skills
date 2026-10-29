@@ -32,7 +32,7 @@ Near the top of the index, include a documentation routing table rather than cop
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resolve an API operation or response schema | [Live Notehub OpenAPI](https://api.notefile.net/openapi.yaml) | Apply the current endpoint contract through the selected transport |
+| Resolve an API operation or response schema | [Notehub OpenAPI](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml) | Apply the current endpoint contract through the selected transport |
 | Read endpoint explanations and examples | [Notehub API reference](https://dev.blues.io/api-reference/notehub-api/) | Check the applicable operation and behavior |
 | Interpret native fields or system Notefiles | [Shared native-field meanings](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Combine the relevant platform interpretation with product-specific meaning |
 
