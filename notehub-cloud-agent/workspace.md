@@ -15,10 +15,10 @@ already available reliably from the harness instead of maintaining duplicate rec
 
 | If you need to | Read | Then |
 |---|---|---|
-| Prepare the database and its maintenance task | [Cache preparation](cache-preparation.md) | Create and verify the two deliverables |
-| Store cached data and acquisition progress | [Cache database](cache.md) | Preserve project boundaries, exact checkpoints and honest coverage |
-| Run or resume scheduled work | [Job contracts](jobs.md) | Persist the inputs and progress that the work actually needs |
-| Implement a requested monitor or alert | [Monitors](../notehub-project-chat/monitors.md) | Store the state needed for its comparison and delivery behavior |
+| Prepare the database and its maintenance task | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Create and verify the two deliverables |
+| Store cached data and acquisition progress | [Cache database](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve project boundaries, exact checkpoints and honest coverage |
+| Run or resume scheduled work | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Persist the inputs and progress that the work actually needs |
+| Implement a requested monitor or alert | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Store the state needed for its comparison and delivery behavior |
 
 Keep credentials in the selected MCP or CLI. Commit fetched records with their cursor;
 commit monitor transitions with pending deliveries. Preserve user choices and delivery

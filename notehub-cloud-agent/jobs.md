@@ -14,16 +14,16 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Prepare project queries or requested monitor jobs | [Setup](setup.md) | Reuse the cache workers and verify the requested project capabilities |
-| Create the cache database and maintenance task during Access | [Cache preparation](cache-preparation.md) | Verify database persistence and scheduled execution before project enrollment |
-| Recover durable execution inputs and state | [Database state](workspace.md) | Use the recorded scope and configuration rather than conversation memory |
-| Implement monitor comparisons and alert delivery | [Monitor pseudocode](../notehub-project-chat/monitors.md#evaluation-and-delivery-pseudocode) | Adapt the algorithm to the requested monitor and actual delivery tools |
-| Establish bootstrap, coverage, concurrency or retention rules | [Cache](cache.md) | Preserve per-stream coverage and atomic checkpoints |
-| Fetch incremental changes for the acquisition job | [Modified cursors](../notehub-project-chat/modified-cursors.md) | Use the exact saved cursor, process successive batches and persist progress |
-| Refresh the knowledge used by questions and monitors | [Read product skills](../notehub-access/project-skills.md) | Check the metadata catalog and fetch needed changes without rewriting shared skills |
-| Define or revise a calculation before evaluating it | [Prepared questions](questions.md) | Use its validated meaning revision and evidence requirements |
-| Choose relevant findings and tone for engagement | [Engagement](../notehub-project-chat/engagement.md) | Produce due status reports or useful updates, respecting user preferences |
-| Refresh schemas and optimize recurring queries | [Query performance](query-performance.md) | Use daily schema checks, field-usage records and measured query plans |
+| Prepare project queries or requested monitor jobs | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Reuse the cache workers and verify the requested project capabilities |
+| Create the cache database and maintenance task during Access | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify database persistence and scheduled execution before project enrollment |
+| Recover durable execution inputs and state | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Use the recorded scope and configuration rather than conversation memory |
+| Implement monitor comparisons and alert delivery | [Monitor pseudocode](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#evaluation-and-delivery-pseudocode) | Adapt the algorithm to the requested monitor and actual delivery tools |
+| Establish bootstrap, coverage, concurrency or retention rules | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve per-stream coverage and atomic checkpoints |
+| Fetch incremental changes for the acquisition job | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Use the exact saved cursor, process successive batches and persist progress |
+| Refresh the knowledge used by questions and monitors | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Check the metadata catalog and fetch needed changes without rewriting shared skills |
+| Define or revise a calculation before evaluating it | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Use its validated meaning revision and evidence requirements |
+| Choose relevant findings and tone for engagement | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Produce due status reports or useful updates, respecting user preferences |
+| Refresh schemas and optimize recurring queries | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Use daily schema checks, field-usage records and measured query plans |
 
 ## Common execution context
 

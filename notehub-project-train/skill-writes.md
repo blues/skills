@@ -10,8 +10,8 @@ wrapping, timestamp-based filename or manual old-version cleanup.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Read the original baseline or current documents before merging | [Read product skills](../notehub-access/project-skills.md) | Retain exact content, kinds and revisions for every affected document |
-| Review meaning, publication scope and the continuing interview | [Training publication](publishing.md) | Follow the lesson's review, publish, verify and continue cycle |
+| Read the original baseline or current documents before merging | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain exact content, kinds and revisions for every affected document |
+| Review meaning, publication scope and the continuing interview | [Training publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Follow the lesson's review, publish, verify and continue cycle |
 
 ## Address the skill owner and document
 

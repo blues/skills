@@ -12,10 +12,10 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Record verified capabilities and their actual invocation paths | [Database state](workspace.md) | Keep durable nonsecret configuration and receipts |
-| Resolve project scope for a project-bound capability check | [Project Selection](../notehub-access/projects.md) | Return with the verified project; general environment preparation can use an account-level read |
-| Create the cache database and maintenance task during Access | [Cache preparation](cache-preparation.md) | Complete database installation and scheduled execution checks |
-| Configure project-specific capabilities requested by Chat | [Setup](setup.md) | Resume the first incomplete step using existing context |
+| Record verified capabilities and their actual invocation paths | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Keep durable nonsecret configuration and receipts |
+| Resolve project scope for a project-bound capability check | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified project; general environment preparation can use an account-level read |
+| Create the cache database and maintenance task during Access | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Complete database installation and scheduled execution checks |
+| Configure project-specific capabilities requested by Chat | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Resume the first incomplete step using existing context |
 
 Establish this capability record with actual tool documentation and a harmless read/test:
 

@@ -11,8 +11,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](../notehub-access/SKILL.md) | Return with the selected authenticated transport |
-| Resolve missing or changed project scope | [Project Selection](../notehub-access/projects.md) | Return with the verified data project and skill owner |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return with the selected authenticated transport |
+| Resolve missing or changed project scope | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified data project and skill owner |
 
 Start with schemas, a few recent event bodies, fleet/device descriptions and relevant
 nonsecret configuration. Look at full per-device Sessions when the question needs them.

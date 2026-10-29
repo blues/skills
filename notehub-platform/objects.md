@@ -6,11 +6,11 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Interpret reported versions or DFU state | [Firmware](firmware.md) | Distinguish desired, reported and effective firmware |
-| Interpret Event or Device location families | [Location](location.md) | Use the correct provenance and timestamp |
-| Interpret connection snapshots, session usage or activity | [Sessions](sessions.md) | Choose full Session records or Event metadata as appropriate |
-| Interpret power state, supply readings or charge accumulators | [Power](power.md) | Apply units, reset and charging rules before deriving energy claims |
-| Interpret health logs or diagnostic history | [Health](health.md) | Check the producer, filtering and completeness of the evidence |
+| Interpret reported versions or DFU state | [Firmware](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/firmware.md) | Distinguish desired, reported and effective firmware |
+| Interpret Event or Device location families | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) | Use the correct provenance and timestamp |
+| Interpret connection snapshots, session usage or activity | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md) | Choose full Session records or Event metadata as appropriate |
+| Interpret power state, supply readings or charge accumulators | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) | Apply units, reset and charging rules before deriving energy claims |
+| Interpret health logs or diagnostic history | [Health](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/health.md) | Check the producer, filtering and completeness of the evidence |
 
 ## Choose the evidence
 

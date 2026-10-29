@@ -16,13 +16,13 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](../notehub-access/SKILL.md) | Return with one verified connection and environment context |
-| Resolve missing project or inherited skill-owner context | [Project Selection](../notehub-access/projects.md) | Return with the verified data project and skill owner |
-| Discover or read product skills not already available | [Read product skills](../notehub-access/project-skills.md) | List names and kinds, then fetch relevant documents, or get the full set with content in one call |
-| Interpret native objects or system fields used by the question | [Platform](../notehub-platform/SKILL.md) | Apply the relevant native meanings alongside product rules |
-| Prepare executable cloud questions from the working catalog | [Prepared questions](../notehub-cloud-agent/questions.md) | Bind queries and candidate monitors to semantic recipes |
-| Teach or correct shared meaning when requested | [Training](../notehub-project-train/SKILL.md) | Review and publish the correction within scope |
-| Answer after the relevant meaning is loaded | [Project chat](SKILL.md) | Query suitable evidence and return the answer |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return with one verified connection and environment context |
+| Resolve missing project or inherited skill-owner context | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified data project and skill owner |
+| Discover or read product skills not already available | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | List names and kinds, then fetch relevant documents, or get the full set with content in one call |
+| Interpret native objects or system fields used by the question | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Apply the relevant native meanings alongside product rules |
+| Prepare executable cloud questions from the working catalog | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Bind queries and candidate monitors to semantic recipes |
+| Teach or correct shared meaning when requested | [Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Review and publish the correction within scope |
+| Answer after the relevant meaning is loaded | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Query suitable evidence and return the answer |
 
 ## Find the entrance to the stored set
 
@@ -130,10 +130,10 @@ Return the loaded product context to the step that called this reference.
 
 | If you arrived from | Continue with | Then |
 |---|---|---|
-| Initial project preparation | [Entry guide](../notehub/SKILL.md#4-check-cloud-cache-readiness) | Check cloud cache readiness when applicable, then enter the requested activity |
-| A question or follow-up | [Project Chat](SKILL.md) | Query suitable evidence using the relevant product and platform meaning |
-| Cloud setup | [Project setup](../notehub-cloud-agent/setup.md) | Resume its first incomplete step with the loaded knowledge |
-| A dedicated training request | [Project Training](../notehub-project-train/SKILL.md) | Complete the full baseline and continue the interview |
+| Initial project preparation | [Entry guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-check-cloud-cache-readiness) | Check cloud cache readiness when applicable, then enter the requested activity |
+| A question or follow-up | [Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Query suitable evidence using the relevant product and platform meaning |
+| Cloud setup | [Project setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Resume its first incomplete step with the loaded knowledge |
+| A dedicated training request | [Project Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Complete the full baseline and continue the interview |
 
 Once the applicable preparation is complete, a “load” request can end with “Ready for
 the selected project; I can help with …” using actual supported question families and

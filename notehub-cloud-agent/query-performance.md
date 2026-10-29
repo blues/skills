@@ -9,10 +9,10 @@ product meaning and the raw data needed to rebuild derived structures.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Create the cache database and maintenance task | [Cache preparation](cache-preparation.md) | Verify both deliverables and enroll projects on first use |
-| Choose entity identities and retention rules | [Cache](cache.md) | Keep records project-scoped and preserve raw evidence |
-| Run the task's daily review phase | [Maintenance](jobs.md#maintenance) | Refresh schemas, purge eligible history and record optimization results |
-| Interpret a queried product field | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Apply units, validity and recipe dependencies before changing a projection |
+| Create the cache database and maintenance task | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify both deliverables and enroll projects on first use |
+| Choose entity identities and retention rules | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Keep records project-scoped and preserve raw evidence |
+| Run the task's daily review phase | [Maintenance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#maintenance) | Refresh schemas, purge eligible history and record optimization results |
+| Interpret a queried product field | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Apply units, validity and recipe dependencies before changing a projection |
 
 ## Keep a record of fields queried
 

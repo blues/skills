@@ -15,12 +15,12 @@ connection and existing infrastructure; retain pauses, limits and chosen schedul
 
 | If you need to | Read | Then |
 |---|---|---|
-| Verify durable execution, storage or the authenticated background path | [Harness capabilities](harness.md) | Establish the actual environment before registering the task |
-| Decide what must survive between runs | [Database state](workspace.md) | Store the minimum needed to resume work; choose the representation |
-| Define tables, identities, bootstrap and retention | [Cache](cache.md) | Preserve project boundaries, raw evidence and exact checkpoints |
-| Implement the maintenance task's fill and daily review phases | [Job contracts](jobs.md) | Connect acquisition, purge, schema refresh and optimization to real scheduled execution |
-| Keep schemas and query performance current | [Query performance](query-performance.md) | Record queried fields and use daily schema and workload review to optimize |
-| Prepare product-specific questions or requested monitors | [Project setup](setup.md) | Build on the installed runtime and enrolled cache |
+| Verify durable execution, storage or the authenticated background path | [Harness capabilities](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md) | Establish the actual environment before registering the task |
+| Decide what must survive between runs | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Store the minimum needed to resume work; choose the representation |
+| Define tables, identities, bootstrap and retention | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve project boundaries, raw evidence and exact checkpoints |
+| Implement the maintenance task's fill and daily review phases | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Connect acquisition, purge, schema refresh and optimization to real scheduled execution |
+| Keep schemas and query performance current | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Record queried fields and use daily schema and workload review to optimize |
+| Prepare product-specific questions or requested monitors | [Project setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Build on the installed runtime and enrolled cache |
 
 ## Find a shared home for one Notehub Cache
 

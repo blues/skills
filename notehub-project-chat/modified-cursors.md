@@ -10,10 +10,10 @@ On the user's Cloud Computer, resume saved cursors at each periodic acquisition 
 
 | If you need to | Read | Then |
 |---|---|---|
-| Choose evidence for a question | [Query planning](querying.md) | Use sufficient cached evidence, a repository or a bounded live read |
-| Prepare recurring caching or enroll a newly referenced project | [Cache preparation](../notehub-cloud-agent/cache-preparation.md) | Reuse the cache database and maintenance task and verify each project's saved checkpoints |
-| Apply changes to a maintained cache | [Cache](../notehub-cloud-agent/cache.md) | Preserve atomic checkpoints, deletion handling, coverage and retention |
-| Resolve an entity's cursor parameters or response shape | [API discovery](../notehub-access/api.md) | Read the current contract and invoke it through the selected connection |
+| Choose evidence for a question | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use sufficient cached evidence, a repository or a bounded live read |
+| Prepare recurring caching or enroll a newly referenced project | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the cache database and maintenance task and verify each project's saved checkpoints |
+| Apply changes to a maintained cache | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve atomic checkpoints, deletion handling, coverage and retention |
+| Resolve an entity's cursor parameters or response shape | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Read the current contract and invoke it through the selected connection |
 
 ## Read and resume batches
 

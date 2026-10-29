@@ -8,7 +8,7 @@ description: Train or revise a Notehub project's shared product knowledge throug
 Learn **what people mean and what the data means**, preserving the hard-won knowledge
 already stored. Product skills bridge a customer's real question to the records that
 answer it. API mechanics belong in these shared workflow skills, not in each product's
-knowledge. Follow [working style](../notehub/working-style.md).
+knowledge. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 Training is a continuing interview that improves the shared skills on every pass.
 Choose a useful gap, investigate, ask, draft, review and save within the authorized
@@ -25,21 +25,21 @@ already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](../notehub-access/SKILL.md) | Retain the verified connection and environment capabilities |
-| Select or verify the project and its skill owner | [Project Selection](../notehub-access/projects.md) | Retain the data project, inherited skill owner and relevant permissions |
-| Read the complete immutable training baseline | [Read product skills](../notehub-access/project-skills.md) | Save all content, kinds and revisions, including unlinked files |
-| Start, resume or revise an interview | [Interview workflow](interview.md) | Choose the opening that matches the request and saved handoff |
-| Orient an initial interview with a small data scan | [Bounded reconnaissance](reconnaissance.md) | Return with observations and hypotheses clearly separated |
-| Choose the owner and organization of a finding | [Knowledge model](knowledge-model.md) | Preserve useful layout and one owner per fact |
-| Record evidence or reconcile conflicting claims | [Evidence and contradictions](evidence.md) | Retain provenance, confidence and applicability |
-| Choose and conduct the next useful lesson | [Lesson loop](lessons.md) | Ask focused questions and update the resumable handoff |
-| Document fields, configuration and validity | [Field inventory](inventory.md) | Cover meaning, validity, significance and action |
-| Turn real questions into grounded answers | [Answer shapes and recipes](recipes.md) | Record dependencies, reductions, coverage and limits |
-| Interpret native Notehub or Notecard data | [Platform meanings](../notehub-platform/SKILL.md) | Reuse shared definitions and record only product-specific interpretation |
-| Request or use restricted documents | [Source handling](sources.md) | Explain actual handling before requesting the material |
-| Review and publish a lesson or correction | [Publication workflow](publishing.md) | Apply conditional revisions and verify exact readback |
-| Close a session or check the resulting skill set | [Output contract](output-contract.md) | Report solid, thin and unreached knowledge and the next actionable question |
-| Check that another agent can use the published knowledge | [Reader workflow](../notehub-project-chat/product-knowledge.md) | Follow its questions and dependencies without the training conversation |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Retain the verified connection and environment capabilities |
+| Select or verify the project and its skill owner | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Retain the data project, inherited skill owner and relevant permissions |
+| Read the complete immutable training baseline | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Save all content, kinds and revisions, including unlinked files |
+| Start, resume or revise an interview | [Interview workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/interview.md) | Choose the opening that matches the request and saved handoff |
+| Orient an initial interview with a small data scan | [Bounded reconnaissance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/reconnaissance.md) | Return with observations and hypotheses clearly separated |
+| Choose the owner and organization of a finding | [Knowledge model](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/knowledge-model.md) | Preserve useful layout and one owner per fact |
+| Record evidence or reconcile conflicting claims | [Evidence and contradictions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/evidence.md) | Retain provenance, confidence and applicability |
+| Choose and conduct the next useful lesson | [Lesson loop](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md) | Ask focused questions and update the resumable handoff |
+| Document fields, configuration and validity | [Field inventory](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/inventory.md) | Cover meaning, validity, significance and action |
+| Turn real questions into grounded answers | [Answer shapes and recipes](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/recipes.md) | Record dependencies, reductions, coverage and limits |
+| Interpret native Notehub or Notecard data | [Platform meanings](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Reuse shared definitions and record only product-specific interpretation |
+| Request or use restricted documents | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Explain actual handling before requesting the material |
+| Review and publish a lesson or correction | [Publication workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Apply conditional revisions and verify exact readback |
+| Close a session or check the resulting skill set | [Output contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/output-contract.md) | Report solid, thin and unreached knowledge and the next actionable question |
+| Check that another agent can use the published knowledge | [Reader workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Follow its questions and dependencies without the training conversation |
 
 ## Carry out the training workflow
 

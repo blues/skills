@@ -11,9 +11,9 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resolve a mismatch between tracking records and the expected meaning | [Interpretation checks](verification.md) | Check the specific producer, mode, configuration and field involved |
-| Interpret coordinates attached to tracking Events | [Location](location.md) | Combine body meaning with the correct envelope location and time |
-| Interpret Mojo charge in tracking records | [Power](power.md) | Account for resets, decreases and charging |
+| Resolve a mismatch between tracking records and the expected meaning | [Interpretation checks](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/verification.md) | Check the specific producer, mode, configuration and field involved |
+| Interpret coordinates attached to tracking Events | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) | Combine body meaning with the correct envelope location and time |
+| Interpret Mojo charge in tracking records | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) | Account for resets, decreases and charging |
 
 ## One file, several kinds of records
 

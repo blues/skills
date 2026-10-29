@@ -11,7 +11,7 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Interpret journeys, fences or movement history | [Tracking](tracking.md) | Combine tracking-body meaning with location provenance and time |
+| Interpret journeys, fences or movement history | [Tracking](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md) | Combine tracking-body meaning with location provenance and time |
 
 ## Equivalent concepts have different paths
 

@@ -10,7 +10,7 @@ Task. DuckDB is the current database of choice. Project Selection enrolls projec
 first use in Chat or Training. Project Chat
 uses the maintained evidence and runs the user's periodic work. Keep the conversation and its question,
 monitor or engagement intent in Chat; return there after completing the needed setup.
-Prefer cloud mode where supported. Follow [working style](../notehub/working-style.md).
+Prefer cloud mode where supported. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 ## Prepare the Cloud Computer for Access
 
@@ -25,10 +25,10 @@ task. Make them discoverable through the cache folder's README and a shared memo
 
 | If you need to | Read | Then |
 |---|---|---|
-| Create the Notehub Cache Database and Notehub Cache Maintenance Task | [Cache preparation](cache-preparation.md) | Verify database persistence, register the task and retain actual execution receipts |
-| Locate or prepare the cache for multiple bots or channels | [Shared cache location](cache-preparation.md#find-a-shared-home-for-one-notehub-cache) | Reuse one durable shared cache; publish its README and shared memory location |
-| Establish the environment's capabilities and invocation paths | [Harness capabilities](harness.md) | Record supported storage, runtime, unattended access, scheduling and delivery |
-| Decide what to persist between runs | [Database state](workspace.md) | Keep state minimal and choose its organization to suit the work |
+| Create the Notehub Cache Database and Notehub Cache Maintenance Task | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Verify database persistence, register the task and retain actual execution receipts |
+| Locate or prepare the cache for multiple bots or channels | [Shared cache location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md#find-a-shared-home-for-one-notehub-cache) | Reuse one durable shared cache; publish its README and shared memory location |
+| Establish the environment's capabilities and invocation paths | [Harness capabilities](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md) | Record supported storage, runtime, unattended access, scheduling and delivery |
+| Decide what to persist between runs | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Keep state minimal and choose its organization to suit the work |
 
 Before a project is selected, verify an appropriate harmless account-level read and the
 maintenance task's idle behavior. On each project's first user reference, verify its binding and
@@ -42,27 +42,27 @@ notifications follow the requested Chat workflow.
 
 | Current situation | Read | Then |
 |---|---|---|
-| The user first references a project on the Cloud Computer | [Project enrollment](cache-preparation.md#enroll-a-project-on-first-use) | Verify its identity/read access and add it to the cache maintenance task's registry |
-| An enrolled project needs Chat preparation | [Setup](setup.md) | Reuse its cache infrastructure and prepare useful queries and requested recurring work |
-| Existing configured assistant, ordinary question | [Project Chat](../notehub-project-chat/SKILL.md) | Return with the workspace and prepared plans; answer from suitable evidence |
-| New or changed monitor/alert | [Monitors](../notehub-project-chat/monitors.md), then [Activation](setup.md#activate-recurring-work) | Reuse setup, define the monitor, install it and verify it runs |
-| Scheduled execution | [Job contracts](jobs.md) | Execute the relevant contract with the durable workspace |
-| Failed job, changed meaning, pause, removal or handoff | [Lifecycle](lifecycle.md) | Apply the change and verify the resulting state |
+| The user first references a project on the Cloud Computer | [Project enrollment](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md#enroll-a-project-on-first-use) | Verify its identity/read access and add it to the cache maintenance task's registry |
+| An enrolled project needs Chat preparation | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Reuse its cache infrastructure and prepare useful queries and requested recurring work |
+| Existing configured assistant, ordinary question | [Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Return with the workspace and prepared plans; answer from suitable evidence |
+| New or changed monitor/alert | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md), then [Activation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md#activate-recurring-work) | Reuse setup, define the monitor, install it and verify it runs |
+| Scheduled execution | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Execute the relevant contract with the durable workspace |
+| Failed job, changed meaning, pause, removal or handoff | [Lifecycle](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/lifecycle.md) | Apply the change and verify the resulting state |
 
 ## Read implementation guidance when needed
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](../notehub-access/SKILL.md) | Return to setup using the same verified connection |
-| Resolve missing or changed project scope | [Project Selection](../notehub-access/projects.md) | Return with the verified data project and skill owner |
-| Load or refresh custom product meaning | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Ground the relevant questions in the project's recipes and dependencies |
-| Interpret native records used by a question | [Platform](../notehub-platform/SKILL.md) | Apply the relevant native definitions |
-| Design maintained evidence and coverage | [Cache](cache.md) | Implement its transaction, concurrency and retention requirements |
-| Refresh schemas or improve query performance | [Query performance](query-performance.md) | Record queried fields and perform daily schema and measured optimization review |
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](../notehub-project-chat/modified-cursors.md) | Retrieve changes in batches through the selected MCP or CLI connection |
-| Implement incremental ingestion | [Batch ingestion pseudocode](jobs.md#batch-ingestion-pseudocode) | Adapt the algorithm to the harness and verify checkpoint/restart behavior |
-| Implement monitor comparisons and delivery | [Monitor pseudocode](../notehub-project-chat/monitors.md#evaluation-and-delivery-pseudocode) | Validate the requested behavior using the harness's own tools |
-| Configure useful proactive engagement | [Engagement](../notehub-project-chat/engagement.md) | Apply its relevance and timing rules during setup or scheduled execution |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return to setup using the same verified connection |
+| Resolve missing or changed project scope | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified data project and skill owner |
+| Load or refresh custom product meaning | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Ground the relevant questions in the project's recipes and dependencies |
+| Interpret native records used by a question | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Apply the relevant native definitions |
+| Design maintained evidence and coverage | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Implement its transaction, concurrency and retention requirements |
+| Refresh schemas or improve query performance | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Record queried fields and perform daily schema and measured optimization review |
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Retrieve changes in batches through the selected MCP or CLI connection |
+| Implement incremental ingestion | [Batch ingestion pseudocode](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#batch-ingestion-pseudocode) | Adapt the algorithm to the harness and verify checkpoint/restart behavior |
+| Implement monitor comparisons and delivery | [Monitor pseudocode](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#evaluation-and-delivery-pseudocode) | Validate the requested behavior using the harness's own tools |
+| Configure useful proactive engagement | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Apply its relevance and timing rules during setup or scheduled execution |
 
 Setup reuses Access and the relevant platform/product knowledge; it does not
 start a second authentication flow. Verify durable storage, scheduled execution and an

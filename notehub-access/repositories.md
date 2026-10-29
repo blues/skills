@@ -12,9 +12,9 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resolve the product meaning needed by the query | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Load the relevant recipe and meaning dependencies |
-| Interpret native fields in the dataset | [Platform](../notehub-platform/SKILL.md) | Verify the data surface and its semantics |
-| Choose live evidence when repository coverage is unsuitable | [Query planning](../notehub-project-chat/querying.md) | Use the selected transport and disclose remaining coverage limits |
+| Resolve the product meaning needed by the query | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Load the relevant recipe and meaning dependencies |
+| Interpret native fields in the dataset | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Verify the data surface and its semantics |
+| Choose live evidence when repository coverage is unsuitable | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use the selected transport and disclose remaining coverage limits |
 
 Bind the repository/dataset to the verified project. Inspect its schema and bounded
 sample before writing a query: Event envelopes, flattened bodies, full Sessions and

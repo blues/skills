@@ -11,8 +11,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Test entry into the set as a later answering agent | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Find a recipe and follow its meaning dependencies without interview context |
-| Include citations or material derived from sources | [Source handling](sources.md) | Preserve approved public citations and applicable sharing restrictions |
+| Test entry into the set as a later answering agent | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Find a recipe and follow its meaning dependencies without interview context |
+| Include citations or material derived from sources | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Preserve approved public citations and applicable sharing restrictions |
 
 ## Make the product set usable
 
@@ -34,7 +34,7 @@ Near the top of the index, include a documentation routing table rather than cop
 |---|---|---|
 | Resolve an API operation or response schema | [Live Notehub OpenAPI](https://api.notefile.net/openapi.yaml) | Apply the current endpoint contract through the selected transport |
 | Read endpoint explanations and examples | [Notehub API reference](https://dev.blues.io/api-reference/notehub-api/) | Check the applicable operation and behavior |
-| Interpret native fields or system Notefiles | [Shared native-field meanings](https://{{.DOMAIN}}/notehub-platform/SKILL.md) | Combine the relevant platform interpretation with product-specific meaning |
+| Interpret native fields or system Notefiles | [Shared native-field meanings](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Combine the relevant platform interpretation with product-specific meaning |
 
 Approved public product citations may also be useful; apply source handling.
 The reader already holds the project it fetched these skills from. Runtime UIDs, access

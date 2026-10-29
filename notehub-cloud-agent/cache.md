@@ -24,13 +24,13 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Create the database, register its maintenance task or enroll another project | [Cache preparation](cache-preparation.md) | Reuse the shared infrastructure and verify per-project readiness |
-| Decide what to persist beyond cached data | [Database state](workspace.md) | Add only what later runs need and preserve it during cache rebuilds |
-| Run the acquisition worker | [Acquisition job contract](jobs.md#acquisition) | Execute bounded work with persisted scope and checkpoints |
-| Choose typed projections from product meaning | [Prepared questions](questions.md) | Project only grounded fields and calculations needed by useful questions |
-| Acquire or refresh stored product knowledge | [Read product skills](../notehub-access/project-skills.md) | List names and kinds, read relevant documents or the full set, and reuse unchanged content |
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](../notehub-project-chat/modified-cursors.md) | Use each endpoint's exact cursor and deletion contract |
-| Maintain schemas and optimize the fields actually queried | [Query performance](query-performance.md) | Track field usage and review physical design daily |
+| Create the database, register its maintenance task or enroll another project | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the shared infrastructure and verify per-project readiness |
+| Decide what to persist beyond cached data | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Add only what later runs need and preserve it during cache rebuilds |
+| Run the acquisition worker | [Acquisition job contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#acquisition) | Execute bounded work with persisted scope and checkpoints |
+| Choose typed projections from product meaning | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Project only grounded fields and calculations needed by useful questions |
+| Acquire or refresh stored product knowledge | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | List names and kinds, read relevant documents or the full set, and reuse unchanged content |
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Use each endpoint's exact cursor and deletion contract |
+| Maintain schemas and optimize the fields actually queried | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Track field usage and review physical design daily |
 
 ## Choose the database organization
 

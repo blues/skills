@@ -12,11 +12,11 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Interpret native quantities, records, location or time | [Platform](../notehub-platform/SKILL.md) | Resolve the native meanings used by the calculation |
-| Load or refresh the product meaning behind a question | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Resolve the recipe and all consequential dependencies |
-| Turn a requested question into a monitor | [Monitors](../notehub-project-chat/monitors.md) | Define its predicate, freshness, state and delivery semantics |
-| Make an authorized monitor run | [Activation](setup.md#activate-recurring-work) | Install, exercise and verify the actual scheduled work |
-| Optimize the plan from real usage | [Query performance](query-performance.md) | Record fields and measured performance for daily schema and layout review |
+| Interpret native quantities, records, location or time | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Resolve the native meanings used by the calculation |
+| Load or refresh the product meaning behind a question | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Resolve the recipe and all consequential dependencies |
+| Turn a requested question into a monitor | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Define its predicate, freshness, state and delivery semantics |
+| Make an authorized monitor run | [Activation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md#activate-recurring-work) | Install, exercise and verify the actual scheduled work |
+| Optimize the plan from real usage | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Record fields and measured performance for daily schema and layout review |
 
 ## From recipe to executable plan
 

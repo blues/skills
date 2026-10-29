@@ -10,12 +10,12 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Make the stored set easy for a later agent to enter | [Output contract](output-contract.md) | Provide an index, question routes and honest answerability |
-| Define how questions map to evidence and presentation | [Answer shapes and recipes](recipes.md) | Connect the customer wording to meaning, calculation and output |
-| Document every Notefile and field | [Field inventory](inventory.md) | Cover all four rungs and preserve the owning definition |
-| Orient the trainer with bounded project evidence | [Reconnaissance](reconnaissance.md) | Keep API mechanics in working context rather than product knowledge |
-| Interpret native fields | [Platform](../notehub-platform/SKILL.md) | Reuse shared definitions and record product-specific applicability |
-| Derive knowledge from supplied documents | [Source handling](sources.md) | Respect sharing restrictions and retain useful provenance |
+| Make the stored set easy for a later agent to enter | [Output contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/output-contract.md) | Provide an index, question routes and honest answerability |
+| Define how questions map to evidence and presentation | [Answer shapes and recipes](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/recipes.md) | Connect the customer wording to meaning, calculation and output |
+| Document every Notefile and field | [Field inventory](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/inventory.md) | Cover all four rungs and preserve the owning definition |
+| Orient the trainer with bounded project evidence | [Reconnaissance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/reconnaissance.md) | Keep API mechanics in working context rather than product knowledge |
+| Interpret native fields | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Reuse shared definitions and record product-specific applicability |
+| Derive knowledge from supplied documents | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Respect sharing restrictions and retain useful provenance |
 
 ## What you are doing, and why
 
@@ -93,7 +93,7 @@ set small and the kinds rich. The Area column below identifies a knowledge area,
 a separate required file.
 
 These knowledge categories classify knowledge stored in a project; they are not the
-discovery mechanism for shared skills on {{.DOMAIN}}. No new kind is needed merely
+discovery mechanism for the [shared Notehub skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md). No new kind is needed merely
 because a finding concerns platform data. Use `notefiles`, `derivation`, `sentinels`,
 `scenarios`, `config` and `recipe` for the project's application of that data. `usage`
 continues to mean how the customer's machine is worked, not cellular byte accounting.

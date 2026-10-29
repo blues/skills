@@ -12,14 +12,14 @@ customer-defined bodies need the project's own skills.
 
 For live project work, reuse the verified project and authorization.
 
-Use [working style](../notehub/working-style.md). Familiar identities and already verified
+Use [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md). Familiar identities and already verified
 field meanings do not require a glossary detour.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Answer a live project question or perform a requested operation | [Project chat](../notehub-project-chat/SKILL.md) | Carry the platform interpretation into the project's question workflow |
-| Understand unfamiliar object relationships | [Notehub concepts](concepts.md) | Return with the relevant identities and relationships understood |
-| Resolve an easily confused field or a mismatch in observed data | [Interpretation checks](verification.md) | Apply the correct meaning and isolate any specific discrepancy |
+| Answer a live project question or perform a requested operation | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Carry the platform interpretation into the project's question workflow |
+| Understand unfamiliar object relationships | [Notehub concepts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/concepts.md) | Return with the relevant identities and relationships understood |
+| Resolve an easily confused field or a mismatch in observed data | [Interpretation checks](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/verification.md) | Apply the correct meaning and isolate any specific discrepancy |
 
 ## Route the question
 
@@ -28,15 +28,15 @@ platform manual or repeat meanings already verified in the current context.
 
 | The person asks about | Start with | Read |
 |---|---|---|
-| Choosing a native data surface or interpreting unfamiliar Event metadata/time | Endpoint response, producer and clock | [Objects, metadata and time](objects.md) |
-| Firmware version, rollout, update stuck or failed | Device's last-reported firmware, target-specific DFU status/history, effective desired configuration | [Firmware](firmware.md) |
-| Online, offline, check-ins, sessions, weak signal, connection failures | Device freshness and Session records; `_session.qo` for event history | [Sessions and connectivity](sessions.md), [Health and system files](health.md) |
-| Notecard data usage, traffic, plan balance | Session period counters for traffic; SIM usage for plan accounting; Usage API for Notehub consumption | [Sessions and connectivity](sessions.md) |
-| Position, GPS versus cell tower or Wi-Fi location | Event location families for history; Device locations for latest known position | [Location](location.md) |
-| Journeys, speed, bearing, distance, geofences | Tracking bodies together with Event location metadata; journey API only with its filtering understood | [Tracking and journeys](tracking.md), [Location](location.md) |
-| Modem power cycles, battery life, energy, charging | Session high-power counters, Mojo measurements, `_power.qo` transitions; product battery model | [Power](power.md) |
-| Reboots, diagnostics, motion, temperature, button events | `_health.qo`, `_health_host.qo`, `_log.qo` and the relevant system file | [Health and system files](health.md) |
-| Project, Fleet, Device or Event fields; a field not listed here | Exact endpoint response and schema, then its producer and project meaning | [Objects, metadata and time](objects.md) |
+| Choosing a native data surface or interpreting unfamiliar Event metadata/time | Endpoint response, producer and clock | [Objects, metadata and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) |
+| Firmware version, rollout, update stuck or failed | Device's last-reported firmware, target-specific DFU status/history, effective desired configuration | [Firmware](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/firmware.md) |
+| Online, offline, check-ins, sessions, weak signal, connection failures | Device freshness and Session records; `_session.qo` for event history | [Sessions and connectivity](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md), [Health and system files](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/health.md) |
+| Notecard data usage, traffic, plan balance | Session period counters for traffic; SIM usage for plan accounting; Usage API for Notehub consumption | [Sessions and connectivity](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md) |
+| Position, GPS versus cell tower or Wi-Fi location | Event location families for history; Device locations for latest known position | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
+| Journeys, speed, bearing, distance, geofences | Tracking bodies together with Event location metadata; journey API only with its filtering understood | [Tracking and journeys](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md), [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
+| Modem power cycles, battery life, energy, charging | Session high-power counters, Mojo measurements, `_power.qo` transitions; product battery model | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) |
+| Reboots, diagnostics, motion, temperature, button events | `_health.qo`, `_health_host.qo`, `_log.qo` and the relevant system file | [Health and system files](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/health.md) |
+| Project, Fleet, Device or Event fields; a field not listed here | Exact endpoint response and schema, then its producer and project meaning | [Objects, metadata and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) |
 
 ## Use the platform meaning with the product meaning
 

@@ -73,11 +73,11 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Ground the monitor calculation in platform/product meaning | [Prepared questions](../notehub-cloud-agent/questions.md) | Use the verified plan and its coverage/freshness requirements |
-| Install or change an authorized monitor | [Activation](../notehub-cloud-agent/setup.md#activate-recurring-work) | Register, exercise and verify its real job and delivery path |
-| Implement scheduled evaluation and delivery | [Job contracts](../notehub-cloud-agent/jobs.md) | Supply durable inputs, incident state, outbox and execution receipts |
-| Pause, resume, remove or repair a monitor | [Lifecycle](../notehub-cloud-agent/lifecycle.md) | Verify the actual scheduler and delivery state |
-| Add periodic status or contextual updates around monitors | [Engagement](engagement.md) | Respect the separate status cadence and user interests |
+| Ground the monitor calculation in platform/product meaning | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Use the verified plan and its coverage/freshness requirements |
+| Install or change an authorized monitor | [Activation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md#activate-recurring-work) | Register, exercise and verify its real job and delivery path |
+| Implement scheduled evaluation and delivery | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Supply durable inputs, incident state, outbox and execution receipts |
+| Pause, resume, remove or repair a monitor | [Lifecycle](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/lifecycle.md) | Verify the actual scheduler and delivery state |
+| Add periodic status or contextual updates around monitors | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Respect the separate status cadence and user interests |
 
 ## Deterministic checks, thoughtful delivery
 

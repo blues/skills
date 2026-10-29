@@ -11,8 +11,8 @@ whole collection with content in one call. Reuse current material already fetche
 
 | If you need to | Read | Then |
 |---|---|---|
-| Use stored knowledge to answer questions or prepare monitors | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Follow the product index, relevant recipes and their meaning dependencies |
-| Teach or revise shared knowledge at the user's request | [Project Training](../notehub-project-train/SKILL.md) | Enter the dedicated interview and publication workflow; skill writes belong there |
+| Use stored knowledge to answer questions or prepare monitors | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Follow the product index, relevant recipes and their meaning dependencies |
+| Teach or revise shared knowledge at the user's request | [Project Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Enter the dedicated interview and publication workflow; skill writes belong there |
 
 ## Choose how to read
 

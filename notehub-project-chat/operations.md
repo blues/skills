@@ -10,10 +10,10 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Perform the change through MCP | [Notehub MCP: an authenticated request proxy](../notehub-access/mcp.md) | Use the correct execution tier and operation-specific guards |
-| Perform the change through the CLI | [Notehub CLI: an authenticated request proxy](../notehub-access/cli.md) | Use the installed agent guide and authenticated API proxy |
-| Resolve the current request or response contract | [API discovery](../notehub-access/api.md) | Check operation parameters and verification evidence |
-| Configure a requested monitor or alert | [Monitors and alerts](monitors.md) | Define it and follow activation through verified execution |
+| Perform the change through MCP | [Notehub MCP: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use the correct execution tier and operation-specific guards |
+| Perform the change through the CLI | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Use the installed agent guide and authenticated API proxy |
+| Resolve the current request or response contract | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Check operation parameters and verification evidence |
+| Configure a requested monitor or alert | [Monitors and alerts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Define it and follow activation through verified execution |
 
 1. Resolve the exact target and inspect its state. For a bulk action, enumerate or count
    the selected population and verify the filter. An empty filter must never silently

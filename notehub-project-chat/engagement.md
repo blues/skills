@@ -11,9 +11,9 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Configure authorized engagement opportunities and delivery | [Activation](../notehub-cloud-agent/setup.md#activate-recurring-work) | Register the real schedule and verify the delivery path |
-| Run a scheduled engagement opportunity | [Engagement job contract](../notehub-cloud-agent/jobs.md#engagement) | Evaluate prepared questions, record the outcome and send only useful findings |
-| Define or change the monitor behind an update | [Monitors](monitors.md) | Keep the question, evaluator, alert rule and status preferences connected |
+| Configure authorized engagement opportunities and delivery | [Activation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md#activate-recurring-work) | Register the real schedule and verify the delivery path |
+| Run a scheduled engagement opportunity | [Engagement job contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#engagement) | Evaluate prepared questions, record the outcome and send only useful findings |
+| Define or change the monitor behind an update | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Keep the question, evaluator, alert rule and status preferences connected |
 
 The purpose is to help the person notice relevant changes and make better decisions,
 not to fill a notification quota. Maintain a small, user-editable interest record:

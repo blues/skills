@@ -12,9 +12,9 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Interpret Mojo charge in diagnostic messages | [Power](power.md) | Account for resets and charging before deriving usage |
-| Determine whether firmware actually updated | [DFU state](firmware.md) | Combine log evidence with target-specific status and reported firmware |
-| Resolve an ambiguous native field or a mismatch in observed data | [Interpretation checks](verification.md) | Apply the relevant field meaning and isolate the discrepancy |
+| Interpret Mojo charge in diagnostic messages | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) | Account for resets and charging before deriving usage |
+| Determine whether firmware actually updated | [DFU state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/firmware.md) | Combine log evidence with target-specific status and reported firmware |
+| Resolve an ambiguous native field or a mismatch in observed data | [Interpretation checks](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/verification.md) | Apply the relevant field meaning and isolate the discrepancy |
 
 ## System-file map
 
@@ -23,9 +23,9 @@ Read the rows that apply to the current step; reuse context already established.
 | `_health.qo` | Notecard operational/health messages, including boot and DFU diagnostics | Log schema below |
 | `_health_host.qo` | Host-submitted health messages through the Notecard | Same basic log shape; host's method/text vocabulary requires project knowledge |
 | `_log.qo` | Configured Notecard diagnostics, often more verbose and subsystem-specific | Log schema below; emission is conditional |
-| `_session.qo` | Notehub-generated communication start/end Events | [Sessions](sessions.md); much of the data is Event metadata, not body |
-| `_track.qo` or configured tracking file | Notecard tracking and supported Notehub fence transitions | [Tracking](tracking.md), [location](location.md) |
-| `_power.qo` | Supported Notecard USB/charging source transitions | [Power](power.md) |
+| `_session.qo` | Notehub-generated communication start/end Events | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md); much of the data is Event metadata, not body |
+| `_track.qo` or configured tracking file | Notecard tracking and supported Notehub fence transitions | [Tracking](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md), [location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
+| `_power.qo` | Supported Notecard USB/charging source transitions | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) |
 | `_motion.qo` or configured motion file | Notecard accelerometer reporting | Motion schema below |
 | `_temp.qo` | Configured automatic temperature/diagnostic reporting | Temperature schema below |
 | `_button.qo` or configured button file | Notecard button / AUX GPIO reporting | Button schema below |

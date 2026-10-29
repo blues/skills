@@ -8,7 +8,7 @@ description: Establish or reuse secure Notehub access before project selection, 
 Complete missing access prerequisites, then return to the step that called this skill.
 Reuse verified setup from the same environment. Access supplies the connection and
 execution capabilities; Project Selection binds the task to a project, and the entry
-guide chooses Chat or Training. Follow [working style](../notehub/working-style.md).
+guide chooses Chat or Training. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 ## Connect and authenticate once
 
@@ -19,8 +19,8 @@ headers. If the hub/account and invocation method are already verified, reuse th
 
 | If you need to | Read | Then |
 |---|---|---|
-| Register/connect MCP, authenticate or learn its invocation method | [Notehub MCP: an authenticated request proxy](mcp.md) | Use the harness's supported connection and browser authorization; verify access |
-| Install or authenticate the CLI | [Notehub CLI: an authenticated request proxy](cli.md) | Follow official installation guidance and `notehub --help-agent`; complete its browser/polling login flow |
+| Register/connect MCP, authenticate or learn its invocation method | [Notehub MCP: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use the harness's supported connection and browser authorization; verify access |
+| Install or authenticate the CLI | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Follow official installation guidance and `notehub --help-agent`; complete its browser/polling login flow |
 
 Respect a cancelled authorization. Change transport only for a concrete need or the
 user's choice, explicitly verifying the intended hub/account. A project permission
@@ -40,7 +40,7 @@ monitors and engagement.
 
 | Operating capability | Read | Then |
 |---|---|---|
-| The user has their own Cloud Computer, such as Grok Bot, Muse, Dots, or 'claws' | [Cloud Computer preparation](../notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer-for-access) | Create and verify the Notehub Cache Database and Notehub Cache Maintenance Task, ready for first-use project enrollment |
+| The user has their own Cloud Computer, such as Grok Bot, Muse, Dots, or 'claws' | [Cloud Computer preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer-for-access) | Create and verify the Notehub Cache Database and Notehub Cache Maintenance Task, ready for first-use project enrollment |
 | Foreground session without continuing execution | The selected transport guide above | Retain interactive access without persistent pollers |
 | Environment already verified | No repeated preparation | Reuse its actual workspace/invocation paths and capability record |
 

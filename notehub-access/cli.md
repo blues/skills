@@ -12,7 +12,7 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resolve an unfamiliar endpoint, method or response | [API discovery](api.md) | Use the current schema for the intended operation |
+| Resolve an unfamiliar endpoint, method or response | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Use the current schema for the intended operation |
 
 ## Authenticate without handling credentials
 

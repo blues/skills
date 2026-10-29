@@ -27,8 +27,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Map a general Notehub API operation into code mode | [API discovery](api.md) | Resolve the live operationId and parameters before invoking it |
-| Prepare a Cloud Computer after connecting MCP | [Cloud Computer preparation](../notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer-for-access) | Return the verified environment context to Access, then resume the caller |
+| Map a general Notehub API operation into code mode | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Resolve the live operationId and parameters before invoking it |
+| Prepare a Cloud Computer after connecting MCP | [Cloud Computer preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer-for-access) | Return the verified environment context to Access, then resume the caller |
 
 ## Exact mapping
 

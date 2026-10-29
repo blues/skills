@@ -10,13 +10,13 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish or resume the interview | [Opening and resumption](interview.md) | Choose the appropriate opening only when establishing the run |
-| Capture Notefiles, fields and configuration meaning | [Field inventory](inventory.md) | Account for meaning, validity, significance and action |
-| Define useful questions or their answer presentation | [Answer shapes and recipes](recipes.md) | Ground current-state and period answers in their distinct semantics |
-| Decide where a finding belongs or mark an inapplicable dimension | [Knowledge organization](knowledge-model.md) | Preserve one owner per fact and explicit applicability |
-| Request or interpret source documents | [Source handling](sources.md) | Confirm handling and sharing constraints before requesting restricted material |
-| Investigate an anomaly or reconcile contradictory claims | [Evidence and contradictions](evidence.md) | Preserve provenance and scope; surface unresolved conflicts |
-| Read back or publish a completed lesson | [Publication](publishing.md) | Use existing authorization and verify the saved result |
+| Establish or resume the interview | [Opening and resumption](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/interview.md) | Choose the appropriate opening only when establishing the run |
+| Capture Notefiles, fields and configuration meaning | [Field inventory](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/inventory.md) | Account for meaning, validity, significance and action |
+| Define useful questions or their answer presentation | [Answer shapes and recipes](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/recipes.md) | Ground current-state and period answers in their distinct semantics |
+| Decide where a finding belongs or mark an inapplicable dimension | [Knowledge organization](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/knowledge-model.md) | Preserve one owner per fact and explicit applicability |
+| Request or interpret source documents | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Confirm handling and sharing constraints before requesting restricted material |
+| Investigate an anomaly or reconcile contradictory claims | [Evidence and contradictions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/evidence.md) | Preserve provenance and scope; surface unresolved conflicts |
+| Read back or publish a completed lesson | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Use existing authorization and verify the saved result |
 
 ## Keep improving through the interview loop
 

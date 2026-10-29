@@ -10,11 +10,11 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Recover the assistant's configuration, jobs and receipts | [Database state](workspace.md) | Reconcile durable records with actual scheduler state |
-| Resume or repair scheduled execution | [Job contracts](jobs.md) | Preserve valid checkpoints and verify the repaired run |
-| Enroll another project or repair the cache infrastructure | [Cache preparation](cache-preparation.md) | Preserve existing workers and checkpoints while adding or repairing the affected scope |
-| Add requested project questions or monitoring | [Setup](setup.md) | Complete only the missing setup and preserve functioning jobs |
-| Make an authorized correction to shared product meaning | [Training](../notehub-project-train/SKILL.md) | Review and publish the shared correction, then recheck affected private plans |
+| Recover the assistant's configuration, jobs and receipts | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Reconcile durable records with actual scheduler state |
+| Resume or repair scheduled execution | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Preserve valid checkpoints and verify the repaired run |
+| Enroll another project or repair the cache infrastructure | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Preserve existing workers and checkpoints while adding or repairing the affected scope |
+| Add requested project questions or monitoring | [Setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/setup.md) | Complete only the missing setup and preserve functioning jobs |
+| Make an authorized correction to shared product meaning | [Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Review and publish the shared correction, then recheck affected private plans |
 
 Use stored state and the actual harness to determine what runs, its scope, progress and
 how to stop it. Add recovery state only as needed; distinguish pending deliveries from

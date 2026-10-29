@@ -10,10 +10,10 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Check how a later agent finds and uses a recipe | [Reader workflow](../notehub-project-chat/product-knowledge.md) | Verify that all consequential meaning dependencies are reachable |
-| Turn a semantic recipe into a private cloud query plan | [Prepared questions](../notehub-cloud-agent/questions.md) | Keep executable plans and runtime state outside shared product knowledge |
-| Learn from an existing customer screen or project evidence | [Project evidence lesson](lessons.md#e-project-evidence) | Record the expected answer shape and its actual data source |
-| Check consistency and publish recipes | [Publication](publishing.md) | Verify owning rules, dependency gates and index statuses together |
+| Check how a later agent finds and uses a recipe | [Reader workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Verify that all consequential meaning dependencies are reachable |
+| Turn a semantic recipe into a private cloud query plan | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Keep executable plans and runtime state outside shared product knowledge |
+| Learn from an existing customer screen or project evidence | [Project evidence lesson](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#e-project-evidence) | Record the expected answer shape and its actual data source |
+| Check consistency and publish recipes | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Verify owning rules, dependency gates and index statuses together |
 
 ## Choose the answer shape
 

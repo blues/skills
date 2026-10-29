@@ -10,12 +10,12 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Recover the overall training workflow or missing prerequisites | [Training](SKILL.md) | Resume at the relevant step without restarting completed setup |
-| Acquire the full baseline, including unlinked files | [Read product skills](../notehub-access/project-skills.md) | Retain exact contents, kinds and revisions beside drafts |
-| Continue after the opening or resume a saved lesson | [Lesson loop](lessons.md) | Ask the next useful unresolved question |
-| Address a reported change, correction or explicit review | [Revisit stored knowledge](lessons.md#h-revisit-stored-knowledge) | Trace the specific change through owning claims and recipes |
-| Request source material or explain how it will be handled | [Source handling](sources.md) | Explain actual handling before asking for restricted material |
-| Confirm meaning or publish the resulting changes | [Publication](publishing.md) | Separate fact confirmation from authorization and verify exact writes |
+| Recover the overall training workflow or missing prerequisites | [Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Resume at the relevant step without restarting completed setup |
+| Acquire the full baseline, including unlinked files | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain exact contents, kinds and revisions beside drafts |
+| Continue after the opening or resume a saved lesson | [Lesson loop](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md) | Ask the next useful unresolved question |
+| Address a reported change, correction or explicit review | [Revisit stored knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md#h-revisit-stored-knowledge) | Trace the specific change through owning claims and recipes |
+| Request source material or explain how it will be handled | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Explain actual handling before asking for restricted material |
+| Confirm meaning or publish the resulting changes | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Separate fact confirmation from authorization and verify exact writes |
 
 ## Read the existing set and choose the opening
 

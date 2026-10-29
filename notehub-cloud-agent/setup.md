@@ -22,11 +22,11 @@ tools to achieve it. These instructions describe what to configure, not a univer
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](../notehub-access/SKILL.md) | Reuse one verified transport and environment |
-| Resolve missing or changed project scope | [Project Selection](../notehub-access/projects.md) | Retain the verified project binding and relevant permissions |
-| Load or refresh meaning for custom product data | [Reading product knowledge](../notehub-project-chat/product-knowledge.md) | Retain the index, relevant recipes and meaning dependencies |
-| Interpret native records used by a question | [Platform](../notehub-platform/SKILL.md) | Retain the applicable native definitions |
-| Repair the cache database, maintenance task or project enrollment | [Cache preparation](cache-preparation.md) | Complete only the missing infrastructure and preserve existing jobs/checkpoints |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Reuse one verified transport and environment |
+| Resolve missing or changed project scope | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Retain the verified project binding and relevant permissions |
+| Load or refresh meaning for custom product data | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Retain the index, relevant recipes and meaning dependencies |
+| Interpret native records used by a question | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Retain the applicable native definitions |
+| Repair the cache database, maintenance task or project enrollment | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Complete only the missing infrastructure and preserve existing jobs/checkpoints |
 
 Reuse completed access and product reading. Inspect the existing project and job registry
 in the Notehub Cache Database. Verify project/account binding, storage persistence, the DuckDB runtime, scheduling,
@@ -52,7 +52,7 @@ and assume it survives after the session.
 
 | If you need to | Read or use | Then |
 |---|---|---|
-| Decide what must survive between runs | [Database state](workspace.md) | Keep only the state needed by the configured work |
+| Decide what must survive between runs | [Database state](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/workspace.md) | Keep only the state needed by the configured work |
 
 Reuse the database and registry established during Access, preserving other projects,
 settings and job IDs. Persist what the configured work needs to resume without this
@@ -76,12 +76,12 @@ queries and typed views; missing product meaning does not prevent caching native
 
 | If you need to | Read | Then |
 |---|---|---|
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](../notehub-project-chat/modified-cursors.md) | Drain successive batches, commit each returned cursor and resume it on the next poll |
-| Implement the acquisition worker | [Acquisition contract](jobs.md#acquisition) | Fetch through the selected transport and persist per-stream progress |
-| Define coverage, concurrency and retention | [Cache](cache.md) | Preserve raw evidence, exact checkpoints and honest coverage |
-| Keep schema snapshots and query performance current | [Query performance](query-performance.md) | Verify daily refresh and a working record of queried fields |
-| Implement and validate batch ingestion | [Batch ingestion pseudocode](jobs.md#batch-ingestion-pseudocode) | Use the harness's supported runtime and authenticated background path |
-| Configure retention, schema refresh and optimization | [Maintenance contract](jobs.md#maintenance) | Verify the task's daily review covers this project |
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Drain successive batches, commit each returned cursor and resume it on the next poll |
+| Implement the acquisition worker | [Acquisition contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#acquisition) | Fetch through the selected transport and persist per-stream progress |
+| Define coverage, concurrency and retention | [Cache](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) | Preserve raw evidence, exact checkpoints and honest coverage |
+| Keep schema snapshots and query performance current | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Verify daily refresh and a working record of queried fields |
+| Implement and validate batch ingestion | [Batch ingestion pseudocode](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#batch-ingestion-pseudocode) | Use the harness's supported runtime and authenticated background path |
+| Configure retention, schema refresh and optimization | [Maintenance contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#maintenance) | Verify the task's daily review covers this project |
 
 Verify enrollment has configured:
 
@@ -121,7 +121,7 @@ for the coverage it has already verified; use live/repository evidence for the r
 
 | If you need to | Read | Then |
 |---|---|---|
-| Turn platform/product questions into executable plans | [Prepared questions](questions.md) | Record meaning, evidence requirements, query inputs and verification status |
+| Turn platform/product questions into executable plans | [Prepared questions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Record meaning, evidence requirements, query inputs and verification status |
 
 Read the relevant platform definitions and, for custom product meaning, the product's
 index, useful recipes and all their meaning dependencies. Select the questions the
@@ -139,8 +139,8 @@ semantics block that query or monitor, not the rest of setup.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Find evidence beyond the cache's history or fields | [Repositories](../notehub-access/repositories.md) | Verify actual dataset coverage and freshness before querying |
-| Choose among cache, repository and live evidence | [Query planning](../notehub-project-chat/querying.md) | Answer only for the supported scope and show gaps |
+| Find evidence beyond the cache's history or fields | [Repositories](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/repositories.md) | Verify actual dataset coverage and freshness before querying |
+| Choose among cache, repository and live evidence | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Answer only for the supported scope and show gaps |
 
 Execute the prepared current-state and period/population queries that apply. For each,
 compare one bounded case with source records through the same transport, then try a
@@ -158,9 +158,9 @@ is available, record the supported live API path and its cost/coverage instead.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Define a new or changed monitor/alert | [Monitors](../notehub-project-chat/monitors.md) | Resolve the calculation, state transitions, freshness and delivery contract |
-| Configure authorized proactive engagement | [Engagement](../notehub-project-chat/engagement.md) | Set useful local-time opportunities and suppression rules |
-| Supply durable execution inputs and completion behavior | [Job contracts](jobs.md) | Apply the relevant evaluation, delivery or engagement contract |
+| Define a new or changed monitor/alert | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Resolve the calculation, state transitions, freshness and delivery contract |
+| Configure authorized proactive engagement | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Set useful local-time opportunities and suppression rules |
+| Supply durable execution inputs and completion behavior | [Job contracts](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md) | Apply the relevant evaluation, delivery or engagement contract |
 
 For each requested monitor, complete the monitor definition using the
 prepared question and applicable platform/product rules. Store the evaluator reference, state

@@ -4,11 +4,11 @@ Choose the source by the evidence needed, not by a fixed preference for one quer
 
 | Situation | Source | Read when the source or contract is unfamiliar |
 |---|---|---|
-| Cloud cache supports the fields, population, window and freshness | Query that cache | [Cache coverage](../notehub-cloud-agent/cache.md) |
-| History extends beyond cache, or a foreground agent needs analytical queries | Suitable repository through the chosen connection | [Repositories](../notehub-access/repositories.md) |
-| Missing field, current resource state, bounded investigation | Live API through that same connection | [API discovery](../notehub-access/api.md) |
-| Read successive batches or changes to Events, Sessions, Devices or another supported entity | Modified-cursor reads through the selected connection | [Modified cursors](modified-cursors.md) |
-| Improve repeated or slow cloud queries | Field-usage records and measured query plans | [Query performance](../notehub-cloud-agent/query-performance.md) |
+| Cloud cache supports the fields, population, window and freshness | Query that cache | [Cache coverage](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md) |
+| History extends beyond cache, or a foreground agent needs analytical queries | Suitable repository through the chosen connection | [Repositories](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/repositories.md) |
+| Missing field, current resource state, bounded investigation | Live API through that same connection | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) |
+| Read successive batches or changes to Events, Sessions, Devices or another supported entity | Modified-cursor reads through the selected connection | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) |
+| Improve repeated or slow cloud queries | Field-usage records and measured query plans | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) |
 | No source covers the request | Explain the missing evidence and offer the useful bounded answer | No additional reference |
 
 Check coverage **before** querying: hub/project binding, entity, filters, complete scan,
@@ -32,8 +32,8 @@ cursor guide above for the complete contract.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resolve custom field meaning or recipe dependencies | [Reading product knowledge](product-knowledge.md) | Apply the owning product definitions and recipe status |
-| Interpret native records or system fields | [Platform](../notehub-platform/SKILL.md) | Choose the reference for the actual data surface |
+| Resolve custom field meaning or recipe dependencies | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Apply the owning product definitions and recipe status |
+| Interpret native records or system fields | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Choose the reference for the actual data surface |
 
 Use the project's confirmed vocabulary and field inventory, including units, scaling,
 array positions, sentinels, missing/zero distinctions, conditional emission and firmware

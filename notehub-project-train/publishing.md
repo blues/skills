@@ -12,8 +12,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Review citations and sharing restrictions | [Source handling](sources.md) | Resolve source restrictions before publishing derived knowledge |
-| Write, replace or delete stored skills | [Training skill writes](skill-writes.md) | Use conditional revisions, dependencies first, index last and exact readback |
+| Review citations and sharing restrictions | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Resolve source restrictions before publishing derived knowledge |
+| Write, replace or delete stored skills | [Training skill writes](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/skill-writes.md) | Use conditional revisions, dependencies first, index last and exact readback |
 
 ## Confirm meaning and consequence
 
@@ -97,4 +97,4 @@ readback. A successful write is an improvement checkpoint, not completion of tra
 
 | If you need to | Read | Then |
 |---|---|---|
-| Continue after review and publication | [Lesson loop](lessons.md) | Ask the next useful question and build on what was just learned |
+| Continue after review and publication | [Lesson loop](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/lessons.md) | Ask the next useful question and build on what was just learned |

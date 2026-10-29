@@ -8,14 +8,14 @@ coverage and freshness while reducing repeated setup, downloads and computation.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Choose evidence for the current question | [Query planning](querying.md) | Use a sufficient cache, repository or bounded live read |
-| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](modified-cursors.md) | Resume saved progress and retrieve changes in batches |
-| Resolve native field meaning | [Platform](../notehub-platform/SKILL.md) | Load only the relevant native reference |
-| Resolve custom product meaning | [Reading product knowledge](product-knowledge.md) | Reuse the catalog and fetched documents; read only missing or changed content and consequential dependencies |
-| Prepare reusable calculations for repeated questions | [Prepared question plans](../notehub-cloud-agent/questions.md) | Bind parameters, meanings, evidence requirements and result shape |
-| Create cache infrastructure or enroll another project on the Cloud Computer | [Cache preparation](../notehub-cloud-agent/cache-preparation.md) | Reuse the Notehub Cache Database and Notehub Cache Maintenance Task |
-| Optimize recurring queries using actual field usage | [Query performance](../notehub-cloud-agent/query-performance.md) | Record queried fields and review schemas, typed projections, physical ordering and indexes daily |
-| Find historical or analytical data outside available cache coverage | [Repositories](../notehub-access/repositories.md) | Verify the actual schema, scope and freshness before aggregating |
+| Choose evidence for the current question | [Query planning](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Use a sufficient cache, repository or bounded live read |
+| Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Resume saved progress and retrieve changes in batches |
+| Resolve native field meaning | [Platform](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Load only the relevant native reference |
+| Resolve custom product meaning | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Reuse the catalog and fetched documents; read only missing or changed content and consequential dependencies |
+| Prepare reusable calculations for repeated questions | [Prepared question plans](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/questions.md) | Bind parameters, meanings, evidence requirements and result shape |
+| Create cache infrastructure or enroll another project on the Cloud Computer | [Cache preparation](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md) | Reuse the Notehub Cache Database and Notehub Cache Maintenance Task |
+| Optimize recurring queries using actual field usage | [Query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) | Record queried fields and review schemas, typed projections, physical ordering and indexes daily |
+| Find historical or analytical data outside available cache coverage | [Repositories](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/repositories.md) | Verify the actual schema, scope and freshness before aggregating |
 
 ## Reuse the work, refresh the evidence
 
@@ -68,5 +68,5 @@ become the basis of the monitor rather than a loosely related new query.
 
 | If the next step is | Read | Then |
 |---|---|---|
-| Suggest or create a periodic follow-up | [Monitors](monitors.md) | Reuse the answered question and define meaningful change and delivery |
-| Provide ongoing status or contextual updates | [Engagement](engagement.md) | Use current monitor/query results and the user's interests |
+| Suggest or create a periodic follow-up | [Monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Reuse the answered question and define meaningful change and delivery |
+| Provide ongoing status or contextual updates | [Engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) | Use current monitor/query results and the user's interests |

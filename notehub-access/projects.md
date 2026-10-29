@@ -63,7 +63,7 @@ skill owner or a project merely appearing in a list does not expand the data sco
 
 | If you need to | Read | Then |
 |---|---|---|
-| Add a newly referenced project or recover its existing cache binding | [First-use cache enrollment](../notehub-cloud-agent/cache-preparation.md#enroll-a-project-on-first-use) | Add it to the maintenance task's registry, queue a bounded initial fill, and retain its readiness state |
+| Add a newly referenced project or recover its existing cache binding | [First-use cache enrollment](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache-preparation.md#enroll-a-project-on-first-use) | Add it to the maintenance task's registry, queue a bounded initial fill, and retain its readiness state |
 
 Continue product reading and the requested task while initial history loads. A foreground
 agent carries the verified project context without creating persistent cache jobs.
@@ -89,7 +89,7 @@ bindings; switching the current conversation does not retarget a monitor.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Establish a missing connection or execution environment | [Access](SKILL.md) | Return here with the verified hub/account and selected transport |
-| Resolve an unfamiliar project/product lookup operation | [API discovery](api.md) | Use the current read contract and verify the actual returned scope |
-| Read inherited product skills and identify their owner | [Read product skills](project-skills.md) | Retain the verified skill owner separately from the data project |
-| Understand the selected product after Project Selection was invoked alone | [Entry guide](../notehub/SKILL.md#3-read-the-products-skills) | Read its product skills, then complete the preparation for the requested activity |
+| Establish a missing connection or execution environment | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return here with the verified hub/account and selected transport |
+| Resolve an unfamiliar project/product lookup operation | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Use the current read contract and verify the actual returned scope |
+| Read inherited product skills and identify their owner | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Retain the verified skill owner separately from the data project |
+| Understand the selected product after Project Selection was invoked alone | [Entry guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#3-read-the-products-skills) | Read its product skills, then complete the preparation for the requested activity |

@@ -26,5 +26,5 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Invoke the resolved operation through the selected MCP connection | [Notehub MCP: an authenticated request proxy](mcp.md) | Use 'code mode' to map OperationId and parameters to an 'execute' MCP tool |
-| Invoke the resolved operation through the selected CLI environment | [Notehub CLI: an authenticated request proxy](cli.md) | Use the tool's CURL-like syntax as an API proxy |
+| Invoke the resolved operation through the selected MCP connection | [Notehub MCP: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use 'code mode' to map OperationId and parameters to an 'execute' MCP tool |
+| Invoke the resolved operation through the selected CLI environment | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Use the tool's CURL-like syntax as an API proxy |

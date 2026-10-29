@@ -6,8 +6,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Difference high-power counters or interpret charging and Mojo fields | [Power](power.md) | Apply reset, generation and charging semantics |
-| Interpret session tower, triangulated or GPS location | [Location](location.md) | Preserve each source and its observation time |
+| Difference high-power counters or interpret charging and Mojo fields | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) | Apply reset, generation and charging semantics |
+| Interpret session tower, triangulated or GPS location | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) | Preserve each source and its observation time |
 
 ## Which record answers the question
 

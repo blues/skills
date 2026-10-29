@@ -19,8 +19,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Find full Session evidence for high-power activity | [Sessions](sessions.md) | Use the full Session API/dataset rather than assuming Event parity |
-| Distinguish charge, energy and cumulative readings | [Interpretation checks](verification.md) | Apply the field's units and reset semantics |
+| Find full Session evidence for high-power activity | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md) | Use the full Session API/dataset rather than assuming Event parity |
+| Distinguish charge, energy and cumulative readings | [Interpretation checks](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/verification.md) | Apply the field's units and reset semantics |
 
 ## High-power counters
 

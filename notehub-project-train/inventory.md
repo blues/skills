@@ -10,7 +10,7 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Interpret native objects or system fields in the inventory | [Platform definitions](../notehub-platform/SKILL.md) | Record product applicability without duplicating shared meanings |
+| Interpret native objects or system fields in the inventory | [Platform definitions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/SKILL.md) | Record product applicability without duplicating shared meanings |
 
 ## Cover meaning, validity, significance and action
 

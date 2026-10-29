@@ -9,8 +9,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Find an endpoint and its invocation contract | [API discovery](../notehub-access/api.md) | Resolve the exact operation and response shape |
-| Interpret native record fields or clocks | [Objects and time](objects.md) | Choose the correct data surface and time basis |
+| Find an endpoint and its invocation contract | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Resolve the exact operation and response shape |
+| Interpret native record fields or clocks | [Objects and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) | Choose the correct data surface and time basis |
 
 | Concept | Meaning and practical distinction |
 |---|---|

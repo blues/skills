@@ -10,8 +10,8 @@ Read the rows that apply to the current step; reuse context already established.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Record source identity, citations or sharing restrictions | [Source handling](sources.md) | Use appropriate role/provenance descriptions without copying restricted material |
-| Promote confirmed meaning or publish reconciled claims | [Publication](publishing.md) | Confirm the actual sentences and review every dependent recipe |
+| Record source identity, citations or sharing restrictions | [Source handling](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/sources.md) | Use appropriate role/provenance descriptions without copying restricted material |
+| Promote confirmed meaning or publish reconciled claims | [Publication](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/publishing.md) | Confirm the actual sentences and review every dependent recipe |
 
 ## Record origin, confidence and applicability
 
