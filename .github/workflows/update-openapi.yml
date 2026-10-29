@@ -1,0 +1,91 @@
+name: Update Notehub OpenAPI
+
+on:
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-openapi
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.repository == 'blues/skills' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+
+      - name: Install YAML parser
+        run: |
+          python3 -m venv "$RUNNER_TEMP/openapi-venv"
+          "$RUNNER_TEMP/openapi-venv/bin/pip" install --disable-pip-version-check PyYAML==6.0.3
+
+      - name: Download and validate the schema
+        run: |
+          curl --fail --silent --show-error --location \
+            --proto '=https' --proto-redir '=https' \
+            --connect-timeout 15 --max-time 60 --retry 3 --retry-delay 3 \
+            --output "$RUNNER_TEMP/openapi.yaml" \
+            https://api.notefile.net/openapi.yaml
+          "$RUNNER_TEMP/openapi-venv/bin/python" - "$RUNNER_TEMP/openapi.yaml" <<'PY'
+          import hashlib
+          import pathlib
+          import sys
+          import yaml
+
+          content = pathlib.Path(sys.argv[1]).read_bytes()
+          spec = yaml.safe_load(content)
+          if not isinstance(spec, dict) or not str(spec.get("openapi", "")).startswith("3."):
+              sys.exit("Download is not an OpenAPI 3 document")
+          info = spec.get("info")
+          if not isinstance(info, dict) or not info.get("title") or not info.get("version"):
+              sys.exit("OpenAPI document has no title or version")
+          paths = spec.get("paths")
+          if not isinstance(paths, dict) or not paths:
+              sys.exit("OpenAPI document has no API paths")
+          methods = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
+          operations = [operation for item in paths.values() if isinstance(item, dict)
+                        for method, operation in item.items() if method in methods]
+          if not operations or any(not isinstance(op, dict) or not op.get("responses")
+                                   for op in operations):
+              sys.exit("OpenAPI document has missing or invalid operations")
+          print(f"Validated {len(paths)} paths and {len(operations)} operations; "
+                f"SHA256 {hashlib.sha256(content).hexdigest()}")
+          PY
+
+      - name: Publish changes or a monthly heartbeat
+        run: |
+          # Refresh before deciding, so intervening skills edits reset the idle timer.
+          git fetch --no-tags origin master
+          git checkout -B master origin/master
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          schema=notehub-access/openapi.yaml
+          if ! cmp -s "$RUNNER_TEMP/openapi.yaml" "$schema"; then
+            mkdir -p notehub-access
+            cp "$RUNNER_TEMP/openapi.yaml" "$schema"
+            git add -- "$schema"
+            git commit -m 'Update mirrored Notehub OpenAPI specification'
+            result='Published changed OpenAPI specification.'
+          elif (( $(date +%s) - $(git log -1 --format=%ct) >= 30 * 24 * 60 * 60 )); then
+            git commit --allow-empty -m 'Keep scheduled OpenAPI refresh active'
+            result='Published an empty heartbeat after 30 days without a commit.'
+          else
+            echo 'Schema unchanged; no commit needed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Never force-push: a concurrent edit causes a safe failure and the next run retries.
+          git push origin HEAD:master
+          echo "$result" >> "$GITHUB_STEP_SUMMARY"
