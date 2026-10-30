@@ -39,7 +39,7 @@ headers. If the account and invocation method are already verified, reuse them.
 | If you need to | Read | Then |
 |---|---|---|
 | Register/connect MCP, authenticate or learn its invocation method | [Notehub MCP: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use the harness's supported connection and browser authorization; verify access |
-| Install or authenticate the CLI | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Follow official installation guidance and `notehub --help-agent`; complete its browser/polling login flow |
+| Install or authenticate the CLI | [Notehub CLI: an authenticated request proxy](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Follow official installation guidance and `notehub --help-agent`; complete its browser/polling login flow; if your turn ends after sharing the approval URL, ask the user to reply "done" (or set a short check) and verify `notehub auth status --json` before continuing |
 
 Verify the selected account and a harmless authenticated read through that tool; retain
 useful metadata for later project selection. Respect a cancelled authorization. Change

@@ -51,6 +51,12 @@ reported expiry (normally about ten minutes), cancellation and failure. Do not s
 parallel login attempts or retry a cancelled login. An expired login needs a new attempt
 only if the user still wants to connect.
 
+If your turn ends after you give the user the approval URL (nothing wakes you when a
+detached login process finishes), do not promise to keep watching. Ask the user to reply
+"done" once they have approved, or set a short check if your harness supports scheduled
+or background wakeups. When you resume, run `notehub auth status --json` and confirm
+`signed_in` and the expected `user` before continuing.
+
 The CLI stores and refreshes credentials itself. Never run `auth token`, inspect its
 credential files, supply `--token`, print an inherited token, or add Authorization headers.
 If status reports an environment credential override, report the source without its
