@@ -102,6 +102,11 @@ determined by notefile and field names in the JSON data.
 
 ## 6. Do the requested work
 
+**After Steps 1–5, all Notehub work continues only inside Project Chat or Project
+Training.** Do not invent a third path. Do not answer data questions, run investigations,
+or operate devices by calling MCP/API directly from this entry guide — hand off to the
+activity skill and follow it.
+
 **Both activities are ongoing loops.** The user may spend a long time asking questions,
 refining monitors, or improving product skills. Keep working within the selected activity
 and project, reusing context across turns; completing an answer or lesson is a checkpoint.
@@ -110,6 +115,10 @@ loop and return to **Step 4**. Preserve any unfinished work and a brief resumabl
 in Training, keep confirmed knowledge and unpublished drafts distinct. A stop directed
 at a particular monitor or task applies to that work; ending the conversation does not
 cancel existing monitors or cache maintenance.
+
+The harness **MUST** complete Steps 1–5 before Step 6, and **MUST** stay in the chosen
+activity skill for the work itself. Skipping to tools after “access looks fine” is a
+process failure.
 
 | The person wants | Continue here | Work within the loop |
 |---|---|---|
