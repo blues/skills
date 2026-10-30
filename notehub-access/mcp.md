@@ -1,5 +1,9 @@
 # Notehub MCP: an authenticated request proxy
 
+> **Gate:** use this guide only if Access determined MCP is connectable for this harness
+> (Notehub MCP `search`/`execute` tools present, or a built-in way to add an MCP server).
+> If not (like Muse), stop and use the [CLI guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md).
+
 Use the hosted server at `https://mcp.notehub.io/mcp`. Use the harness's supported MCP
 connection and browser authorization flow; keep credentials inside the connection. Reuse
 an existing session. If MCP registration is not available to the agent, explain the

@@ -30,7 +30,9 @@ fetching the whole corpus. Follow [working style](https://raw.githubusercontent.
 ## 1. Establish access
 
 Use one authenticated request proxy: Notehub MCP by default, or the `notehub` CLI only
-when MCP cannot be connected or the user has already asked for the CLI. Do not ask the
+when MCP cannot be connected or the user has already asked for the CLI. "Cannot be
+connected" is a capability test defined in Access: if this harness exposes no Notehub MCP
+tools (`search`/`execute`) and no way to add an MCP server (like Muse), use the CLI only. Do not ask the
 user to choose between them. Access owns installation/connection,
 authentication and verification. Reuse an already verified connection.
 
@@ -42,7 +44,9 @@ authentication and verification. Reuse an already verified connection.
 
 **All agents must complete API discovery**, regardless of how they accessed Notehub.
 Read the complete OpenAPI specification and survey its available operations. Then read
-**only one** of the MCP or CLI guides, matching the connection established in Access:
+**only one** of the MCP or CLI guides, matching the connection Access established and
+verified (do not read either before Access has routed you; a CLI-only harness never reads
+the MCP guide):
 the MCP guide for MCP access, or the CLI guide for CLI access. Reuse what you learned
 during authentication. Resolve detailed request and response contracts when needed.
 Load Platform's native data meanings later according to the work.
@@ -59,7 +63,8 @@ A subset of agent harnesses run on Cloud Computers with persistent storage, such
 Grok Bot, Muse, Dots, or 'claws'. A Cloud Computer is a persistent computer that the
 agent (and often the user's other bots) can use between conversations. It keeps files,
 can run Python workers and supports scheduled or background work, so a local cache and
-recurring jobs can live there. If and only if this agent is running on a Cloud Computer,
+recurring jobs can live there. Being a Cloud Computer says nothing about MCP: use
+whichever proxy Access selected (for example, Muse uses the CLI). If and only if this agent is running on a Cloud Computer,
 ensure that a **Notehub Cache Database** and **Notehub Cache Maintenance Task** are
 configured properly and that the maintenance task is running.
 

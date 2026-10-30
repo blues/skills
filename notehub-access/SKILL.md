@@ -12,8 +12,26 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 
 ## Connect and authenticate once
 
+**Capability test first (before reading any connection guide).** Check the tools this
+harness actually lets you invoke right now. MCP is *connectable* only if Notehub MCP tools
+are present—code-mode `search` and `execute` (with `execute_write` /
+`execute_destructive`, possibly name-prefixed), or an equivalent native Notehub MCP
+connector you can call—or the harness has a built-in way for you to add an MCP server
+yourself. If none of these exist (like Muse), MCP **cannot be connected** for this harness: use the
+CLI, read only the CLI guide, and do not open the MCP guide, invent OAuth or
+custom-connector bridges, or ask the user to "connect MCP".
+
+| Harness | Capability | Route |
+|---|---|---|
+| MCP tools (`search`/`execute`) in the tool catalog, e.g. Grok Bot, Claude, Codex, Cursor | Connectable | MCP (preferred) |
+| No MCP tool catalog or way to add an MCP server, e.g. Muse | Cannot be connected | CLI only |
+| Any other harness | Apply the test above | Per result |
+
+Capability decides whether MCP is possible; preference (MCP by default, CLI if the user
+asked for it) applies only among connectable options.
+
 Choose one authenticated request proxy: Notehub MCP by default; use the `notehub` CLI
-only when MCP cannot be connected or the user has already asked for it. Do not ask the
+only when MCP cannot be connected (per the test above) or the user has already asked for it. Do not ask the
 user to choose, and never ask them to create a personal access token.
 Both own their credentials—the agent does not retrieve tokens or construct Authorization
 headers. If the account and invocation method are already verified, reuse them.
