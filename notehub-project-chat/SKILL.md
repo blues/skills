@@ -6,8 +6,11 @@ description: Continue work with a selected Notehub Project through an ongoing lo
 # Chat about the Project and keep the user informed
 
 Arrive here after the entry cookbook has established access, taught the API, prepared
-any Cloud Computer, selected ProjectUID and loaded the complete product skill set.
-Reuse that connection, product understanding and known cache readiness. Follow
+any Cloud Computer, selected ProjectUID, **enrolled that Project in the Notehub Cache
+(mandatory on a Cloud Computer — see [projects Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache))**,
+and loaded the complete product skill set. Reuse that connection, product understanding
+and known cache readiness. **If enrollment or cache readiness is missing, return to
+Project selection Step 3 before answering any data question.** Follow
 [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 A **monitor watches something and alerts the user according to their monitoring
@@ -16,13 +19,17 @@ another agreed rule. Its notifications can be messages, graphs or both, delivere
 chat stream, WhatsApp, SMS, Slack or another supported channel. These preferences belong
 to the monitor, whether requested directly or inferred from an ongoing interest.
 
-**For ordinary data questions, use the Notehub Cache when it has the required fields,
-population, history and freshness.** If the question concerns the whole dataset or no
-cache is available, use the **Project Repository when access is through MCP and the
-Project has a Repository enabled**. Repository queries are slower than the local cache
-but faster than direct Notehub API queries. The question and Repository procedures below
-apply Notehub and Product Skills to the chosen source; direct API reads supply missing
-evidence or current service state.
+**ALWAYS route ordinary Q&A through the Notehub Cache when it is present** (Project
+enrolled) — including while the cache is still initializing; answer from verified
+coverage. On a Cloud Computer with cache + maintenance registered, beginning fill on
+project open is **not optional**, and the user must be told fill has started. **MUST NOT**
+route ordinary analytics through live Notehub APIs when the cache is present. If the
+question concerns the whole dataset, or no cache is available and cannot be enrolled,
+use the **Project Repository when access is through MCP and the Project has a Repository
+enabled**. Repository queries are slower than the local cache but faster than direct
+Notehub API queries. The question and Repository procedures below apply Notehub and
+Product Skills to the chosen source; direct API reads supply missing evidence or current
+service state only.
 
 | Only if preparation is missing | Read | Then |
 |---|---|---|

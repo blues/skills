@@ -108,42 +108,63 @@ reading does not block continuing.
 
 ## 3. Enroll the project and check its cloud cache
 
+**NOT OPTIONAL.** When the Notehub Cache Database and Maintenance Task are set up on a
+Cloud Computer, opening or selecting a Project **requires** immediate enrollment and
+**immediate start of fill** in this turn, a **clear report to the user that fill has
+begun** (so they know), and thereafter **ALWAYS routing Q&A through the cache when it
+is present**. Do this before product skills, before any data answer, and before any live
+Notehub analytics call. Do not defer enrollment until the first question. Do not answer
+fleet/device/event questions over the live API while skipping this step. Waiting for the
+next scheduled refresh alone is **not** compliance.
+
 **If this agent is not running on a Cloud Computer, skip to Step 4.** Otherwise, use the
 Notehub Cache Database and Notehub Cache Maintenance Task prepared during Cloud Computer
 setup. Enrollment applies to both Chat and Training whenever the user first references
-or starts using a verified project. Projects merely appearing in a list are not enrolled.
+or starts using a verified project. Projects merely appearing in a list are **not**
+enrolled; choosing, opening, or loading a project **is** an enrollment trigger.
 
 | If you need to | Read | Then |
 |---|---|---|
 | Repair missing shared cache infrastructure | [Cloud Computer setup](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/SKILL.md#prepare-the-cloud-computer) | Complete the missing database or maintenance-task setup, then resume this enrollment |
 | Establish initial streams and coverage | [Cache model, Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#3-define-streams-and-verify-initial-coverage) | Use the required entities, full Sessions, fixed bounds and coverage rules for the first fill |
 
-1. **Find or create the enrollment.** Look up the verified account and ProjectUID
+1. **Find or create the enrollment (blocking).** Look up the verified account and ProjectUID
    in the shared registry. Reuse its existing cursors, coverage and jobs; otherwise add
-   it. Preserve pauses and exclusions. A paused or excluded enrollment remains so unless
-   the user asks to resume it; skip its fill and schedule checks below.
-2. **Start only the missing acquisition.** For a new active enrollment, queue a bounded
-   first fill of project/Device metadata, recent Events, full per-device Sessions and
-   the complete Notefile Schema snapshot. Apply the cache's coverage and retention
-   rules; record the first schema refresh and next daily due time. With the agent-turn
-   fetch handoff ([Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md)),
-   enrollment adds the ProjectUID to the registry and the next scheduled fetch turn
-   performs the first fill; it may also be run once immediately. For an existing
-   enrollment, continue from committed progress rather than restarting its history.
+   it **now**. Preserve pauses and exclusions. A paused or excluded enrollment remains so unless
+   the user asks to resume it; skip its fill and schedule checks below, and record that state.
+2. **Start missing acquisition immediately (required).** For a new active enrollment,
+   begin a bounded first fill **now** of project/Device metadata, recent Events, full
+   per-device Sessions and the complete Notefile Schema snapshot. Apply the cache's
+   coverage and retention rules; record the first schema refresh and next daily due time.
+   **Report to the user in this turn** that enrollment succeeded and fill has started
+   (cache initializing), not only after fill completes. With the agent-turn fetch
+   handoff ([Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md)),
+   enrollment adds the ProjectUID to the registry **and you MUST kick the first fill in
+   this same turn** (run `plan` → fetch batches via read-only MCP `execute` with
+   envelopes written to files → `ingest`); do not wait for the next scheduled refresh
+   alone. For an existing enrollment, continue from committed progress rather than
+   restarting its history, and still verify fill is progressing; if fill is stalled,
+   restart it and tell the user.
 3. **Verify ongoing maintenance.** Check that the actual registered task reads the live
    registry and includes this project in its next scheduled run. It must discover new
    enrollments rather than use a fixed project list copied from its creation prompt.
    Create only missing project-specific subtasks if the implementation needs them.
 4. **Check this project's evidence.** Inspect recorded coverage, last successful
    acquisition, schema refresh and gaps. For a new enrollment, verify that bootstrap has
-   started or is queued for a real scheduled run. Record whether the cache is ready,
+   **started in this turn** (not merely scheduled someday). Record whether the cache is ready,
    initializing, degraded, paused or excluded, and what data is usable now. A healthy
-   shared task alone does not prove this project's data is fresh or complete.
+   shared task alone does not prove this project's data is fresh or complete. Tell the
+   user the project is enrolled and whether the cache is ready or still initializing.
 
-**Complete when:** the verified project is in the durable registry and its actual
-maintenance coverage and readiness are known, or its pause, exclusion or missing
-capability is recorded. Continue product reading and useful Chat or Training while history
-fills; report an initializing cache as initializing.
+**MUST NOT** run ordinary Project Chat analytics against the live Notehub API while this
+step is incomplete. **ALWAYS** route subsequent Q&A through the Notehub Cache when it is
+present / enrolled (see [querying](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md)) — including while fill is still in progress.
+
+**Complete when:** the verified project is in the durable registry, first-fill acquisition
+has been **started in this turn** and the user has been **told fill began**, and readiness
+is known (or pause/exclusion is recorded). Continue product reading and useful Chat or
+Training while history fills; report an initializing cache as initializing — never as a
+reason to skip enrollment or to bypass the cache for Q&A.
 
 ## 4. Summarize the selection and continue
 

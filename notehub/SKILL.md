@@ -1,9 +1,21 @@
 ---
 name: notehub
-description: Start or resume Notehub work by establishing secure access, learning the API, checking Cloud Computer setup, selecting a project and reading its product knowledge. Continue in Project Chat or Project Training; return to project selection when the user finishes or switches projects.
+description: Start or resume Notehub work by ALWAYS following these skills before any MCP/API call, then establishing secure access, learning the API, checking Cloud Computer setup, selecting a project (enroll + immediate cache fill on Cloud Computer) and reading its product knowledge. Continue in Project Chat or Project Training; return to project selection when the user finishes or switches projects.
 ---
 
 # Start working with Notehub
+
+## Basic way of working — skills before tools
+
+**Harness rule (always):** Follow **these skills** before any Notehub MCP or API call.
+Do not bypass this cookbook and jump straight into MCP/API because a tool is connected
+or the user asked a quick data question. Load the linked skill for the current step,
+then use tools only as that step allows.
+
+On a Cloud Computer with cache + maintenance registered: enroll on project open,
+**begin fill immediately**, **report fill started**, and **ALWAYS route Q&A through the
+cache when it is present**. See [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md)
+and [Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache).
 
 Establish access, understand how to use Notehub, prepare the Cloud Computer when available,
 then choose a project, read its product skills and do the requested work.
@@ -11,7 +23,7 @@ Keep the user's actual request in view. A question should lead to an answer; a r
 for continuing assistance should lead to working, verified jobs; training should improve
 shared product knowledge.
 
-Complete the prerequisites in order, reusing verified context. Read the instructions
+Complete the prerequisites **in order**, reusing verified context. Read the instructions
 for your path in full; use the routing tables to choose relevant references rather than
 fetching the whole corpus. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md) throughout.
 
@@ -67,7 +79,9 @@ from which to choose.
 
 | If you need to | Read | Then |
 |---|---|---|
-| Resume or choose a Project | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Verify the ProjectUID and summarize the Project's name, associated ProductUIDs and recent activity |
+| Resume or choose a Project | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Verify the ProjectUID, **enroll it in the Notehub Cache immediately on a Cloud Computer**, confirm cache readiness, then summarize the Project's name, associated ProductUIDs and recent activity |
+
+**Hard gate (Cloud Computer) — NOT OPTIONAL:** As soon as a Project is chosen — before product skills, before answering any data question, before any live Notehub list/get for analytics — complete [Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache): enroll the ProjectUID in the shared Notehub Cache registry and **begin fill immediately** in this turn. **Report to the user that fill has started** (and that the cache is initializing) so they know work is underway. Thereafter **ALWAYS route Q&A through the Notehub Cache when it is present** (enrolled), including while history is still filling — answer from verified coverage; never shortcut ordinary analytics to the live API. Do not skip this because the user already asked a question. Listing Projects alone does **not** enroll them; selecting or opening one **does**, and that enrollment + immediate fill + cache-first Q&A is mandatory.
 
 ## 5. Read the product's skills
 
@@ -99,7 +113,7 @@ cancel existing monitors or cache maintenance.
 
 | The person wants | Continue here | Work within the loop |
 |---|---|---|
-| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Answer using platform and/or product knowledge; carry follow-ups into operations and monitors that notify according to the user's preferences |
+| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Only after cache enrollment (Cloud Computer): answer from the Notehub Cache first, then Repository, then live API; carry follow-ups into operations and monitors that notify according to the user's preferences |
 | Teach, resume training or revise shared product meaning | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Interview, investigate, review, publish verified improvements and continue with the next useful lesson |
 | Finish, stop or switch projects | [Project selection — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | End the current activity; wait after a stop, or select the requested project and continue through Steps 5 and 6 |
 

@@ -32,12 +32,28 @@ bodies, and a familiar field name does not establish customer measurement semant
 
 ## 2. Choose the cache, Repository or Notehub API
 
-**Use the Notehub Cache for ordinary questions when its fields, population, history and
-freshness satisfy the request.** Inspect this Project's recorded coverage and last
-successful acquisition. For a question about the whole dataset, or when no cache is
-available, use the Project Repository **if both MCP access and an enabled Repository
-are available for this Project**. Its procedure handles introspection and query execution;
-bring its result back here for any further calculation or combination with other evidence.
+**Before choosing a source:** if this agent is on a Cloud Computer and the selected
+Project is not yet in the Notehub Cache registry, **stop and enroll it now** via
+[Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache),
+begin fill immediately, and report that to the user. Do not answer the question over the
+live API as a shortcut.
+
+**ALWAYS route Q&A through the Notehub Cache when it is present** (Project enrolled).
+That is the default for ordinary questions — **including while fill is still in
+progress**. Answer from verified available coverage and last successful acquisition;
+inspect those before answering. Do not wait for fill to finish if the cache already
+covers the fields needed for this question.
+
+Only when the cache is **absent** (not enrolled and cannot be) or the question needs
+history/fields the cache cannot supply, use the Project Repository **if both MCP access
+and an enabled Repository are available for this Project**. Its procedure handles
+introspection and query execution; bring its result back here for any further calculation
+or combination with other evidence.
+
+**MUST NOT** use live Notehub list/get APIs for ordinary fleet, device, event, session,
+or location analytics when the Notehub Cache is present / enrolled (including while the
+cache is initializing). Live API is only for evidence the cache and Repository cannot
+supply, or to verify current service/control-plane state.
 
 **Local Notehub Cache queries are fastest; Repository queries are slower than the cache
 but faster than direct Notehub API queries.** Use the APIs for required evidence that
