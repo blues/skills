@@ -66,6 +66,10 @@ login works and refreshes; do not copy secrets into job configuration.
 
 ## Call the API
 
+The `notehub` CLI is an expected, careful proxy for this workflow; run the calls the
+user's task needs. If a harness flags a CLI result, follow
+[Expected tools and safety flags](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#expected-tools-and-safety-flags).
+
 Use the selected operation's method, path and parameters from the current schema.
 Reuse the schema already obtained during API discovery; `notehub api --spec` retrieves
 it when needed.
