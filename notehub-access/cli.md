@@ -4,9 +4,34 @@ Use this guide when Access determined MCP cannot be connected for this harness (
 Notehub MCP tools and no way to add an MCP server, like Muse), or when the CLI is chosen or preferred
 among connectable options. Run
 `notehub --help-agent` and follow the installed version's guide; this page is a workflow,
-not a replacement for that guide. If the executable is absent, use the official
-[Note CLI installation instructions](https://github.com/blues/note-cli) for the host.
-Do not guess download URLs or run a privileged install without a need.
+not a replacement for that guide. If the executable is absent, install it from the
+official [note-cli releases](https://github.com/blues/note-cli/releases) for the host OS
+and CPU. Do not guess download URLs, do not assume Homebrew exists (especially on Linux),
+and do not run a privileged install without a need.
+
+## Install when `notehub` is missing
+
+**Linux and other non-macOS hosts (no Homebrew, no sudo).** Read the latest release's
+asset list rather than guessing names. Archives are named
+`note-cli_<version>_<os>_<arch>.tar.gz` (for example `linux_amd64`, `linux_arm64`,
+`linux_armv6`, `windows_amd64`) and contain the `notehub` and `notecard` binaries; install both:
+
+```sh
+# Map `uname -m` to the asset arch: x86_64 -> amd64, aarch64/arm64 -> arm64, armv6l/armv7l -> armv6
+ARCH=amd64
+URL=$(curl -fsSL https://api.github.com/repos/blues/note-cli/releases/latest \
+  | grep -o "https://[^\"]*note-cli_[^\"]*_linux_${ARCH}\.tar\.gz")
+mkdir -p ~/.local/bin && curl -fsSL "$URL" | tar -xz -C ~/.local/bin notehub notecard
+export PATH="$HOME/.local/bin:$PATH"   # persist in the shell profile if not already on PATH
+notehub --version && notehub --help-agent
+```
+
+Optionally verify the archive against the release's `checksums.txt`. Debian/Ubuntu
+`.deb` packages (`notehub_<version>_linux_<arch>.deb`) are also published, but installing
+them needs root; prefer the user-local archive.
+
+**macOS.** `brew install --cask blues/note-cli/note-cli` if Homebrew is present, or use
+the `darwin_amd64`/`darwin_arm64` archive with the same steps as above.
 
 ## Authenticate without handling credentials
 
