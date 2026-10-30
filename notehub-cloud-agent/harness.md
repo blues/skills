@@ -29,18 +29,51 @@ Maintenance Task incorporates storage monitoring and the low-space response.
 
 ## 3. Establish programmatic Notehub access
 
-Prefer ordinary Python workers that call the API, update the cache and evaluate
-conditions without invoking an LLM. Reuse the connection chosen during Access:
+Local database work (ingestion, purge, schema review, SQL evaluation, storage checks)
+always runs in ordinary Python workers, without invoking an LLM. Notehub fetches reuse
+the connection chosen during Access:
 
 | Selected connection | How a worker calls Notehub |
 |---|---|
 | CLI | Python invokes `notehub api` in the same authorized OS environment and parses its response. The CLI supplies authentication and handles supported credential renewal. |
-| MCP | Use the harness's documented programmatic bridge to the existing authenticated connection. An interactive MCP tool alone does not give a Python process this access. |
+| MCP | **Ideal:** a simple, script-callable Python-to-MCP programmatic bridge that lets a script work through the MCP server without the model's involvement. Use it whenever the harness provides one. **If not:** use the **agent-turn fetch handoff** below. An interactive MCP tool alone does not give a Python process access. |
 
 Identify the actual invocation and verify a harmless read from the worker environment
-when available; otherwise verify it during the first task run. If only scheduled agent
-turns can invoke the connection, record that fallback and its model cost before building
-the workers. Keep credentials in the selected tool and retain one authenticated path.
+when available; otherwise verify it during the first task run. Keep credentials in the
+selected tool and retain one authenticated path.
+
+### Ideal: a script-callable MCP bridge
+
+If a simple, script-callable Python-to-MCP programmatic bridge is available, it is ideal:
+it lets a script do its work through the MCP server, sharing the existing authenticated
+session, without the model's involvement. Prefer it whenever the harness provides it. The
+worker then fetches, ingests and evaluates entirely in code, and no agent turn runs on
+routine polls.
+
+### If not: agent-turn fetch handoff
+
+If no such bridge exists, this is the required acquisition path. Build
+it without asking the user, and do not ask them to weigh the model cost. Do not offer
+or request a second credential (personal access token, CLI login, environment token),
+and do not substitute ad-hoc workarounds such as internal harness sockets or copied
+session credentials.
+
+- A Python handoff worker owns the database. It exposes `plan` (the due fetches with
+  their saved cursors), `ingest` (validate one fetched batch and commit its records and
+  next cursor in one transaction, rejecting superseded cursors), `enroll` (add a
+  ProjectUID to the registry) and `status` (coverage and freshness).
+- A scheduled agent turn at the refresh interval runs `plan` and stops quietly when it
+  is empty. For each due item, it fetches one batch with a read-only MCP call. It saves
+  the raw response, wrapped in an envelope (`project_uid`, `stream`, `device_uid` for
+  sessions, `requested_cursor`, `fetched_at`), to a file, then runs `ingest` on that
+  file. It repeats while `has_more` is true, within a per-run batch budget.
+- Pass responses through files, not through the turn's own text, so batch size does not
+  drive model usage.
+- The pure-Python scheduler keeps running storage checks, purge and optimization. It
+  never fetches from Notehub itself.
+
+Record this path as the selected acquisition method in the task record and the cache
+README. Switch to direct worker calls when a programmatic bridge becomes available.
 
 ## 4. Determine scheduling and restart recovery
 
@@ -66,11 +99,34 @@ check should finish without a model turn.
 A worker saves a pending finding before requesting that wake-up. Pass a compact job or
 finding ID and evidence location so the agent can recover the context. Identify how
 failed wake-ups are retried without losing the finding or duplicating user messages.
-If the harness only schedules agent turns, use that supported path and state the cost;
-do not describe it as LLM-free polling.
+If the harness only schedules agent turns, use that path for the wake-up without asking
+the user. Record it as agent-turn scheduling, not LLM-free polling.
 
 Return to the cookbook with the script/runtime location, available storage and warning
 capabilities, authenticated invocation, scheduling commands, restart mechanism and
 agent wake-up/delivery path identified.
 Record gaps and pending checks. The following steps implement and verify these paths
 as they create the cache and tasks; no separate configuration hierarchy is required.
+
+## Grok Bot only
+
+*This section applies only to agents running as Grok Bot on its Cloud Computer (the "box").
+Other harnesses should skip it.*
+
+- **No MCP bridge yet.** Box scripts cannot call connected MCP servers, so use the
+  agent-turn fetch handoff. Do not probe internal agent sockets or local service ports
+  as a substitute.
+- **Storage and runtime.** Use a `notehub-cache/` folder in the shared workspace, which
+  every bot of the user can reach. Put DuckDB in a shared Python virtual environment.
+- **Local scheduler.** The box has no cron or systemd. Run the pure-Python worker from a
+  `nohup setsid` loop script with a lock. It does not survive a box restart, so record
+  that limitation and the restart command in the README.
+- **Agent-turn fetch.** Create one routine, for example "Notehub cache refresh", every 15
+  minutes. Its prompt runs `handoff.py plan`. It calls the Notehub MCP's read-only
+  `execute` with `write_to_file` set, so the envelope lands in the agent-tools folder
+  rather than in the conversation. Then it runs `handoff.py ingest <file>`, deletes the
+  file, and stays silent on success. Name no credential in the prompt.
+- **Discovery.** Save a shared memory fact pointing every bot to the cache folder's README.
+- **Wake-up and delivery.** Box scripts cannot start an agent turn. Workers write findings
+  to a pending folder, and a scheduled routine delivers them (see Monitor preparation,
+  Grok Bot only).

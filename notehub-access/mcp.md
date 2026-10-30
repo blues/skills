@@ -70,3 +70,17 @@ Specific guards still apply:
   delete operation, not an empty string or `-`.
 - Use dedicated single-device enable/disable/provision operations rather than
   constructing a `create_job` for one device.
+
+## Grok Bot only
+
+*This section applies only to agents running as Grok Bot. Other harnesses should skip it.*
+
+- Connect the Notehub MCP as a Grok Bot connector (a custom connector for
+  `https://mcp.notehub.io/mcp` when it is not in the catalog). The user authorizes it
+  through the connect card. On desktop, the browser ends on a `localhost` callback page.
+  That page is normal and means sign-in completed.
+- The OAuth session lives with the connector, not on the Cloud Computer. Notehub tools
+  are callable only from agent turns, not from box scripts. Do not install the CLI,
+  store a token or set a token environment variable as a second path.
+- Large results can be saved to a file with the dynamic-tool call's `write_to_file`
+  option. This is how the cache handoff passes fetched batches to its worker.

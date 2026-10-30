@@ -4,7 +4,10 @@ Cloud Computer setup creates the Notehub Cache Maintenance Task using the acquis
 contracts below; first-use project enrollment supplies the scopes it maintains. Implement them
 with the harness's actual worker/scheduler tools and database state.
 Use deterministic code and SQL for routine work, in a language supported by the harness.
-Prefer directly scheduled Python workers when supported; reserve LLM turns for findings
+Local work runs in directly scheduled Python workers. Ideally, Notehub fetches run in the
+same workers through a script-callable Python-to-MCP bridge, with no model involvement.
+If no bridge exists, LLM turns are used for Notehub fetches (see the agent-turn fetch handoff in
+[Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md)) and for findings
 that need reasoning or user interaction.
 The pseudocode below describes behavior; its names are not callable APIs or a prescribed
 database schema. Implement and validate it using the selected authenticated transport,
@@ -76,6 +79,9 @@ Keep any native harness storage warnings enabled as an additional signal between
 Use the worker-to-agent mechanism identified during harness preparation. The ordinary
 path is code calling the authenticated API, updating the cache and evaluating queries.
 Only a finding needing interpretation, composition or user input wakes an LLM task.
+If code cannot wake the agent or reach the delivery channel, a scheduled agent turn reads
+the pending findings and delivers them. This fallback is required, not a choice to put to
+the user.
 Already prepared routine deliveries can use the delivery worker without another model turn.
 
 ```text
@@ -182,8 +188,9 @@ way. A failed or unfinished scan retains the last complete success and its cover
 limits.
 
 When only scheduled agent turns can invoke MCP, the turn performs the fetch through
-that same connection and passes the response to its database worker using a
-supported harness mechanism. Carry the ProjectUID, stream definition, requested
+that same connection and passes the response to its database worker as a file, using
+the agent-turn fetch handoff in Background execution. This is the required path, not
+an option to put to the user. Carry the ProjectUID, stream definition, requested
 cursor, current attempt ID and actual fetch time with the response. Reject
 superseded results and late failures, including when a newer empty scan kept the
 same cursor. Never relabel an old response with ingestion time. Resolve abandoned

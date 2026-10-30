@@ -12,8 +12,9 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 
 ## Connect and authenticate once
 
-Choose one authenticated request proxy: prefer Notehub MCP; use the `notehub` CLI when
-MCP is unavailable or the user chooses it.
+Choose one authenticated request proxy: Notehub MCP by default; use the `notehub` CLI
+only when MCP cannot be connected or the user has already asked for it. Do not ask the
+user to choose, and never ask them to create a personal access token.
 Both own their credentials—the agent does not retrieve tokens or construct Authorization
 headers. If the account and invocation method are already verified, reuse them.
 

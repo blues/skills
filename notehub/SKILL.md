@@ -17,8 +17,9 @@ fetching the whole corpus. Follow [working style](https://raw.githubusercontent.
 
 ## 1. Establish access
 
-Use one authenticated request proxy: prefer Notehub MCP, or use the `notehub` CLI when
-MCP is unavailable or the user chooses it. Access owns installation/connection,
+Use one authenticated request proxy: Notehub MCP by default, or the `notehub` CLI only
+when MCP cannot be connected or the user has already asked for the CLI. Do not ask the
+user to choose between them. Access owns installation/connection,
 authentication and verification. Reuse an already verified connection.
 
 | If you need to | Read | Then |
@@ -43,7 +44,10 @@ Load Platform's native data meanings later according to the work.
 ## 3. Check Cloud Computer setup
 
 A subset of agent harnesses run on Cloud Computers with persistent storage, such as
-Grok Bot, Muse, Dots, or 'claws'. If and only if this agent is running on a Cloud Computer,
+Grok Bot, Muse, Dots, or 'claws'. A Cloud Computer is a persistent computer that the
+agent (and often the user's other bots) can use between conversations. It keeps files,
+can run Python workers and supports scheduled or background work, so a local cache and
+recurring jobs can live there. If and only if this agent is running on a Cloud Computer,
 ensure that a **Notehub Cache Database** and **Notehub Cache Maintenance Task** are
 configured properly and that the maintenance task is running.
 

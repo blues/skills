@@ -90,3 +90,14 @@ Return a brief account of what changed, what runs next and any remaining depende
 For handoff, preserve nonsecret configuration, job IDs, meaning revisions, monitor
 preferences and progress, and unresolved coverage gaps. Keep only what the next
 run or agent needs; a recorded configuration is not proof that execution succeeded.
+
+## Grok Bot only
+
+*This section applies only to agents running as Grok Bot. Other harnesses should skip it.*
+
+- The pure-Python scheduler loop does not survive a box restart, and there is no startup
+  hook. Recovery means relaunching the loop script named in the cache README, guarded by
+  its lock so it cannot run twice. Report this limitation instead of searching for a hook.
+- Grok Bot routines (the agent-turn fetch and any monitor or engagement routines) persist
+  across restarts. Pause, resume or remove them with the routine tool, and keep the cache
+  task record in step.

@@ -186,3 +186,11 @@ start at its saved lesson; a revision can go directly to revisiting stored knowl
 Keep returning to that loop after answers, readbacks and publications. Existing files
 and a successful prior session are a starting point for deeper training, not evidence
 that there is nothing left to learn.
+
+## Grok Bot only
+
+*This section applies only to agents running as Grok Bot. Other harnesses should skip it.*
+
+- The Cloud Computer's workspace is shared by all of the user's bots, so it is not
+  private. Keep training drafts in a clearly named per-project folder there. Tell the
+  user they persist until deleted and that other bots can read them.

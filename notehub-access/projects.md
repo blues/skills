@@ -125,7 +125,10 @@ or starts using a verified project. Projects merely appearing in a list are not 
 2. **Start only the missing acquisition.** For a new active enrollment, queue a bounded
    first fill of project/Device metadata, recent Events, full per-device Sessions and
    the complete Notefile Schema snapshot. Apply the cache's coverage and retention
-   rules; record the first schema refresh and next daily due time. For an existing
+   rules; record the first schema refresh and next daily due time. With the agent-turn
+   fetch handoff ([Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md)),
+   enrollment adds the ProjectUID to the registry and the next scheduled fetch turn
+   performs the first fill; it may also be run once immediately. For an existing
    enrollment, continue from committed progress rather than restarting its history.
 3. **Verify ongoing maintenance.** Check that the actual registered task reads the live
    registry and includes this project in its next scheduled run. It must discover new

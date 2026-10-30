@@ -26,8 +26,12 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 
 Before creating the cache, verify script locations, available storage and low-space
 warnings, authenticated background access, scheduling and restart recovery, and how
-workers wake an LLM task. Prefer Python doing routine work without an LLM turn on every
-poll. Reuse verified setup and capture the actual paths, limits and hooks.
+workers wake an LLM task. All local cache, SQL and monitor work runs as plain Python on
+the scheduler, never as an LLM turn. Notehub fetches ideally run in the same Python workers through a
+script-callable MCP bridge. If no bridge exists, they use the agent-turn fetch handoff
+described in [Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md). Set this up
+without asking the user to choose a path or approve model cost. Reuse verified setup and
+capture the actual paths, limits and hooks.
 
 | To complete this step | Read | Result |
 |---|---|---|

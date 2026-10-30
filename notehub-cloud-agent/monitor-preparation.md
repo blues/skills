@@ -32,8 +32,12 @@ saved progress so a restart does not lose a result or repeat a completed notific
 
 Use the harness's supported chat stream or messaging channel, such as WhatsApp, SMS or
 Slack, according to the user's preferences. Verify which destinations are available.
-Wake the agent only when interpretation, composition or user interaction is needed;
-ordinary checks and prepared messages can run in code. Record actual send outcomes.
+Use the same approach as cache acquisition. Prefer no model involvement: evaluate
+monitors in Python against the cache, save due findings to a pending store and deliver
+prepared messages from code wherever the harness offers a script-callable delivery
+path. Fall back to scheduled agent turns only where code cannot reach the channel or a
+finding needs interpretation, composition or user interaction. Set this up without
+asking the user about model cost. Record actual send outcomes.
 
 | For implementation | Resource | Then |
 |---|---|---|
@@ -60,3 +64,14 @@ Save the invocation and verification result and apply the established restart me
 Project Chat supplies each monitor's question, cadence and preferences; with none yet,
 report the routine ready for monitors. Preserve existing registrations and pauses.
 Return to the cookbook for engagement setup, which uses this same monitoring routine.
+
+## Grok Bot only
+
+*This section applies only to agents running as Grok Bot. Other harnesses should skip it.*
+
+- Box scripts cannot start an agent turn or post a message. Evaluate monitors either in
+  Python from the scheduler loop, writing findings to the cache's pending-findings folder,
+  or inside a scheduled Grok Bot routine. In both cases a routine reads the pending
+  findings and delivers them to the user's chosen destination (this chat, Slack and so
+  on). Stay silent when there is nothing due.
+- Do not use internal agent sockets or local service ports as a wake-up path.

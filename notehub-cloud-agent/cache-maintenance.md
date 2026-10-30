@@ -43,7 +43,10 @@ under this maintenance task and use the same registry.
 ## 3. Register or verify scheduling and restart recovery
 
 Register the exact worker invocation at the chosen cadence and timezone, or verify the
-existing registration. Prefer direct code execution. Use shared/user-level ownership
+existing registration. Local phases run as direct code execution. Ideally, fetches do
+too, through a script-callable MCP bridge. Where no bridge exists and fetches use the
+agent-turn fetch handoff, register that turn too, at the same cadence, without
+asking the user about its cost. Use shared/user-level ownership
 where supported so deleting one bot does not remove the user's maintenance task.
 
 Apply the restart mechanism established in harness preparation: persistent schedules,
