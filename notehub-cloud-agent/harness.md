@@ -175,6 +175,14 @@ agent wake-up/delivery path identified.
 Record gaps and pending checks. The following steps implement and verify these paths
 as they create the cache and tasks; no separate configuration hierarchy is required.
 
+
+### One call_tool per execute (MCP fetch handoff)
+
+Each agent-turn fetch must run **one** Notehub MCP `execute` containing **exactly one**
+`call_tool` for the planned batch (`pageSize` per cache/modified-cursor rules). Do not
+chain multiple fetches in one execute. Persist the envelope to a file, run local
+`ingest`, then issue another execute for the next batch.
+
 ## Grok Bot only
 
 *This section applies only to agents running as Grok Bot on its Cloud Computer (the "box").

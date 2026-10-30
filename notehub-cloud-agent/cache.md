@@ -178,3 +178,12 @@ for catch-up and for steady-state incremental polls.
 Loop while `has_more` is true. After catch-up, periodic (~15m) runs only fetch
 incremental changes from the saved cursors.
 
+## One call_tool per execute for MCP batch fetch
+
+When acquisition uses Notehub MCP `execute` (agent-turn fetch handoff), each fetch batch
+must be **one** `execute` block with **exactly one** `await call_tool(...)` (typically
+`get_events` / `get_devices` / session fetch at `pageSize=10000`, or the largest size
+the transport allows). Do not pack multiple pages into one execute. Write the envelope
+to a file, ingest locally, then start a **new** execute for the next batch while
+`has_more` is true.
+

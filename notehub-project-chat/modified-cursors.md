@@ -35,7 +35,15 @@ Check the exact response: Events, Devices and Device Sessions expose `next_curso
 `X-Has-More` headers. There is no universal envelope. Preserve headers when needed.
 
 `next_cursor` identifies where to resume; `has_more` says whether another batch is
-available now. **Always request `pageSize=10000` (10K batches)** for modified-cursor
+available now. **One `call_tool` per MCP `execute` block (required for batch fetch):**
+When filling or polling via Notehub MCP code-mode `execute`, each `execute` block must
+contain **exactly one** `await call_tool(...)` for the fetch. Do **not** chain multiple
+`get_events` / `get_devices` / `GetDeviceSessions` calls inside one execute (the sandbox
+caps `call_tool` invocations per block, and packing pages invites timeouts/OOM). Ingest
+and cursor advance happen **outside** execute (agent-turn handoff / local worker) after
+that single response is written to a file. A new execute is required for the next batch.
+
+**Always request `pageSize=10000` (10K batches)** for modified-cursor
 scans wherever the operation supports `pageSize`, up to the operation’s documented
 maximum. Do not default to 500 or other small pages for cache fill. Where supported,
 `pageSize` is the API parameter for batch size; modified-cursor scans advance with
