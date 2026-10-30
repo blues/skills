@@ -38,6 +38,11 @@ becomes `get_devices_dfu_status` and `GetDbNote` becomes `get_db_note`.
 - Return the result explicitly. A final expression also works; `print()` output is not
   the result. Lists and strings may be wrapped as `{"result": ...}`; unwrap only the
   transport envelope, not a similarly named property in a resource.
+- Always `await call_tool(...)`; an un-awaited call returns a coroutine, not data.
+- A tool result may arrive as a JSON **string** rather than an object (observed for
+  `get_events`). Check `isinstance(r, str)` and `json.loads(r)` before reading keys.
+- Large pages work: a 10,000-event `get_events` page (about 11 MB) returns in about
+  1–3 s. Return a compact summary when you only need counts or cursors.
 
 ## Choose the tool by effect
 
@@ -78,6 +83,9 @@ Specific guards still apply:
 - Connect the Notehub MCP as a Grok Bot connector (a custom connector for
   `https://mcp.notehub.io/mcp` when it is not in the catalog). The user authorizes it
   through the connect card. On desktop, the browser ends on a `localhost` callback page.
+- Results printed with `print()` can come back as "(omitted)"; return values instead.
+  For full pages, pass `write_to_file=true`: an ~11 MB 10k-event page saves cleanly to
+  `/workspace/agent-tools/*.txt` (one line, with fence text around the JSON).
   That page is normal and means sign-in completed.
 - The OAuth session lives with the connector, not on the Cloud Computer. Notehub tools
   are callable only from agent turns, not from box scripts. Do not install the CLI,

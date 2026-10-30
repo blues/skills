@@ -93,12 +93,20 @@ and saves it to a file:
 **Fetch block** (runs inside the MCP code-mode `execute` tool, not as a local script):
 
 ```python
-import datetime
+import datetime, json
 p = "app:..."; cur = "0"   # values taken from `plan`
-r = await call_tool("get_events", {"projectOrProductUID": p, "cursor": cur, "pageSize": 500})
+r = await call_tool("get_events", {"projectOrProductUID": p, "cursor": cur, "pageSize": 10000})
+if isinstance(r, str):     # the payload may arrive as a JSON string
+    r = json.loads(r)
 return {"project_uid": p, "stream": "events", "requested_cursor": cur,
         "fetched_at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "response": r}
 ```
+
+Exactly one `call_tool` per `execute` block; await it and return the envelope (do not
+`print` it). Events pages of `pageSize` 10000 (about 11 MB) complete in roughly 1–3 s; use
+the same size for devices and sessions where the operation accepts it (see
+[cache.md](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md)).
+Have the harness save large results to a file and pass that file to `ingest`.
 
 **Commands.**
 
@@ -183,6 +191,55 @@ Each agent-turn fetch must run **one** Notehub MCP `execute` containing **exactl
 chain multiple fetches in one execute. Persist the envelope to a file, run local
 `ingest`, then issue another execute for the next batch.
 
+**Make the loop fast.** With no bridge, the time per page is mostly the agent turn
+itself. Measured on a ~3.4M-event project (10,000 events and ~12 MB per page):
+
+| Phase | Typical |
+|---|---|
+| MCP `get_events` (pageSize 10000) | 1.0–2.2 s (first call ~3 s) |
+| `json.loads` of the string payload | ~140 ms |
+| DuckDB ingest of 10,000 rows (one transaction) | ~300 ms |
+| Agent overhead between the two tool calls | 12–15 s |
+
+So the fill is bound by agent turns, not by Notehub or DuckDB. Rules:
+
+- Exactly **two tool calls per page**: the fetch `execute` and the `ingest` command. No
+  probes, status checks, re-reads or commentary between pages.
+- Put the timing **inside** the fetch block and carry it in the envelope (`mcp_ms`),
+  so measuring costs no extra call.
+- Have `ingest` print **only** the next cursor and `has_more`, and delete the input file.
+  The next fetch uses that cursor directly; never re-run `plan` mid-loop.
+- Run as many pages as possible in one agent run before yielding. Ending the turn and
+  waiting for the next scheduled run is far slower than continuing.
+- Use pageSize 10000 for events. Smaller pages multiply the agent-turn cost.
+- Log per-page phases (MCP, unpack, SQL, turn wall, overhead = wall − MCP − unpack − SQL)
+  to a CSV so regressions are visible.
+
+Fetch block with built-in timing:
+
+```python
+import datetime
+P = "app:..."; C = "<cursor printed by the last ingest>"
+t = datetime.datetime.now(datetime.timezone.utc)
+r = await call_tool("get_events", {"projectOrProductUID": P, "cursor": C, "pageSize": 10000})
+n = datetime.datetime.now(datetime.timezone.utc)
+return {"project_uid": P, "stream": "events", "requested_cursor": C,
+        "fetched_at": n.isoformat(), "mcp_ms": round((n - t).total_seconds() * 1000),
+        "response": r}
+```
+
+Ingest step that times its own phases and prints the next cursor:
+
+```python
+t0 = time.perf_counter(); env = parse(path)
+if isinstance(env["response"], str):
+    env["response"] = json.loads(env["response"])
+t1 = time.perf_counter(); res = ingest(con, env); t2 = time.perf_counter()
+os.remove(path)
+print(env.get("mcp_ms"), round((t1 - t0) * 1000), round((t2 - t1) * 1000), res,
+      env["response"].get("next_cursor"))
+```
+
 ## Grok Bot only
 
 *This section applies only to agents running as Grok Bot on its Cloud Computer (the "box").
@@ -211,3 +268,12 @@ Other harnesses should skip it.*
   agent that can create it. The same applies to monitor and engagement routines.
   Routines are Grok Bot's mechanism; other harnesses use their own scheduler and should
   not assume this tool exists.
+- **Fast fetch loop.** Each page is one Notehub `execute` with `write_to_file` set, then
+  one shell call that runs `ingest` on the saved file and prints the next cursor. Keep
+  both calls minimal and say nothing between pages. Measured overhead is still about
+  12–15 s per page, because each tool call is a separate model step. For a large backfill
+  (hundreds of pages), give the job to a dedicated subagent run, or allow many pages per
+  routine run, instead of the default small cap. Results printed with `print()` can come
+  back as "(omitted)", so return values instead. A full 10k page (~12 MB) saves cleanly
+  to `/workspace/agent-tools/`. These numbers are specific to Grok Bot's tool-call
+  latency; other harnesses should measure their own.

@@ -38,6 +38,11 @@ failing project must not starve others. Apply native storage warnings alongside 
 checks. If separate scheduled workers are needed, retain their IDs and responsibilities
 under this maintenance task and use the same registry.
 
+When fetches run as agent turns (no script-callable MCP bridge), follow the fast-loop
+rules in [Harness: one call_tool per execute](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md#one-call_tool-per-execute-mcp-fetch-handoff):
+pageSize 10000, two tool calls per page, per-phase timing in a CSV, and a per-run page
+budget large enough for backfills (hundreds of pages) rather than a small default cap.
+
 **Complete when:** the worker implements all phases and resumes from durable state.
 
 ## 3. Register or verify scheduling and restart recovery
