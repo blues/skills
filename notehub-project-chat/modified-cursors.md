@@ -9,21 +9,37 @@ On the user's Cloud Computer, resume saved cursors at each periodic acquisition 
 ## 1. Verify the stream and cursor contract
 
 Use modified cursors for incremental synchronization wherever the operation
-documents them. Start with `0` for a complete initial entity scan, or an epoch time
-in **microseconds** when a deliberately bounded starting point is appropriate. A
-returned cursor is an **opaque string**, potentially including a tie-breaker:
-preserve it exactly. Never parse it into a float, increment it, derive it from the
-last row's timestamp, or replace it with an EventUID. Old EventUID cursors and
-`/events-cursor` are not the sync mechanism.
+documents them.
+
+**Cursor start rules (required):**
+- Entities that are **not time-windowed** (Devices, and full per-device Sessions
+  scans): always start at **`0`** for a complete initial scan. Do not synthesize a
+  start time for those streams.
+- Entities that **are time-windowed** (Events, and any other stream whose modified
+  cursor is documented as an epoch-microsecond time cursor): **never** need to start
+  at `0` for catch-up of “recent” history. Start at a **synthesized Unix epoch
+  microseconds** value for “how far back I want to begin” (for example ~14 days ago
+  in µs since epoch). The cursor **is** documented as an epoch-microsecond cursor;
+  after the first response, resume only with the returned opaque `next_cursor`.
+  Do not invent mid-stream cursors by parsing floats or bumping timestamps yourself.
+
+A returned cursor is an **opaque string**, potentially including a tie-breaker:
+preserve it exactly once issued. Never parse a returned cursor into a float, increment
+it, derive it from the last row's timestamp, or replace it with an EventUID. Old
+EventUID cursors and `/events-cursor` are not the sync mechanism. (Synthesizing the
+*initial* start as epoch microseconds for time-windowed streams is allowed and
+required when bounding how far back to fill; that is not parsing a returned cursor.)
 
 Check the exact response: Events, Devices and Device Sessions expose `next_cursor` and
 `has_more`; some operations return arrays and cursor metadata in `X-Next-Cursor` and
 `X-Has-More` headers. There is no universal envelope. Preserve headers when needed.
 
 `next_cursor` identifies where to resume; `has_more` says whether another batch is
-available now. Request a large batch within the operation's documented limit and the
-worker's response capacity. Where supported, `pageSize` is the API parameter for batch
-size; modified-cursor scans advance with `cursor`, never `pageNum`.
+available now. **Always request `pageSize=10000` (10K batches)** for modified-cursor
+scans wherever the operation supports `pageSize`, up to the operation’s documented
+maximum. Do not default to 500 or other small pages for cache fill. Where supported,
+`pageSize` is the API parameter for batch size; modified-cursor scans advance with
+`cursor`, never `pageNum`.
 
 Keep each record under its ProjectUID and the endpoint's documented key:
 

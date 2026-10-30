@@ -161,3 +161,20 @@ row as the service's retention policy. Verify bootstrap completeness, schema
 snapshots, retention and all-device orchestration as part of the maintenance task.
 
 Return the verified model or coverage result to the procedure that called this resource.
+
+## Batch size and cursor starts for acquisition
+
+Cache fill **always** uses **`pageSize=10000`** (10K-row batches) for Devices, Events,
+and Sessions wherever the API accepts `pageSize`. Smaller pages are an anti-pattern
+for catch-up and for steady-state incremental polls.
+
+| Stream | Time-windowed? | Initial cursor |
+|---|---|---|
+| Devices | No | **`0`** (full scan) |
+| Sessions (per device) | No | **`0`** (full scan per DeviceUID) |
+| Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** for the desired lookback (e.g. 14 days); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
+| Notefile Schemas | N/A | Full snapshot; no modified cursor |
+
+Loop while `has_more` is true. After catch-up, periodic (~15m) runs only fetch
+incremental changes from the saved cursors.
+
