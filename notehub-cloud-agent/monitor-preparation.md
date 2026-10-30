@@ -75,3 +75,6 @@ Return to the cookbook for engagement setup, which uses this same monitoring rou
   findings and delivers them to the user's chosen destination (this chat, Slack and so
   on). Stay silent when there is nothing due.
 - Do not use internal agent sockets or local service ports as a wake-up path.
+- Create delivery routines as described under "Creating the routines" in
+  [Background execution, Grok Bot only](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md#grok-bot-only),
+  including the handoff when you cannot create routines yourself.

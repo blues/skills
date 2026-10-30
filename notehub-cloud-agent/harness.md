@@ -75,6 +75,73 @@ session credentials.
 Record this path as the selected acquisition method in the task record and the cache
 README. Switch to direct worker calls when a programmatic bridge becomes available.
 
+#### Writing the handoff worker
+
+Write the handoff worker locally on the Cloud Computer, next to the database. The skills
+repository does not ship code. The examples below show the contract; adapt the table
+layout to the [Cache model](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md).
+
+**Envelope.** Each fetch turn returns exactly this object from one read-only MCP block
+and saves it to a file:
+
+```json
+{"project_uid": "app:...", "stream": "devices|events|sessions|schemas",
+ "device_uid": "dev:... (sessions only)", "requested_cursor": "0",
+ "fetched_at": "2026-10-30T14:00:00Z", "response": {"devices": [], "has_more": false, "next_cursor": "..."}}
+```
+
+**Fetch block** (runs inside the MCP code-mode `execute` tool, not as a local script):
+
+```python
+import datetime
+p = "app:..."; cur = "0"   # values taken from `plan`
+r = await call_tool("get_events", {"projectOrProductUID": p, "cursor": cur, "pageSize": 500})
+return {"project_uid": p, "stream": "events", "requested_cursor": cur,
+        "fetched_at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "response": r}
+```
+
+**Commands.**
+
+| Command | Does |
+|---|---|
+| `plan` | For each active enrolled project, list devices and events with their saved cursors (`"0"` if none), sessions for each known device, and schemas when a daily refresh is due |
+| `ingest FILE...` | Parse each envelope. Ignore any text wrapper around the JSON. Validate and commit it |
+| `enroll APP_UID LABEL` | Add the project to the registry; the next fetch turn performs its first fill |
+| `status` | Per project: counts, last successful ingest and cursor positions |
+
+**Ingest rules**, the core of the worker:
+
+```python
+def ingest(con, env):
+    p, s, dev = env["project_uid"], env["stream"], env.get("device_uid")
+    if not enrolled(con, p):
+        return "rejected:not-enrolled"
+    key = s if s != "sessions" else f"sessions:{dev}"
+    saved = saved_cursor(con, p, key) or "0"
+    if s != "schemas" and str(env["requested_cursor"]) != saved:
+        return "rejected:superseded"          # a newer batch already committed
+    r = env["response"]
+    rows = r if s == "schemas" else r.get(s, [])
+    nxt, more = (None, False) if s == "schemas" else (r.get("next_cursor"), bool(r.get("has_more")))
+    if more and (not nxt or nxt == saved):
+        return "rejected:bad-cursor"          # has_more without progress
+    con.execute("BEGIN")
+    try:
+        upsert(con, p, s, rows, env["fetched_at"])   # key by uid / event / session / notefile
+        if nxt is not None:
+            save_cursor(con, p, key, nxt, env["fetched_at"])
+        log_ingest(con, env, nxt, more, len(rows))
+        con.execute("COMMIT")
+    except Exception:
+        con.execute("ROLLBACK"); raise
+    return f"ok:{len(rows)} has_more={more}"
+```
+
+Keep cursors as opaque strings. Use the actual fetch time, never the ingest time.
+Serialize writers with a file lock. Test with synthetic envelopes in a disposable
+database first: a replayed envelope must be rejected, and a new device must make
+`plan` add its sessions stream.
+
 ## 4. Determine scheduling and restart recovery
 
 Identify how to register, list, invoke, update and cancel periodic jobs. Determine the
@@ -130,3 +197,9 @@ Other harnesses should skip it.*
 - **Wake-up and delivery.** Box scripts cannot start an agent turn. Workers write findings
   to a pending folder, and a scheduled routine delivers them (see Monitor preparation,
   Grok Bot only).
+- **Creating the routines.** Grok Bot creates scheduled agent turns as routines. If you
+  cannot create routines yourself (for example, you are a subagent without the routine
+  tool), do not skip the step. Hand the exact routine name, schedule and prompt to the
+  agent that can create it. The same applies to monitor and engagement routines.
+  Routines are Grok Bot's mechanism; other harnesses use their own scheduler and should
+  not assume this tool exists.
