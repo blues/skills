@@ -3,7 +3,9 @@
 This is Cloud Computer cookbook Step 5. Prepare recurring opportunities for the monitors
 that Project Chat creates from the user's interests. Reuse the monitoring routine from
 Step 4, the shared database and existing registrations. Project Chat supplies the interests;
-setup does not need an invented Project or question.
+setup does not need an invented Project or question. This schedule does nothing until
+Project Chat registers interests via [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md); load that procedure
+when entering Project Chat.
 
 ## 1. Recover the current schedule and preferences
 

@@ -106,7 +106,8 @@ from which to choose.
 
 ## 5. Read the product's skills
 
-Understand the hardware products whose data flows into the selected Project, their
+These product skills are **project product knowledge** (data meanings for this Project),
+not the workflow for chatting about it. Understand the hardware products whose data flows into the selected Project, their
 terminology and how product concepts map to Event `body` fields or database columns.
 Read all skills and their `kinds` tags in one `GetSkills` call with `includeContent=true`,
 or reuse a complete, current snapshot already read. Internalize the entire set and
@@ -120,6 +121,13 @@ An empty skill set is a knowledge gap, not a reason to invent product meaning or
 start an unsolicited interview. Even without product skills, useful platform
 questions can still be asked - and sometimes the nature of products can be
 determined by notefile and field names in the JSON data.
+
+**Hard gate — NOT OPTIONAL:** Loading project product knowledge is **not** being in
+Project Chat. Do not report "ready for Project Chat" and do not answer a data question as
+Project Chat until you have also loaded [Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md),
+[engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md). Core engagement rule:
+record the user's ongoing interests, create monitors from them without waiting for an
+explicit "watch this" request, and bring back updates at engagement opportunities.
 
 ## 6. Do the requested work
 
@@ -143,7 +151,7 @@ process failure.
 
 | The person wants | Continue here | Work within the loop |
 |---|---|---|
-| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md) | Only after cache enrollment (Cloud Computer): answer from the Notehub Cache first, then Repository, then live API; carry follow-ups into operations and monitors that notify according to the user's preferences |
+| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat (loop + interest-driven engagement + monitors)](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md), with [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Only after cache enrollment (Cloud Computer): answer from the Notehub Cache first, then Repository, then live API; record ongoing interests, create monitors from them without waiting for an explicit watch request, and bring back updates at engagement opportunities, notifying according to the user's preferences |
 | Teach, resume training or revise shared product meaning | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Interview, investigate, review, publish verified improvements and continue with the next useful lesson |
 | Finish, stop or switch projects | [Project selection — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | End the current activity; wait after a stop, or select the requested project and continue through Steps 5 and 6 |
 
