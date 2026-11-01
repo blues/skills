@@ -107,7 +107,8 @@ Stdout is the response body, stderr diagnostics; HTTP failures exit nonzero. A s
 response can have an empty body. Avoid `--verbose` unless needed; logs can contain
 customer data. `--pretty` buffers output, so avoid it for streams. For binary firmware,
 use the documented `notehub firmware get <firmware> [path]` to download and
-`notehub firmware upload <path> [name]` to upload; the API proxy may append a newline.
+`notehub firmware upload <path> [name]` to upload, rather than `notehub api`, which may
+append a newline to binary content.
 
 `--paginate` follows modified cursors (starting at `0` unless supplied), emits successive
 responses rather than one JSON document, and fails on incomplete cursor metadata or
