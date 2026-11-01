@@ -13,7 +13,7 @@ quick query.
 
 ### Follow the entry cookbook end-to-end
 
-The core [notehub SKILL.md](https://notehub.md/notehub/SKILL.md) is a **step-by-step
+The core [notehub SKILL.md](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md) is a **step-by-step
 cookbook**. The harness **MUST** run that cookbook **in order** for Notehub work:
 
 1. Establish access  
@@ -22,8 +22,8 @@ cookbook**. The harness **MUST** run that cookbook **in order** for Notehub work
 4. Choose / enroll the project (and on Cloud Computer: **begin cache fill immediately**,
    **report fill started**, **ALWAYS route Q&A through the cache when present**)  
 5. Read the product's skills  
-6. Do the requested work in the matching activity loop — **[Project Chat](https://notehub.md/notehub-project-chat/SKILL.md)**
-   or **[Project Training](https://notehub.md/notehub-project-train/SKILL.md)** — by
+6. Do the requested work in the matching activity loop — **[Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md)**
+   or **[Project Training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md)** — by
    following that activity's skill, not by improvising answers or ad-hoc MCP calls.
 
 **MUST NOT** skip ahead to MCP/API “just to answer.” **MUST NOT** treat Project Chat or

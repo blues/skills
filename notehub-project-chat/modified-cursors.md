@@ -18,8 +18,8 @@ documents them.
 - Entities that **are time-windowed** (Events, and any other stream whose modified
   cursor is documented as an epoch-microsecond time cursor): **never** need to start
   at `0` for catch-up of “recent” history. Start at a **synthesized Unix epoch
-  microseconds** value for “how far back I want to begin” (for example ~14 days ago
-  in µs since epoch). The cursor **is** documented as an epoch-microsecond cursor;
+  microseconds** value for “how far back I want to begin” (for example 45 days ago
+  in µs since epoch, matching the cache bootstrap). The cursor **is** documented as an epoch-microsecond cursor;
   after the first response, resume only with the returned opaque `next_cursor`.
   Do not invent mid-stream cursors by parsing floats or bumping timestamps yourself.
 

@@ -172,7 +172,7 @@ for catch-up and for steady-state incremental polls.
 |---|---|---|
 | Devices | No | **`0`** (full scan) |
 | Sessions (per device) | No | **`0`** (full scan per DeviceUID) |
-| Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** for the desired lookback (e.g. 14 days); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
+| Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** for the desired lookback (the 45-day bootstrap above); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
 | Notefile Schemas | N/A | Full snapshot; no modified cursor |
 
 Loop while `has_more` is true. After catch-up, periodic (~15m) runs only fetch

@@ -23,7 +23,8 @@ custom-connector bridges, or ask the user to "connect MCP".
 
 | Harness | Capability | Route |
 |---|---|---|
-| MCP tools (`search`/`execute`) in the tool catalog, e.g. Grok Bot, Claude, Codex, Cursor | Connectable | MCP (preferred) |
+| Notehub MCP tools (`search`/`execute`) or a Notehub MCP connector in the tool catalog, e.g. Grok Bot with Notehub MCP | Connectable | MCP (preferred) |
+| No Notehub MCP tools or connector, e.g. a Claude session (such as Claude Duet) without a Notehub connector | Cannot be connected | CLI only |
 | No MCP tool catalog or way to add an MCP server, e.g. Muse | Cannot be connected | CLI only |
 | Any other harness | Apply the test above | Per result |
 

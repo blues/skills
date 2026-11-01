@@ -66,7 +66,8 @@ Keep outputs small and relevant, but never hide incomplete coverage behind a sum
 The code-mode contract excludes `login`, `o_auth2_client_credentials`,
 `get_device_environment_variables_by_pin`, `set_device_environment_variables_by_pin`,
 `delete_project`, `set_global_description`, `delete_global_description`,
-`upload_firmware` and `download_firmware`. Do not assume every OpenAPI operation is
+`upload_firmware` and `download_firmware` (MCP cannot upload or download firmware
+files; use the CLI for those). Do not assume every OpenAPI operation is
 exposed unchanged. If needed, report a concrete limitation; don't reach for raw tokens.
 
 Specific guards still apply:

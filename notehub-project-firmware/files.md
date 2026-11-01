@@ -21,8 +21,8 @@ it; resolve an unintended consequence before making that change.
 
 | Request | Operation | Apply |
 |---|---|---|
-| Download the selected binary | `DownloadFirmware` | Retrieve the exact stored file through the authenticated tool |
-| Upload a supplied binary | `UploadFirmware` | Send binary content using the documented request type; retain the returned filename and metadata |
+| Download the selected binary | `DownloadFirmware` (CLI only; excluded from MCP code mode) | Retrieve the exact stored file through the authenticated CLI |
+| Upload a supplied binary | `UploadFirmware` (CLI only; excluded from MCP code mode) | Send binary content using the documented request type; retain the returned filename and metadata |
 | Edit an existing host firmware entry's metadata | `UpdateFirmware` | Supply only the intended metadata changes; this edits the catalog entry, not running Device firmware |
 | Delete a stored host binary | `DeleteFirmware` | Use its exact full stored filename and inspect the result |
 | Resolve parameters, supported firmware types or binary request/response details | [OpenAPI specification](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml) | Follow the operation's current contract through the established proxy |
