@@ -66,8 +66,10 @@ Keep outputs small and relevant, but never hide incomplete coverage behind a sum
 The code-mode contract excludes `login`, `o_auth2_client_credentials`,
 `get_device_environment_variables_by_pin`, `set_device_environment_variables_by_pin`,
 `delete_project`, `set_global_description`, `delete_global_description`,
-`upload_firmware` and `download_firmware`. Firmware file upload and download are not
-available at all via MCP; use the CLI for those. Do not assume every OpenAPI operation is
+`upload_firmware` and `download_firmware`. MCP code mode cannot upload or download firmware
+files; report that limitation. A switch to the CLI is a transport change under Access, made
+only for this need or at the user's choice, and not available where the harness forbids a
+second path (e.g. Grok Bot). Do not assume every OpenAPI operation is
 exposed unchanged. If needed, report a concrete limitation; don't reach for raw tokens.
 
 Specific guards still apply:

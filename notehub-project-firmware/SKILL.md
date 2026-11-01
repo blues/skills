@@ -7,8 +7,11 @@ description: Explore and manage Notecard and host firmware updates for Devices a
 
 Use this cookbook within Project Chat for firmware questions and authorized changes.
 Reuse the selected ProjectUID, MCP or CLI connection, product knowledge and any prepared
-cache. Both access methods support this work, except firmware file upload and download,
-which are not available at all via MCP; use the CLI for those. Follow
+cache. Both access methods support this work, except firmware file upload and download:
+MCP code mode cannot upload or download firmware files. Over MCP, report that limitation.
+Switching to the CLI is a transport change under [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md), made only for this need
+or at the user's choice, and is not available on harnesses that forbid a second path
+(e.g. Grok Bot). Follow
 [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 Keep **Notecard firmware** and **host firmware** separate. For each, distinguish the
