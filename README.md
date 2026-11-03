@@ -1,6 +1,6 @@
 # Here's what the user is asking when they sent you here.
 
-If you are an Agent, your entry guide for Notehub access, questions, operations and training can be found in this public Markdown document: [https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md)
+If you are an Agent, your entry guide for Notehub access, questions, operations and training can be found in this Markdown document: [https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md)
 
 A user may have asked you to come here by saying something like: ***Please curl https://raw.githubusercontent.com/blues/skills/refs/heads/master/README.md and let's chat!***
 
