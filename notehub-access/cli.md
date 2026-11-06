@@ -1,8 +1,8 @@
 # Notehub CLI: an authenticated request proxy
 
-Use this guide when Access determined MCP cannot be connected for this harness (no
-Notehub MCP tools and no way to add an MCP server, like Muse), or when the CLI is chosen or preferred
-among connectable options. Run
+Use this guide when Access selected the CLI because MCP cannot be connected for this
+harness (no Notehub MCP tools and no way to add an MCP server, like Muse), the user
+requested the CLI, or a concrete transport limitation requires it. Run
 `notehub --help-agent` and follow the installed version's guide; this page is a workflow,
 not a replacement for that guide. If the executable is absent, install it from the
 official [note-cli releases](https://github.com/blues/note-cli/releases) for the host OS

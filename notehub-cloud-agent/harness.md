@@ -29,31 +29,26 @@ Maintenance Task incorporates storage monitoring and the low-space response.
 
 ## 3. Establish programmatic Notehub access
 
-Local database work (ingestion, purge, schema review, SQL evaluation, storage checks)
-always runs in ordinary Python workers, without invoking an LLM. Notehub fetches reuse
-the connection chosen during Access:
+Do as much work as possible in scheduled Python methods: determine due work, parse
+responses, ingest records, commit cursors, run SQL, evaluate monitors and maintain storage.
+Return to the harness only for reasoning, user interaction or calling an MCP tool.
+Notehub fetches reuse the connection chosen during Access:
 
-| Selected connection | How a worker calls Notehub |
+| Selected connection | How background work calls Notehub |
 |---|---|
 | CLI | Python invokes `notehub api` in the same authorized OS environment and parses its response. The CLI supplies authentication and handles supported credential renewal. |
-| MCP | **Ideal:** a simple, script-callable Python-to-MCP programmatic bridge that lets a script work through the MCP server without the model's involvement. Use it whenever the harness provides one. **If not:** use the **agent-turn fetch handoff** below. An interactive MCP tool alone does not give a Python process access. |
+| MCP | Python prepares the work; the harness calls the connected MCP tool and saves the response to a file. Python then parses, validates and ingests it through the **agent-turn fetch handoff** below. |
 
-Identify the actual invocation and verify a harmless read from the worker environment
-when available; otherwise verify it during the first task run. Keep credentials in the
-selected tool and retain one authenticated path.
+Identify the actual invocation and verify a harmless read through the selected path:
+the Python worker for CLI access, or the harness MCP call and Python ingestion for MCP
+access. Verify it during the first task run if no earlier check is possible. Keep
+credentials in the selected tool and retain one authenticated path.
 
-### Ideal: a script-callable MCP bridge
+### MCP: agent-turn fetch handoff
 
-If a simple, script-callable Python-to-MCP programmatic bridge is available, it is ideal:
-it lets a script do its work through the MCP server, sharing the existing authenticated
-session, without the model's involvement. Prefer it whenever the harness provides it. The
-worker then fetches, ingests and evaluates entirely in code, and no agent turn runs on
-routine polls.
-
-### If not: agent-turn fetch handoff
-
-If no such bridge exists, this is the required acquisition path. Build
-it without asking the user, and do not ask them to weigh the model cost. Do not offer
+For MCP access, this is the acquisition path. CLI access uses the direct worker
+invocation in the table above and skips this handoff. Build it without asking the
+user, and do not ask them to weigh the model cost. Do not offer
 or request a second credential (personal access token, CLI login, environment token),
 and do not substitute ad-hoc workarounds such as internal harness sockets or copied
 session credentials.
@@ -73,7 +68,7 @@ session credentials.
   never fetches from Notehub itself.
 
 Record this path as the selected acquisition method in the task record and the cache
-README. Switch to direct worker calls when a programmatic bridge becomes available.
+README. Keep the harness turn focused on MCP calls and handing their results back to Python.
 
 #### Writing the handoff worker
 
@@ -166,10 +161,11 @@ all periodic registrations are gone. Record any missing automatic recovery capab
 ## 5. Determine how workers wake the agent
 
 Find the harness's supported way for code to enqueue or trigger an LLM task in the
-right user/project context, and its notification mechanism for the user. Ordinary
-polls, SQL calculations and comparisons stay in code. Wake the LLM when a finding
-needs reasoning, a message or graph, or a question for the user. An unchanged routine
-check should finish without a model turn.
+right user/project context, and its notification mechanism for the user. Routine planning,
+CLI calls, parsing, SQL calculations, comparisons and rendering stay in Python. Return
+to the harness for reasoning, user interaction or an MCP tool call. After an MCP call,
+pass the result back to Python promptly. A routine check that needs none of these
+harness capabilities should finish in code.
 
 A worker saves a pending finding before requesting that wake-up. Pass a compact job or
 finding ID and evidence location so the agent can recover the context. Identify how
@@ -191,7 +187,7 @@ Each agent-turn fetch must run **one** Notehub MCP `execute` containing **exactl
 chain multiple fetches in one execute. Persist the envelope to a file, run local
 `ingest`, then issue another execute for the next batch.
 
-**Make the loop fast.** With no bridge, the time per page is mostly the agent turn
+**Make the loop fast.** In the MCP handoff, the time per page is mostly the agent turn
 itself. Measured on a ~3.4M-event project (10,000 events and ~12 MB per page):
 
 | Phase | Typical |
@@ -245,7 +241,7 @@ print(env.get("mcp_ms"), round((t1 - t0) * 1000), round((t2 - t1) * 1000), res,
 *This section applies only to agents running as Grok Bot on its Cloud Computer (the "box").
 Other harnesses should skip it.*
 
-- **No MCP bridge yet.** Box scripts cannot call connected MCP servers, so use the
+- **MCP calls run in the harness.** Box scripts cannot call connected MCP servers, so use the
   agent-turn fetch handoff. Do not probe internal agent sockets or local service ports
   as a substitute.
 - **Storage and runtime.** Use a `notehub-cache/` folder in the shared workspace, which

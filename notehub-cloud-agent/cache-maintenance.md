@@ -20,8 +20,9 @@ goal, use its fastest supported interval so changes can reach the user promptly.
 Each run checks storage, fills due projects and runs daily work when due. Read the
 live registry each time so newly enrolled projects join automatically. Preserve
 pauses/exclusions. With no projects yet, check storage and skip
-acquisition. Use Python or the supported runtime for routine work; wake the agent only
-when a finding or failure needs reasoning or user interaction.
+acquisition. Keep routine work in scheduled Python methods. Return to the harness for
+reasoning, user interaction or MCP tool calls; hand MCP responses back to Python for
+parsing, ingestion and further calculation.
 
 Implement the phases below, or verify the existing worker performs them. The resources
 contain algorithms and data rules; return to this procedure after the needed section.
@@ -38,7 +39,7 @@ failing project must not starve others. Apply native storage warnings alongside 
 checks. If separate scheduled workers are needed, retain their IDs and responsibilities
 under this maintenance task and use the same registry.
 
-When fetches run as agent turns (no script-callable MCP bridge), follow the fast-loop
+For MCP fetches through the harness, follow the fast-loop
 rules in [Harness: one call_tool per execute](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md#one-call_tool-per-execute-mcp-fetch-handoff):
 pageSize 10000, two tool calls per page, per-phase timing in a CSV, and a per-run page
 budget large enough for backfills (hundreds of pages) rather than a small default cap.
@@ -48,9 +49,9 @@ budget large enough for backfills (hundreds of pages) rather than a small defaul
 ## 3. Register or verify scheduling and restart recovery
 
 Register the exact worker invocation at the chosen cadence and timezone, or verify the
-existing registration. Local phases run as direct code execution. Ideally, fetches do
-too, through a script-callable MCP bridge. Where no bridge exists and fetches use the
-agent-turn fetch handoff, register that turn too, at the same cadence, without
+existing registration. Local phases run as scheduled Python methods. CLI fetches run
+directly in those workers. For MCP access, register the agent-turn fetch handoff too,
+at the same cadence, without
 asking the user about its cost. Use shared/user-level ownership
 where supported so deleting one bot does not remove the user's maintenance task.
 

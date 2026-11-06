@@ -5,12 +5,16 @@ description: Continue work with a selected Notehub Project through an ongoing lo
 
 # Chat about the Project and keep the user informed
 
-Arrive here after the entry cookbook has established access, taught the API, prepared
-any Cloud Computer, selected ProjectUID, **enrolled that Project in the Notehub Cache
-(mandatory on a Cloud Computer — see [projects Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache))**,
-and loaded the complete product skill set. Reuse that connection, product understanding
-and known cache readiness. **If enrollment or cache readiness is missing, return to
-Project selection Step 3 before answering any data question.** Follow
+Arrive here after the entry cookbook has established access, taught the API, selected
+ProjectUID and loaded the complete product skill set. Retain both independent routing
+decisions: **MCP or Notehub CLI**, and **Cloud Computer or simple agent**.
+
+On a **Cloud Computer**, the entry workflow must also have prepared the Notehub Cache
+and **enrolled the selected Project and begun its fill**. If enrollment or known cache
+readiness is missing, return to [Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache)
+before answering a data question. A **simple agent** skips those cache prerequisites
+and obtains Notehub evidence through its selected MCP or CLI tool.
+Reuse the verified connection, product understanding and applicable cache readiness. Follow
 [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md).
 
 A **monitor watches something and alerts the user according to their monitoring
@@ -27,9 +31,11 @@ route ordinary analytics through live Notehub APIs when the cache is present. If
 question concerns the whole dataset, or no cache is available and cannot be enrolled,
 use the **Project Repository when access is through MCP and the Project has a Repository
 enabled**. Repository queries are slower than the local cache but faster than direct
-Notehub API queries. The question and Repository procedures below apply Notehub and
-Product Skills to the chosen source; direct API reads supply missing evidence or current
-service state only.
+Notehub API queries. A simple agent using the CLI, or using MCP without a suitable
+enabled Repository, obtains its evidence through ordinary Notehub API calls with that
+tool. On a Cloud Computer, live API reads supply evidence unavailable from the cache
+and Repository, or verify current service state. The question and Repository procedures
+below apply Notehub and Product Skills to the chosen source.
 
 | Only if preparation is missing | Read | Then |
 |---|---|---|
@@ -73,7 +79,7 @@ calculate and verify. A follow-up reuses completed work where it still applies.
 |---|---|---|
 | Ask a question or investigate a finding | [Answer a question](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md) | Calculating a grounded result from suitable evidence, using the cache first when it covers the question |
 | Get ready for fast Q&A or improve repeated questions | [Optimize Q&A](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/optimizing-qa.md) | Preparing or reusing verified queries against the existing data sources |
-| Query about 100% of historical data (beyond any Notehub Cache), or answer when no cache is available | [Query the Project Repository](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-repository/SKILL.md) | Introspecting and querying the Repository through MCP using Notehub Skills and Product Skills; requires MCP access and a Repository enabled for this Project |
+| Query about 100% of historical data (beyond any Notehub Cache), or answer when no cache is available, **using MCP with a Repository enabled for this Project** | [Query the Project Repository](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-repository/SKILL.md) | Introspecting and querying the Repository through MCP using Notehub Skills and Product Skills; otherwise use Answer a question above to choose available evidence |
 | Watch something, receive periodic updates or graphs, or be alerted when a result changes or a threshold is crossed | [Create or change a monitor](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md#create-or-change-a-monitor) | Reusing the question's calculation, setting when and where to notify, and verifying scheduled checks and notification delivery |
 | Explore or investigate state of Devices, Fleets, or other Project entities. Make changes if authorized. | [Operations](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/operations.md) | Explaining the observed state and, when requested and authorized, making changes and verifying their actual effect |
 | Explore and manage Firmware Updates for Devices and Fleets | [Explore and manage Firmware Updates](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-firmware/SKILL.md) | Explaining reported and desired firmware, investigating update progress, and carrying authorized updates through verification |

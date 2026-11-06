@@ -32,9 +32,10 @@ saved progress so a restart does not lose a result or repeat a completed notific
 
 Use the harness's supported chat stream or messaging channel, such as WhatsApp, SMS or
 Slack, according to the user's preferences. Verify which destinations are available.
-Use the same approach as cache acquisition. Prefer no model involvement: evaluate
-monitors in Python against the cache, save due findings to a pending store and deliver
-prepared messages from code wherever the harness offers a script-callable delivery
+Evaluate monitors in scheduled Python against the cache and save due findings to a
+pending store. If fresh inputs require an MCP call, hand that call to the harness and
+return its response to Python. Deliver prepared messages from code wherever the
+harness offers a script-callable delivery
 path. Fall back to scheduled agent turns only where code cannot reach the channel or a
 finding needs interpretation, composition or user interaction. Set this up without
 asking the user about model cost. Record actual send outcomes.
@@ -69,11 +70,12 @@ Return to the cookbook for engagement setup, which uses this same monitoring rou
 
 *This section applies only to agents running as Grok Bot. Other harnesses should skip it.*
 
-- Box scripts cannot start an agent turn or post a message. Evaluate monitors either in
-  Python from the scheduler loop, writing findings to the cache's pending-findings folder,
-  or inside a scheduled Grok Bot routine. In both cases a routine reads the pending
-  findings and delivers them to the user's chosen destination (this chat, Slack and so
-  on). Stay silent when there is nothing due.
+- Box scripts cannot start an agent turn or post a message. Evaluate monitors in Python,
+  invoked either by the scheduler loop or by a scheduled Grok Bot routine, and write
+  findings to the cache's pending-findings folder. A routine reads those findings,
+  handles any needed reasoning and
+  delivers them to the user's chosen destination (this chat, Slack and so on).
+  Stay silent when there is nothing due.
 - Do not use internal agent sockets or local service ports as a wake-up path.
 - Create delivery routines as described under "Creating the routines" in
   [Background execution, Grok Bot only](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md#grok-bot-only),

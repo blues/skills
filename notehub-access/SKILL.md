@@ -19,12 +19,12 @@ are present—code-mode `search` and `execute` (with `execute_write` /
 connector you can call—or the harness has a built-in way for you to add an MCP server
 yourself. If none of these exist (like Muse), MCP **cannot be connected** for this harness: use the
 CLI, read only the CLI guide, and do not open the MCP guide, invent OAuth or
-custom-connector bridges, or ask the user to "connect MCP".
+unsupported connector setup, or ask the user to "connect MCP".
 
 | Harness | Capability | Route |
 |---|---|---|
 | Notehub MCP tools (`search`/`execute`) or a Notehub MCP connector in the tool catalog, e.g. Grok Bot with Notehub MCP | Connectable | MCP (preferred) |
-| No Notehub MCP tools or connector, e.g. a Claude session (such as Claude Duet) without a Notehub connector | Cannot be connected | CLI only |
+| No Notehub MCP tools or connector and no way to add an MCP server, e.g. a Claude session (such as Claude Duet) with neither capability | Cannot be connected | CLI only |
 | No MCP tool catalog or way to add an MCP server, e.g. Muse | Cannot be connected | CLI only |
 | Any other harness | Apply the test above | Per result |
 

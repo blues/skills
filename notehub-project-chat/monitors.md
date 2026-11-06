@@ -31,6 +31,10 @@ an existing matching monitor and change only what is needed. A request authorize
 scoped recurring work where the harness supports it; ask only about missing decisions
 that affect the result or delivery.
 
+If this agent is not running on a Cloud Computer, prepare the calculation and preferences
+in Steps 1–2, then go to Step 6 to report a draft and the missing execution capability.
+Cloud Computer setup and recurring registration apply only on a Cloud Computer.
+
 ### 1. Recover the question and its calculation
 
 Preserve the existing monitor's identity, ProjectUID and pause state. Record the request

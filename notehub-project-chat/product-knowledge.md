@@ -199,5 +199,6 @@ the calling workflow continues from here.
 Project Chat. Do not report "ready for Project Chat" and do not answer a data question as
 Project Chat until you have also loaded [Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md),
 [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md). Core engagement rule:
-record the user's ongoing interests, create monitors from them without waiting for an
-explicit "watch this" request, and bring back updates at engagement opportunities.
+record the user's ongoing interests and, on a Cloud Computer, create monitors from them
+without waiting for an explicit "watch this" request and bring back updates at
+engagement opportunities.

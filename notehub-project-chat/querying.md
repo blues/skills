@@ -32,6 +32,12 @@ bodies, and a familiar field name does not establish customer measurement semant
 
 ## 2. Choose the cache, Repository or Notehub API
 
+Apply both routing decisions from the entry guide: **access method** and **environment**.
+A **simple agent** obtains all Notehub evidence through its selected tool: MCP queries
+an enabled Project Repository when suitable, or calls the ordinary Notehub API; the
+`notehub` CLI calls the ordinary Notehub API. A simple agent skips Notehub Cache setup
+and enrollment. The cache requirements below apply to **Cloud Computers**.
+
 **Before choosing a source:** if this agent is on a Cloud Computer and the selected
 Project is not yet in the Notehub Cache registry, **stop and enroll it now** via
 [Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache),

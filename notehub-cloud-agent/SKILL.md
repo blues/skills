@@ -26,10 +26,12 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 
 Before creating the cache, verify script locations, available storage and low-space
 warnings, authenticated background access, scheduling and restart recovery, and how
-workers wake an LLM task. All local cache, SQL and monitor work runs as plain Python on
-the scheduler, never as an LLM turn. Notehub fetches ideally run in the same Python workers through a
-script-callable MCP bridge. If no bridge exists, they use the agent-turn fetch handoff
-described in [Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md). Set this up
+workers return work to the harness. Do as much work as possible in scheduled Python
+methods: plan acquisition, parse responses, update the cache, run SQL, evaluate monitors
+and perform maintenance. Return to the harness only for reasoning, user interaction or,
+in MCP environments, calling an MCP tool. Reuse the connection chosen by Access: Python
+workers invoke `notehub api` for CLI access; MCP access uses the agent-turn fetch handoff
+described in [Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md), then returns the response to Python. Set this up
 without asking the user to choose a path or approve model cost. Reuse verified setup and
 capture the actual paths, limits and hooks.
 

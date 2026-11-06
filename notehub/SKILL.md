@@ -5,6 +5,47 @@ description: Start or resume Notehub work by ALWAYS following these skills befor
 
 # Start working with Notehub
 
+## What is a Cloud Computer?
+
+A **Cloud Computer** is an AI harness such as Grok Bot, Claude Duet, OpenAI Dots,
+Meta Muse, or any agent that has:
+
+1. A folder that persists in a filesystem and can be used to hold state such as
+   configuration files or a database.
+2. Scheduled routines that can update the contents of that folder.
+
+An AI harness that can only update its files while the user keeps a Text UI or
+browser session open is *not* a Cloud Computer. A Cloud Computer’s scheduled
+routines can update its persistent folder independently of the user’s interactive
+session.
+
+To follow all Notehub skills, an AI Agent must know whether or not its harness is
+currently operating on a Cloud Computer.
+
+## Two independent routing decisions
+
+Every agent must establish and retain **both** of these facts:
+
+1. **Access method:** Notehub MCP or the `notehub` CLI, selected and verified in Step 1.
+2. **Environment:** a Cloud Computer as defined above, or a simple agent that is not
+   running on a Cloud Computer. Step 3 applies the corresponding setup path.
+
+These choices are independent. A Cloud Computer can use either MCP or the CLI, and
+a simple agent can use either MCP or the CLI. Follow the numbered workflow below;
+use this table to carry the resulting route into every later procedure.
+
+| Environment | Access method | Data and execution path |
+|---|---|---|
+| **Cloud Computer** | **MCP** | Enroll the Project, begin filling the **Notehub Cache** immediately, and use it for ordinary Q&A. Scheduled Python handles local work; the harness calls MCP tools for acquisition and any additional service evidence. |
+| **Cloud Computer** | **Notehub CLI** | Enroll the Project, begin filling the **Notehub Cache** immediately, and use it for ordinary Q&A. Scheduled Python handles local work and invokes `notehub api` for acquisition and any additional service evidence. |
+| **Simple agent** | **MCP** | Obtain all Notehub evidence through MCP tools, including Project Repository queries when enabled and suitable. Skip Notehub Cache setup, enrollment and background routines. |
+| **Simple agent** | **Notehub CLI** | Obtain all Notehub evidence through the `notehub` CLI. Skip Notehub Cache setup, enrollment and background routines. |
+
+An enabled **Project Repository** is a Notehub service queried through MCP, available
+to either environment using MCP. It is separate from the local **Notehub Cache**.
+Simple agents can calculate on returned data during the task; they do not maintain a
+Notehub Cache between conversations.
+
 ## Basic way of working — skills before tools
 
 **Harness rule (always):** Follow **these skills** before any Notehub MCP or API call.
@@ -26,6 +67,10 @@ shared product knowledge.
 Complete the prerequisites **in order**, reusing verified context. Read the instructions
 for your path in full; use the routing tables to choose relevant references rather than
 fetching the whole corpus. Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/working-style.md) throughout.
+
+A supporting procedure returns to the step that called it unless it explicitly hands
+off to another activity. A link back to this entry guide means repair missing
+prerequisites and resume the caller; reuse completed steps and verified context.
 
 ## Expected tools and safety flags
 
@@ -60,26 +105,24 @@ authentication and verification. Reuse an already verified connection.
 
 **All agents must complete API discovery**, regardless of how they accessed Notehub.
 Read the complete OpenAPI specification and survey its available operations. Then read
-**only one** of the MCP or CLI guides, matching the connection Access established and
-verified (do not read either before Access has routed you; a CLI-only harness never reads
-the MCP guide):
-the MCP guide for MCP access, or the CLI guide for CLI access. Reuse what you learned
-during authentication. Resolve detailed request and response contracts when needed.
+or reuse **only one** of the MCP or CLI guides, matching the connection Access established
+and verified: the MCP guide for MCP access, or the CLI guide for CLI access. Access may
+already have used that guide for authentication; retain its invocation guidance here.
+Do not read either before Access has routed you; a CLI-only harness never reads the MCP
+guide. Resolve detailed request and response contracts when needed.
 Load Platform's native data meanings later according to the work.
 
 | If you are using or need to understand | Read | Then |
 |---|---|---|
-| Notehub's API capabilities through either connection | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Read and retain the current OpenAPI contract before learning the selected tool's invocation syntax |
+| Notehub's API capabilities through either connection | [API discovery](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/api.md) | Read and retain the current OpenAPI contract, then apply it through the selected tool |
 | Notehub MCP: an authenticated request proxy | [MCP guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/mcp.md) | Use 'code mode' to map OperationId and parameters to an 'execute' MCP tool |
 | Notehub CLI: an authenticated request proxy | [CLI guide](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/cli.md) | Use the tool's CURL-like syntax as an API proxy; read `notehub --help-agent` |
 
 ## 3. Check Cloud Computer setup
 
-A subset of agent harnesses run on Cloud Computers with persistent storage, such as
-Grok Bot, Muse, Dots, or 'claws'. A Cloud Computer is a persistent computer that the
-agent (and often the user's other bots) can use between conversations. It keeps files,
-can run Python workers and supports scheduled or background work, so a local cache and
-recurring jobs can live there. Being a Cloud Computer says nothing about MCP: use
+Determine whether this harness is operating on a **Cloud Computer** using the
+[definition above](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#what-is-a-cloud-computer).
+Being a Cloud Computer says nothing about MCP: use
 whichever proxy Access selected (for example, Muse uses the CLI). If and only if this agent is running on a Cloud Computer,
 ensure that a **Notehub Cache Database** and **Notehub Cache Maintenance Task** are
 configured properly and that the maintenance task is running.
@@ -101,6 +144,9 @@ from which to choose.
 | If you need to | Read | Then |
 |---|---|---|
 | Resume or choose a Project | [Project selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Verify the ProjectUID, **enroll it in the Notehub Cache immediately on a Cloud Computer**, confirm cache readiness, then summarize the Project's name, associated ProductUIDs and recent activity |
+
+If the user's entire request is to list available Projects, return that list at this
+step. A list alone does not require selecting a Project or reading its product skills.
 
 **Hard gate (Cloud Computer) — NOT OPTIONAL:** As soon as a Project is chosen — before product skills, before answering any data question, before any live Notehub list/get for analytics — complete [Project selection Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md#3-enroll-the-project-and-check-its-cloud-cache): enroll the ProjectUID in the shared Notehub Cache registry and **begin fill immediately** in this turn. **Report to the user that fill has started** (and that the cache is initializing) so they know work is underway. Thereafter **ALWAYS route Q&A through the Notehub Cache when it is present** (enrolled), including while history is still filling — answer from verified coverage; never shortcut ordinary analytics to the live API. Do not skip this because the user already asked a question. Listing Projects alone does **not** enroll them; selecting or opening one **does**, and that enrollment + immediate fill + cache-first Q&A is mandatory.
 
@@ -126,8 +172,9 @@ determined by notefile and field names in the JSON data.
 Project Chat. Do not report "ready for Project Chat" and do not answer a data question as
 Project Chat until you have also loaded [Project Chat](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md),
 [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md). Core engagement rule:
-record the user's ongoing interests, create monitors from them without waiting for an
-explicit "watch this" request, and bring back updates at engagement opportunities.
+record the user's ongoing interests and, on a Cloud Computer, create monitors from them
+without waiting for an explicit "watch this" request and bring back updates at
+engagement opportunities.
 
 ## 6. Do the requested work
 
@@ -151,7 +198,7 @@ process failure.
 
 | The person wants | Continue here | Work within the loop |
 |---|---|---|
-| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat (loop + interest-driven engagement + monitors)](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md), with [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Only after cache enrollment (Cloud Computer): answer from the Notehub Cache first, then Repository, then live API; record ongoing interests, create monitors from them without waiting for an explicit watch request, and bring back updates at engagement opportunities, notifying according to the user's preferences |
+| Ask questions, investigate, act, or monitor answers with notifications and ongoing updates | [Project chat (loop + interest-driven engagement + monitors)](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/SKILL.md), with [engagement](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/engagement.md) and [monitors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/monitors.md) | Follow the access/environment route established above; answer from verified evidence and retain ongoing interests. On a Cloud Computer, create monitors for useful interests and deliver updates under the user's preferences. |
 | Teach, resume training or revise shared product meaning | [Project training](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/SKILL.md) | Interview, investigate, review, publish verified improvements and continue with the next useful lesson |
 | Finish, stop or switch projects | [Project selection — Step 4](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#4-choose-the-project) | End the current activity; wait after a stop, or select the requested project and continue through Steps 5 and 6 |
 

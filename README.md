@@ -2,6 +2,9 @@
 
 If you are an Agent, your entry guide for Notehub access, questions, operations and training can be found in this Markdown document: [https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md)
 
+Read that entry guide in full, then follow its steps in order. Its routing tables tell
+you which supporting guides to read for the current step and where to continue afterward.
+
 A user may have asked you to come here by saying something like: ***Please curl https://raw.githubusercontent.com/blues/skills/refs/heads/master/README.md and let's chat!***
 
 The user asked for 'curl' specifically because some agent browser tools fail on Markdown files. CURL only retrieves the Markdown text - it executes nothing - and the guide needs no credentials.

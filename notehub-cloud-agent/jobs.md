@@ -3,12 +3,11 @@
 Cloud Computer setup creates the Notehub Cache Maintenance Task using the acquisition and daily review
 contracts below; first-use project enrollment supplies the scopes it maintains. Implement them
 with the harness's actual worker/scheduler tools and database state.
-Use deterministic code and SQL for routine work, in a language supported by the harness.
-Local work runs in directly scheduled Python workers. Ideally, Notehub fetches run in the
-same workers through a script-callable Python-to-MCP bridge, with no model involvement.
-If no bridge exists, LLM turns are used for Notehub fetches (see the agent-turn fetch handoff in
-[Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md)) and for findings
-that need reasoning or user interaction.
+Keep as much work as possible in scheduled Python methods: plan due work, call the
+selected CLI, parse responses, update the cache, run SQL, evaluate monitors and maintain
+storage. Return to the harness only for reasoning, user interaction or MCP tool calls.
+For MCP access, the harness calls the tool and hands its response back to Python through
+the agent-turn fetch handoff in [Background execution](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/harness.md).
 The pseudocode below describes behavior; its names are not callable APIs or a prescribed
 database schema. Implement and validate it using the selected authenticated transport,
 database and scheduler.
@@ -76,9 +75,10 @@ Keep any native harness storage warnings enabled as an additional signal between
 
 ## Wake the agent only for work that needs it
 
-Use the worker-to-agent mechanism identified during harness preparation. The ordinary
-path is code calling the authenticated API, updating the cache and evaluating queries.
-Only a finding needing interpretation, composition or user input wakes an LLM task.
+Use the worker-to-agent mechanism identified during harness preparation. Scheduled
+Python handles routine work, including CLI requests, cache updates and query evaluation.
+Return to the harness for reasoning or user interaction, and for every MCP tool call
+using the acquisition handoff below. Return MCP results to Python for processing.
 If code cannot wake the agent or reach the delivery channel, a scheduled agent turn reads
 the pending findings and delivers them. This fallback is required, not a choice to put to
 the user.
@@ -187,16 +187,15 @@ batch may keep the same cursor or advance it; commit its successful freshness ei
 way. A failed or unfinished scan retains the last complete success and its coverage
 limits.
 
-When only scheduled agent turns can invoke MCP, the turn performs the fetch through
-that same connection and passes the response to its database worker as a file, using
+For MCP access, the harness performs the fetch through the selected connection and
+passes the response to its Python database worker as a file, using
 the agent-turn fetch handoff in Background execution. This is the required path, not
 an option to put to the user. Carry the ProjectUID, stream definition, requested
 cursor, current attempt ID and actual fetch time with the response. Reject
 superseded results and late failures, including when a newer empty scan kept the
 same cursor. Never relabel an old response with ingestion time. Resolve abandoned
-attempts after the worker timeout. Choose a direct bridge when supported; do not
-assume MCP tools are local imports or add a CLI login to work around that
-limitation.
+attempts after the worker timeout. MCP tools are called by the harness; do not treat
+them as local Python imports or add a CLI login to bypass the selected connection.
 
 ### Validate the implemented acquisition worker
 
