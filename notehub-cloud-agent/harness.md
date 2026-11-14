@@ -254,6 +254,22 @@ Other harnesses should skip it.*
   `execute` with `write_to_file` set, so the envelope lands in the agent-tools folder
   rather than in the conversation. Then it runs `handoff.py ingest <file>`, deletes the
   file, and stays silent on success. Name no credential in the prompt.
+- **Configure the fetch call exactly this way.** Call the Notehub MCP through Grok Bot's
+  own tool call: namespace `user-Notehub MCP` (or whatever the connector is named), tool
+  `execute`, with the tool-call option `write_to_file: true` set beside `arguments`. Do not
+  put it inside `arguments` or inside the Python `code`; the server's `execute` accepts
+  only `code` and rejects anything else. The harness writes the result to a file and
+  returns its path (for example "Large output has been written to: <path>"). The path
+  may be outside `/workspace/agent-tools/`, so ingest whatever path is returned. Then run
+  `ingest <path>` in one short shell command that names only the path.
+- **Never write the envelope yourself.** Do not use a code-mode connector wrapper (such as
+  a `connectors/<server>` `execute()` function inside a subagent's code sandbox), and do
+  not save the page with a file-write tool or a shell command that embeds the payload.
+  That wrapper drops `write_to_file`, so the page comes back inline. Writing it yourself
+  then hits Auto-review approval cards that expire unattended in routines, even with an
+  Allow rule, and file writes are capped at 1 MB per call. If `write_to_file` is
+  unavailable in a run, stop and report a blocker rather than falling back to writing
+  files. Write this rule into the routine prompt itself, because each run starts fresh.
 - **Discovery.** Save a shared memory fact pointing every bot to the cache folder's README.
 - **Wake-up and delivery.** Box scripts cannot start an agent turn. Workers write findings
   to a pending folder, and a scheduled routine delivers them (see Monitor preparation,
@@ -270,6 +286,6 @@ Other harnesses should skip it.*
   12–15 s per page, because each tool call is a separate model step. For a large backfill
   (hundreds of pages), give the job to a dedicated subagent run, or allow many pages per
   routine run, instead of the default small cap. Results printed with `print()` can come
-  back as "(omitted)", so return values instead. A full 10k page (~12 MB) saves cleanly
-  to `/workspace/agent-tools/`. These numbers are specific to Grok Bot's tool-call
+  back as "(omitted)", so return values instead. A full 10k page (~8–12 MB) saves cleanly
+  through `write_to_file`, at the path the harness returns. These numbers are specific to Grok Bot's tool-call
   latency; other harnesses should measure their own.
