@@ -86,6 +86,29 @@ Answer from verified available evidence while initial history fills; do not wait
 the entire cache when it already covers the question. Preserve maintenance pauses and
 report any narrower window or population that limits the answer.
 
+### Query the local cache fast (Grok Bot Cloud Computer)
+
+Measured on a shared Grok Bot cache (~4.5M Events): extracting JSON from `events.data`
+on every query dominated query time. Promoting the hot fields into a typed side table
+made real bot queries 3–17× faster end to end (a radiation monitor 3.4 s → 0.56 s, a
+map script 22.7 s → 1.35 s) and per-device "latest" aggregates 100–190× faster
+(0.7–1.3 s → 6–8 ms), with identical results. ART indexes did not help these analytical
+scans and made each ingest batch about 5× slower, so the cache deliberately has none.
+
+- **Query `events_x` first.** It mirrors `events` row for row, refreshed after every
+  ingest, with typed columns and no JSON. Join back to `events.data` on
+  `(project_uid, event)` only for fields `events_x` lacks; if a field is used repeatedly,
+  ask the cache owner to add it as a column. Columns and maintenance are described in
+  [Cache data model](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#typed-side-table-refresh-and-query-logging-grok-bot-reference).
+- **Connect through the logging helper:** `import sys; sys.path.insert(0, "/workspace/notehub-cache"); import nhq; c = nhq.connect("<bot name>")`.
+  It opens read-only, waits while a fill holds the database, and appends every query
+  (time, bot, script, SQL, ms, rows) to `/workspace/notehub-cache/query_log.ndjson`, the
+  workload record used by [query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) reviews.
+- **Keep queries short and `close()` the connection.** Readers hold a shared lock on
+  `notehub.duckdb.lock`, so fills wait for them rather than failing; a long-open reader
+  delays the cache's freshness.
+- **Do not add indexes or primary keys** to cache tables for query speed.
+
 ## 3. Acquire only the missing evidence
 
 Skip acquisition when the selected source already contains what the question needs.

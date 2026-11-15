@@ -162,6 +162,64 @@ snapshots, retention and all-device orchestration as part of the maintenance tas
 
 Return the verified model or coverage result to the procedure that called this resource.
 
+## Typed side table, refresh and query logging (Grok Bot reference)
+
+This is the measured layout used on Grok Bot Cloud Computers (cache folder
+`/workspace/notehub-cache`, venv `/home/box/venvs/duckdb`). Adapt the promoted
+columns to the fields your own `query_log.ndjson` shows are extracted repeatedly.
+
+**Why.** On ~4.5M Events, JSON extraction from `events.data` dominated query time.
+A typed side table made real scripts 3–17× faster and per-device latest-value
+aggregates 100–190× faster with identical results. Re-sorting `events` gave little,
+because ingest appends in roughly time order anyway. ART indexes on `device` or `event`
+gave no benefit to the observed queries and made each ingest batch ~5× slower, so
+`events_x` has **no primary key and no index**. A full sort/rebuild must run with a
+memory cap (`memory_limit='4GB'`); an uncapped sort was killed by the OOM killer.
+
+**Table.** `events_x` mirrors `events` row for row:
+
+```sql
+CREATE TABLE events_x AS
+SELECT project_uid, event, device, file, captured, fetched_at,
+  coalesce(json_extract_string(data,'$.sn'), json_extract_string(data,'$.best_id')) AS sn,
+  json_extract_string(data,'$.best_country')  AS best_country,
+  json_extract_string(data,'$.best_location') AS best_location,
+  try_cast(json_extract_string(data,'$.body.cpm')   AS DOUBLE) AS cpm,
+  try_cast(json_extract_string(data,'$.body.usv')   AS DOUBLE) AS usv,
+  try_cast(json_extract_string(data,'$.body.csecs') AS DOUBLE) AS csecs
+FROM events ORDER BY project_uid, file, captured;
+```
+
+**Refresh after every ingest.** `step.sh` runs `refresh_events_x.py` immediately after
+`handoff.py ingest`. It takes the same exclusive flock on `notehub.duckdb.lock` as
+ingest and runs one transaction (about 80–130 ms for a normal 15-minute fill). The
+lookback absorbs files ingested slightly out of fetch order:
+
+```sql
+-- w = SELECT max(fetched_at) FROM events_x   (build the table if missing)
+CREATE TEMP TABLE _nx AS SELECT <same column list> FROM events
+  WHERE fetched_at > $w - INTERVAL 30 MINUTE;
+DELETE FROM events_x WHERE (project_uid, event) IN (SELECT project_uid, event FROM _nx);
+INSERT INTO events_x SELECT * FROM _nx;
+-- self-heal: if count(events) <> count(events_x), delete keys missing from events
+-- and insert keys missing from events_x
+```
+
+The refresh is fail-safe: on any error it appends to `errors.log` and exits 0, so ingest
+and the cursor advance are never affected. It writes timings to `refresh_timing.csv`, and
+`--rebuild` recreates the table (~16 s under the lock). The daily maintenance purge in
+`worker.py` applies the same 45-day rule to `events_x`
+(`DELETE FROM events_x WHERE fetched_at < now() - INTERVAL 45 DAY`).
+
+**Readers and query logging.** `nhq.py` in the cache folder wraps `duckdb.connect`:
+`nhq.connect(bot)` takes a shared flock on `notehub.duckdb.lock`, so fills wait for
+readers and readers wait for fills, opens read-only, and retries on lock errors. Each
+`execute()` appends `{ts, bot, script, sql, nparams, ms, rows, error}` to
+`query_log.ndjson`; logging never raises. Readers should keep queries short and close
+the connection. This log is the query-usage record for
+[query performance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/query-performance.md) reviews.
+Document both in the cache folder's README so every bot finds them.
+
 ## Batch size and cursor starts for acquisition
 
 Cache fill **always** uses **`pageSize=10000`** (10K-row batches) for Devices, Events,

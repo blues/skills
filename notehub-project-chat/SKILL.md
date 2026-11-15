@@ -37,6 +37,12 @@ tool. On a Cloud Computer, live API reads supply evidence unavailable from the c
 and Repository, or verify current service state. The question and Repository procedures
 below apply Notehub and Product Skills to the chosen source.
 
+On a Grok Bot Cloud Computer, query the cache through `nhq.connect(bot)` (logs every
+query, waits politely for fills; keep queries short and `close()` it) and prefer the typed
+`events_x` table over JSON extraction from `events.data`, which was measured 3–17× faster
+for real bot workloads and 100×+ for per-device latest queries. Do not add indexes; they
+slowed ingest about 5× without helping these scans. Details: [Answer a question — Step 2](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md#query-the-local-cache-fast-grok-bot-cloud-computer).
+
 | Only if preparation is missing | Read | Then |
 |---|---|---|
 | This skill was entered without the required context, or a prerequisite has become unavailable | [Entry cookbook](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md) | Complete or repair the first missing step, preserve working context, then resume Chat |
