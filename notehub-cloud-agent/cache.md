@@ -186,9 +186,23 @@ SELECT project_uid, event, device, file, captured, fetched_at,
   json_extract_string(data,'$.best_location') AS best_location,
   try_cast(json_extract_string(data,'$.body.cpm')   AS DOUBLE) AS cpm,
   try_cast(json_extract_string(data,'$.body.usv')   AS DOUBLE) AS usv,
-  try_cast(json_extract_string(data,'$.body.csecs') AS DOUBLE) AS csecs
+  try_cast(json_extract_string(data,'$.body.csecs') AS DOUBLE) AS csecs,
+  try_cast(json_extract_string(data,'$.best_lat') AS DOUBLE) AS best_lat,
+  try_cast(json_extract_string(data,'$.best_lon') AS DOUBLE) AS best_lon,
+  json_extract_string(data,'$.best_location_type') AS best_location_type,
+  try_cast(json_extract_string(data,'$.where_lat') AS DOUBLE) AS where_lat,
+  try_cast(json_extract_string(data,'$.where_lon') AS DOUBLE) AS where_lon
 FROM events ORDER BY project_uid, file, captured;
 ```
+
+`best_lat`/`best_lon` are Notehub's chosen best fix, which already falls back from GPS
+(`where_*`) to tower or triangulation; in sampled data no Event lacked `best_lat` while
+having another fix, so no `coalesce` is needed. `where_lat`/`where_lon` keep the GPS-only
+fix for track analysis. Promote a field when the query log shows bots joining back to
+`events.data` for it: Event UIDs are random, so that join scans every `events.data` row
+(about 3.8 CPU-seconds on 4M rows; one such query took 3.7 s and fell to 8 ms once
+`best_lat`/`best_lon` were promoted). If the refresh finds a listed column missing, it
+rebuilds the table.
 
 **Refresh after every ingest.** `step.sh` runs `refresh_events_x.py` immediately after
 `handoff.py ingest`. It takes the same exclusive flock on `notehub.duckdb.lock` as

@@ -98,7 +98,13 @@ scans and made each ingest batch about 5× slower, so the cache deliberately has
 - **Query `events_x` first.** It mirrors `events` row for row, refreshed after every
   ingest, with typed columns and no JSON. Join back to `events.data` on
   `(project_uid, event)` only for fields `events_x` lacks; if a field is used repeatedly,
-  ask the cache owner to add it as a column. Columns and maintenance are described in
+  ask the cache owner to add it as a column rather than joining back: Event UIDs are
+  random, so that join scans every `events.data` row. Current columns: `sn`,
+  `best_country`, `best_location`, `best_lat`, `best_lon` (Notehub's best fix),
+  `best_location_type`, `where_lat`, `where_lon` (GPS only), `cpm`, `usv`, `csecs`, plus
+  `project_uid, event, device, file, captured, fetched_at`. For latest-per-device use
+  `arg_max(col, captured) ... GROUP BY device` (or `QUALIFY row_number() ... = 1`), not
+  a window over every row followed by a self-join. Columns and maintenance are described in
   [Cache data model](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/cache.md#typed-side-table-refresh-and-query-logging-grok-bot-reference).
 - **Connect through the logging helper:** `import sys; sys.path.insert(0, "/workspace/notehub-cache"); import nhq; c = nhq.connect("<bot name>")`.
   It opens read-only, waits while a fill holds the database, and appends every query
