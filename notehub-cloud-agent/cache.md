@@ -84,7 +84,8 @@ The folder README and shared memory locate the cache; live state stays in the da
 | Product skills | Read the catalog and needed content, or a complete content snapshot; check metadata periodically, reuse unchanged documents and recheck dependent views/monitors when meaning changes |
 
 A start cursor in epoch microseconds bounds **modification time**, not capture time.
-Prefer a bounded recent bootstrap of 45 days where the contract and retention support
+Bootstrap Events from a synthesized start cursor **30 days ago** (never page through
+older data the cache will not use; the 45-day figure is only the purge buffer) where the contract supports
 it, then verify that the requested capture-time window is covered. If complete recent
 coverage cannot be established from that bound, use a complete scan or documented
 capture-time backfill plus overlapping modification scan. State service retention gaps.
@@ -243,8 +244,8 @@ for catch-up and for steady-state incremental polls.
 | Stream | Time-windowed? | Initial cursor |
 |---|---|---|
 | Devices | No | **`0`** (full scan) |
-| Sessions (per device) | No | **`0`** (full scan per DeviceUID) |
-| Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** for the desired lookback (the 45-day bootstrap above); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
+| Sessions (per device) | No | **`0`** (full scan per DeviceUID), but only for Devices whose `last_activity` is within the last 30 days; skip stale Devices entirely |
+| Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** 30 days ago (the bootstrap above); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
 | Notefile Schemas | N/A | Full snapshot; no modified cursor |
 
 Loop while `has_more` is true. After catch-up, periodic (~15m) runs only fetch
