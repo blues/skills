@@ -1,0 +1,5 @@
+# Checked by TestHygiene: no Go source outside testdata may mention these
+# words (any case) or any operationId of these specs (exact case).
+word notehub
+word blues
+spec cases/notehub/openapi.yaml

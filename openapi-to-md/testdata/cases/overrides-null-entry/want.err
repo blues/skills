@@ -1,0 +1,3 @@
+openapi-to-md: warning: overrides: operationId "NoSuchOp" not found in spec
+openapi-to-md: warning: overrides: GetTask: parameter "nosuchparam" not found
+openapi-to-md: warning: RunTask: params query.mode and body.mode share the key "mode"; alias one with x-mcp-name

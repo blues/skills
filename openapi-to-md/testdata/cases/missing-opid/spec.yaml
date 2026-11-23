@@ -1,0 +1,8 @@
+openapi: 3.0.3
+info: {title: Missing, version: "1"}
+paths:
+  /a:
+    get: {operationId: FetchA, summary: Fetch the A record, responses: {'200': {description: ok}}}
+    delete: {summary: No operationId here, responses: {'204': {description: gone}}}
+  /b:
+    post: {responses: {'200': {description: ok}}}

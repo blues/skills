@@ -1,0 +1,3 @@
+RunTask:
+  parameters:
+    mode: {x-mcp-class: destructive}

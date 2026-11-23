@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info: {title: Common, version: "1"}
+paths:
+  /shops/{shopId}/orders:
+    get:
+      operationId: ListOrders
+      tags: [orders]
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Since'
+        - name: status
+          in: query
+          description: Only orders in this state.
+          schema: {type: string, enum: [open, paid, shipped]}
+      responses: {'200': {description: ok}}
+  /shops/{shopId}/refunds:
+    get:
+      operationId: ListRefunds
+      tags: [orders]
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: since
+          in: query
+          required: true
+          description: Only refunds issued at or after this Unix time, in seconds.
+          schema: {type: integer, format: int64}
+      responses: {'200': {description: ok}}
+  /shops/{shopId}/customers:
+    get:
+      operationId: ListCustomers
+      tags: [customers]
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/Cursor'
+        - name: limit
+          in: query
+          description: Customers per page, at most 50.
+          schema: {type: integer, default: 10}
+        - name: purge
+          in: query
+          description: If true, delete the customers this call returns.
+          schema: {type: boolean}
+          x-mcp-class: destructive
+      responses: {'200': {description: ok}}
+  /shops/{shopId}/customers/export:
+    post:
+      operationId: ExportCustomers
+      tags: [customers]
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/Since'
+        - name: purge
+          in: query
+          description: If true, delete the customers this call returns.
+          schema: {type: boolean}
+          x-mcp-class: destructive
+        - name: cursor
+          in: query
+          description: Opaque paging cursor from the previous response's `next` field, passed back unchanged.
+          schema: {type: string}
+          x-mcp-name: page_cursor
+      responses: {'200': {description: ok}}
+components:
+  parameters:
+    ShopId:
+      name: shopId
+      in: path
+      required: true
+      description: The shop's handle, e.g. `acme-store`, as shown in its admin URL.
+      schema: {type: string}
+    Limit:
+      name: limit
+      in: query
+      description: Most items to return per page, between 1 and 1000.
+      schema: {type: integer, format: int32, default: 100}
+    Cursor:
+      name: cursor
+      in: query
+      description: Opaque paging cursor from the previous response's `next` field, passed back unchanged.
+      schema: {type: string}
+    Since:
+      name: since
+      in: query
+      description: Only items changed at or after this Unix time, in seconds.
+      schema: {type: integer, format: int64}

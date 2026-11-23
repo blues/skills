@@ -1,0 +1,1 @@
+openapi-to-md: overrides overrides.yaml: GetTask: parameter purge: invalid x-mcp-class "delete" (want read, write or destructive)

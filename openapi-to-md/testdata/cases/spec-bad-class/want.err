@@ -1,0 +1,1 @@
+openapi-to-md: GetX: invalid x-mcp-class "dangerous" (want read, write or destructive)

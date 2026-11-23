@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info: {title: Unions, version: "1"}
+paths:
+  /pay:
+    post:
+      operationId: Pay
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - {title: Card, type: object, required: [card], properties: {card: {type: string}}}
+                - {title: Bank Account, type: object, required: [iban], properties: {iban: {type: string}}}
+      responses: {'200': {description: ok}}
+  /alerts:
+    post:
+      operationId: CreateAlert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [target]
+              properties:
+                target:
+                  oneOf:
+                    - {type: object, required: [email], properties: {email: {type: string, format: email}}}
+                    - {type: object, required: [url], properties: {url: {type: string, format: uri}}}
+                options:
+                  anyOf:
+                    - {type: object, properties: {retries: {type: integer}}}
+                    - {type: 'null'}
+                items:
+                  oneOf:
+                    - {$ref: '#/components/schemas/Item'}
+                    - {type: array, items: {$ref: '#/components/schemas/Item'}}
+      responses: {'200': {description: ok}}
+  /contacts:
+    post:
+      operationId: CreateContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: {type: string}
+                email: {type: string}
+                phone: {type: string}
+                status: {type: string, enum: [new, active, done]}
+              anyOf:
+                - {required: [email]}
+                - {required: [phone]}
+                - {properties: {status: {enum: [done]}}}
+      responses: {'200': {description: ok}}
+  /pets:
+    post:
+      operationId: AddPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - {type: object, required: [name], properties: {name: {type: string}}}
+                - oneOf:
+                    - {$ref: '#/components/schemas/Dog'}
+                    - {$ref: '#/components/schemas/Cat'}
+                  discriminator: {propertyName: petType}
+      responses: {'200': {description: ok}}
+  /payments:
+    post:
+      operationId: CreatePayment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - {$ref: '#/components/schemas/CardPayment'}
+                - {$ref: '#/components/schemas/BankPayment'}
+              discriminator:
+                propertyName: method
+                mapping:
+                  card: '#/components/schemas/CardPayment'
+                  bank_transfer: '#/components/schemas/BankPayment'
+      responses: {'200': {description: ok}}
+  /shapes:
+    post:
+      operationId: CreateShape
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shape: {$ref: '#/components/schemas/Shape'}
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    Item: {type: object, required: [sku], properties: {sku: {type: string}}}
+    Dog: {type: object, required: [petType, bark], properties: {petType: {type: string}, bark: {type: string}}}
+    Cat: {type: object, required: [petType], properties: {petType: {type: string}, indoor: {type: boolean}}}
+    CardPayment: {type: object, required: [method, number], properties: {method: {type: string}, number: {type: string}}}
+    BankPayment: {type: object, required: [method, iban], properties: {method: {type: string}, iban: {type: string}}}
+    Shape:
+      type: object
+      required: [kind]
+      properties: {kind: {type: string}}
+      discriminator:
+        propertyName: kind
+        mapping: {circle: Circle, rect: '#/components/schemas/Rect'}
+    Circle:
+      allOf:
+        - $ref: '#/components/schemas/Shape'
+        - {type: object, properties: {radius: {type: number}}}
+    Rect:
+      allOf:
+        - $ref: '#/components/schemas/Shape'
+        - {type: object, properties: {w: {type: number}, h: {type: number}}}

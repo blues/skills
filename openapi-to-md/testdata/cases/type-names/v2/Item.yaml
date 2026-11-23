@@ -1,0 +1,5 @@
+type: object
+required: [productId, quantity]
+properties:
+  productId: {type: string, format: uuid}
+  quantity: {type: integer}

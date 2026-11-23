@@ -1,0 +1,19 @@
+openapi: 3.0.3
+info: {title: Naming, version: "1"}
+paths:
+  /a: {get: {operationId: ListPets, responses: {'200': {description: ok}}}}
+  /b: {get: {operationId: GetPetByID, responses: {'200': {description: ok}}}}
+  /c: {get: {operationId: GetHTTPServerStatus, responses: {'200': {description: ok}}}}
+  /d: {get: {operationId: OAuth2Token, responses: {'200': {description: ok}}}}
+  /e: {get: {operationId: getV2Users, responses: {'200': {description: ok}}}}
+  /f: {get: {operationId: list_orders_v1, responses: {'200': {description: ok}}}}
+  /g: {get: {operationId: Fetch3DModel, responses: {'200': {description: ok}}}}
+  /h: {get: {operationId: S3BucketInfo, responses: {'200': {description: ok}}}}
+  /i: {get: {operationId: ReadIOStats, x-mcp-name: io_stats, responses: {'200': {description: ok}}}}
+  /j:
+    get:
+      operationId: Search
+      parameters:
+        - {name: q, in: query, schema: {type: string}, x-mcp-name: query}
+        - {name: page-size, in: query, schema: {type: integer}}
+      responses: {'200': {description: ok}}

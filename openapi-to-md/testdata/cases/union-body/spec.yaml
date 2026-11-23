@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info: {title: Unions, version: "1"}
+paths:
+  /payments:
+    post:
+      operationId: CreatePayment
+      requestBody:
+        required: true
+        description: The payment to make.
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CardPayment'
+                - $ref: '#/components/schemas/BankPayment'
+      responses: {'200': {description: ok}}
+  /values:
+    put:
+      operationId: PutValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - type: string
+                - type: integer
+                  format: int32
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    CardPayment:
+      type: object
+      properties: {card: {type: string}}
+    BankPayment:
+      type: object
+      properties: {iban: {type: string}}

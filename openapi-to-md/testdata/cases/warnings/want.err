@@ -1,0 +1,3 @@
+openapi-to-md: warning: find pet by id: tool name "find pet by id" has characters MCP tool names can't use; set x-mcp-name
+openapi-to-md: warning: PutItem: path parameter {id} is not declared
+openapi-to-md: warning: PutItem: params query.name and body.name share the key "name"; alias one with x-mcp-name

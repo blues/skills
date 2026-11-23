@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info: {title: Merge, version: "1"}
+paths:
+  /orgs/{orgId}/teams/{teamId}:
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema: {type: string}
+      - name: orgId
+        in: path
+        required: true
+        schema: {type: string}
+      - name: verbose
+        in: query
+        description: Path-level description.
+        schema: {type: boolean}
+      - name: limit
+        in: query
+        schema: {type: integer}
+    get:
+      operationId: GetTeam
+      parameters:
+        - name: verbose
+          in: query
+          description: Operation-level description wins.
+          schema: {type: string, enum: [low, high]}
+        - name: expand
+          in: query
+          schema: {type: array, items: {type: string}}
+      responses: {'200': {description: ok}}
+    delete:
+      operationId: DeleteTeam
+      responses: {'204': {description: gone}}

@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info: {title: Split, version: "1"}
+paths:
+  /zoos: {$ref: 'paths/zoos.yaml'}
+  /animals: {$ref: 'paths/animals.yaml'}
+  /keepers:
+    get: {operationId: ListKeepers, responses: {'200': {description: ok}}}

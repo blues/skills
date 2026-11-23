@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info: {title: Optional body, version: "1"}
+paths:
+  /vars:
+    put:
+      operationId: SetVars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vars]
+              properties:
+                vars: {type: object, additionalProperties: {type: string}}
+                notes: {type: object, additionalProperties: {type: string}}
+      responses: {'200': {description: ok}}

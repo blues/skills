@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info: {title: Classes, version: "1"}
+paths:
+  /files:
+    get:
+      operationId: ListFiles
+      parameters:
+        - name: purge
+          in: query
+          description: If true, delete the files this call returns.
+          schema: {type: boolean}
+          x-mcp-class: destructive
+        - name: touch
+          in: query
+          description: Set the access time of the returned files to this time.
+          schema: {type: string, format: date-time}
+          x-mcp-class: write
+        - name: depth
+          in: query
+          schema: {type: integer}
+          x-mcp-class: read
+      responses: {'200': {description: ok}}
+    post:
+      operationId: SearchFiles
+      x-mcp-class: read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query: {type: string}
+                purgeMatches:
+                  type: boolean
+                  description: If true, delete every match.
+                  x-mcp-class: destructive
+      responses: {'200': {description: ok}}
+    head:
+      operationId: CheckFiles
+      responses: {'200': {description: ok}}
+    options:
+      operationId: FileOptions
+      responses: {'200': {description: ok}}
+  /files/{fileId}:
+    put:
+      operationId: ReplaceFile
+      x-mcp-class: destructive
+      parameters:
+        - {name: fileId, in: path, required: true, schema: {type: string}}
+      responses: {'200': {description: ok}}
+    patch:
+      operationId: PatchFile
+      parameters:
+        - {name: fileId, in: path, required: true, schema: {type: string}}
+      responses: {'200': {description: ok}}
+    delete:
+      operationId: DeleteFile
+      parameters:
+        - {name: fileId, in: path, required: true, schema: {type: string}}
+        - name: reason
+          in: query
+          schema: {type: string}
+          x-mcp-class: write
+      responses: {'204': {description: gone}}
+    trace:
+      operationId: TraceFile
+      parameters:
+        - {name: fileId, in: path, required: true, schema: {type: string}}
+      responses: {'200': {description: ok}}

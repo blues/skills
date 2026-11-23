@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info: {title: Refs, version: "1"}
+paths:
+  /stores/{storeId}/pets:
+    post:
+      operationId: AddPet
+      tags: [pets]
+      parameters:
+        - $ref: '#/components/parameters/StoreId'
+        - $ref: '#/components/parameters/DryRun'
+      requestBody:
+        $ref: '#/components/requestBodies/PetBody'
+      responses: {'201': {description: created}}
+components:
+  parameters:
+    StoreId:
+      name: storeId
+      in: path
+      required: true
+      description: Store that owns the pet.
+      schema: {$ref: '#/components/schemas/Id'}
+    DryRun:
+      name: dryRun
+      in: query
+      schema: {type: boolean, default: true}
+  requestBodies:
+    PetBody:
+      required: true
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Pet'}
+  schemas:
+    Id: {type: integer, format: int64}
+    Pet:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, description: The pet's name.}
+        status: {$ref: '#/components/schemas/Status'}
+        ownerId: {$ref: '#/components/schemas/Id'}
+    Status:
+      type: string
+      enum: [available, sold]
+      default: available

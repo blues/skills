@@ -1,0 +1,5 @@
+openapi: 3.0.3
+info: {title: Collision, version: "1"}
+paths:
+  /a: {get: {operationId: GetUserID, responses: {'200': {description: ok}}}}
+  /b: {get: {operationId: getUserId, responses: {'200': {description: ok}}}}

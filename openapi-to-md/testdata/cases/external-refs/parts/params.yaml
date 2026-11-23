@@ -1,0 +1,6 @@
+BoatId:
+  name: boatId
+  in: path
+  required: true
+  description: Hull number, e.g. `HN-42`.
+  schema: {type: string}

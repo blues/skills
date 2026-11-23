@@ -1,0 +1,3 @@
+GetTask:
+  parameters:
+    purge: {x-mcp-class: delete}

@@ -1,0 +1,14 @@
+openapi: 3.0.3
+info: {title: Warnings, version: "1"}
+paths:
+  /items/{id}:
+    put:
+      operationId: PutItem
+      parameters: [{name: name, in: query, schema: {type: string}}]
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object, properties: {name: {type: string}}}
+      responses: {'200': {description: ok}}
+  /pets/{petId}:
+    get: {operationId: find pet by id, parameters: [{name: petId, in: path, required: true, schema: {type: string}}], responses: {'200': {description: ok}}}

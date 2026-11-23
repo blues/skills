@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info: {title: Wrappers, version: "1"}
+paths:
+  /orders:
+    post:
+      operationId: CreateOrder
+      parameters:
+        - name: sort
+          in: query
+          schema: {allOf: [{$ref: '#/components/schemas/SortOrder'}], default: asc}
+        - name: limit
+          in: query
+          schema: {allOf: [{$ref: '#/components/schemas/Limit'}]}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: {description: Initial status., allOf: [{$ref: '#/components/schemas/Status'}]}
+                priority: {nullable: true, allOf: [{$ref: '#/components/schemas/Priority'}]}
+                shipTo: {description: Where to ship., allOf: [{$ref: '#/components/schemas/Address'}]}
+                tags: {allOf: [{$ref: '#/components/schemas/StatusList'}]}
+                labels: {allOf: [{$ref: '#/components/schemas/Labels'}]}
+                born: {allOf: [{$ref: '#/components/schemas/Stamp'}], description: When it was born.}
+                narrowed: {allOf: [{$ref: '#/components/schemas/Status'}, {enum: [paid, shipped]}]}
+      responses: {'200': {description: ok}}
+  /circles:
+    post:
+      operationId: CreateCircle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ShapeBase'
+                - type: object
+                  properties:
+                    kind: {enum: [circle]}
+                    radius: {type: number}
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    SortOrder: {type: string, enum: [asc, desc]}
+    Limit: {type: integer, format: int32}
+    Status: {type: string, enum: [pending, paid, shipped]}
+    Priority: {type: integer, enum: [1, 2, 3]}
+    Address: {type: object, required: [line1], properties: {line1: {type: string}, city: {type: string}}}
+    StatusList: {type: array, items: {$ref: '#/components/schemas/Status'}}
+    Labels: {type: object, additionalProperties: {type: string}}
+    Stamp: {type: string, format: date-time}
+    ShapeBase: {type: object, required: [kind], properties: {kind: {type: string, description: The shape kind.}}}

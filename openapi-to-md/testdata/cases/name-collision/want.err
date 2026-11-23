@@ -1,0 +1,1 @@
+openapi-to-md: operationIds "GetUserID" and "getUserId" both map to tool name "get_user_id"

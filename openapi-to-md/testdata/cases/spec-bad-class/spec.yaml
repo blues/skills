@@ -1,0 +1,8 @@
+openapi: 3.0.3
+info: {title: BadClass, version: "1"}
+paths:
+  /x:
+    get:
+      operationId: GetX
+      x-mcp-class: dangerous
+      responses: {'200': {description: ok}}

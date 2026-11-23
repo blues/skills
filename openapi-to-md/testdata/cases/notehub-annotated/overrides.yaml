@@ -1,0 +1,14 @@
+# Annotations for the pinned Notehub spec, kept outside the spec (see DESIGN.md).
+OAuth2ClientCredentials:
+  x-mcp-hidden: true
+GetNotefile:
+  parameters:
+    delete: { x-mcp-class: destructive }
+GetDbNote:
+  parameters:
+    delete: { x-mcp-class: destructive }
+CancelJobRun:
+  x-mcp-class: destructive  # a POST that cancels a run
+# Login, if it is ever re-added:
+# Login:
+#   x-mcp-hidden: true

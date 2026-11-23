@@ -1,0 +1,17 @@
+# File beats spec; spec beats method defaults.
+GetTask:
+  parameters:
+    purge: {x-mcp-class: destructive}   # spec says write
+    verbose: {x-mcp-name: v}            # alias the key
+    missing: {x-mcp-class: write}       # matches nothing: warning
+RunTask:
+  x-mcp-class: write                    # spec says destructive
+  parameters:
+    query.mode: {x-mcp-class: destructive}
+    body.mode: {x-mcp-name: body_mode}
+DeleteTask:
+  x-mcp-hidden: false                   # spec hides it
+ListTasks:
+  x-mcp-name: list_all_tasks             # spec aliases it as tasks_index
+NoSuchOperation:
+  x-mcp-hidden: true                    # not in the spec: warning

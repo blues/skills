@@ -1,0 +1,10 @@
+Boat:
+  type: object
+  required: [name]
+  properties:
+    name: {type: string}
+    length: {$ref: '#/Length'}
+Length:
+  type: number
+  format: float
+  description: Length in metres.

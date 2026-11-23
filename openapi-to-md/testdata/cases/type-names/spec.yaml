@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info: {title: Type names, version: "1"}
+tags: [{name: types}]
+paths:
+  /types:
+    get: {operationId: ListKinds, tags: [types], responses: {'200': {description: ok}}}
+  /v1/orders:
+    post:
+      operationId: CreateOrderV1
+      requestBody: {content: {application/json: {schema: {$ref: 'schemas/Order.yaml'}}}}
+      responses: {'200': {description: ok}}
+  /v2/orders:
+    post:
+      operationId: CreateOrderV2
+      requestBody: {content: {application/json: {schema: {$ref: 'v2/Order.yaml'}}}}
+      responses: {'200': {description: ok}}
+  /routes:
+    post:
+      operationId: CreateRoute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                http: {$ref: '#/components/schemas/http-route'}
+                meta: {$ref: '#/components/schemas/object'}
+                home: {$ref: '#/components/schemas/address'}
+                first: {$ref: '#/components/schemas/Pair/allOf/0'}
+      responses: {'200': {description: ok}}
+  /secret:
+    post:
+      operationId: SecretGarden
+      x-mcp-hidden: true
+      requestBody: {content: {application/json: {schema: {type: object, properties: {plot: {$ref: '#/components/schemas/address'}}}}}}
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    http-route: {type: object, required: [url], properties: {url: {type: string, format: uri}}}
+    object: {type: object, required: [kind], properties: {kind: {type: string}}}
+    address: {type: object, properties: {line1: {type: string}}}
+    Pair:
+      allOf:
+        - {type: object, properties: {a: {type: string}}}
+        - {type: object, properties: {b: {type: integer}}}

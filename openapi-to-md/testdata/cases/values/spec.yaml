@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info: {title: Values, version: "1"}
+paths:
+  /jobs:
+    post:
+      operationId: CreateJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                interval:
+                  type: string
+                  description: |
+                    How often the job runs. For example:
+                    - `10m`
+                    - `1h30m`
+                webhook:
+                  type: string
+                  description: |
+                    URL to call when the job finishes.
+
+                    Errors:
+                    - `400`: the URL is not https
+                    - `409`: another job already uses it
+                settings:
+                  type: object
+                  additionalProperties: true
+                  description: |
+                    Display settings. Recognized keys:
+                    - `theme`: light or dark
+                order:
+                  type: string
+                  description: |
+                    Sort order.
+
+                    - `asc`: oldest first
+                    - `desc`: newest first
+                notify:
+                  type: boolean
+                  description: |
+                    Whether to notify.
+                    - `true`: send mail
+                    - `false`: stay quiet
+                scope:
+                  type: array
+                  items: {type: string}
+                  description: |
+                    What the job may touch:
+                    - `devices`
+                    - `fleets`, `routes`
+      responses: {'200': {description: ok}}

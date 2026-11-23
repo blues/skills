@@ -1,0 +1,2 @@
+openapi-to-md: warning: skipping DELETE /a: no operationId
+openapi-to-md: warning: skipping POST /b: no operationId

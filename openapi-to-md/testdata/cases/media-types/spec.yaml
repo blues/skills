@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info: {title: Media, version: "1"}
+paths:
+  /blobs/{name}:
+    put:
+      operationId: PutBlob
+      parameters: [{name: name, in: path, required: true, schema: {type: string}}]
+      requestBody:
+        required: true
+        description: The bytes to store.
+        content:
+          application/octet-stream:
+            schema: {type: string, format: binary}
+      responses: {'200': {description: ok}}
+    post:
+      operationId: AppendBlob
+      parameters: [{name: name, in: path, required: true, schema: {type: string}}]
+      requestBody:
+        content:
+          text/plain: {}
+      responses: {'200': {description: ok}}
+  /forms:
+    post:
+      operationId: SubmitForm
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema: {type: object, properties: {xmlOnly: {type: string}}}
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: {type: string, format: binary}
+                caption: {type: string}
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data: {type: object}
+      responses: {'200': {description: ok}}
+  /events:
+    post:
+      operationId: PostEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Any JSON object.
+      responses: {'200': {description: ok}}
+    put:
+      operationId: PutEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items: {type: object, additionalProperties: {type: string}}
+      responses: {'200': {description: ok}}

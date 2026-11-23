@@ -1,0 +1,15 @@
+openapi: 3.0.3
+info: {title: Deprecated, version: "1"}
+paths:
+  /old:
+    get:
+      operationId: GetOld
+      deprecated: true
+      responses: {'200': {description: ok}}
+  /new:
+    get:
+      operationId: GetNew
+      parameters:
+        - {name: legacyFilter, in: query, deprecated: true, schema: {type: string}}
+        - {name: filter, in: query, schema: {type: string}}
+      responses: {'200': {description: ok}}

@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info: {title: Ref descriptions, version: "1"}
+paths:
+  /a:
+    post:
+      operationId: PostA
+      parameters: [{$ref: '#/components/parameters/Limit'}]
+      requestBody: {$ref: '#/components/requestBodies/Blob'}
+      responses: {'200': {description: ok}}
+  /b:
+    post:
+      operationId: PostB
+      parameters: [{$ref: '#/components/parameters/Limit', description: At most 10 for this call.}]
+      requestBody: {$ref: '#/components/requestBodies/Blob', description: A gzip-compressed firmware image.}
+      responses: {'200': {description: ok}}
+  /c:
+    get:
+      operationId: GetC
+      parameters: [{$ref: '#/components/parameters/Limit'}]
+      responses: {'200': {description: ok}}
+components:
+  parameters:
+    Limit: {name: limit, in: query, description: How many items to return., schema: {type: integer}}
+  requestBodies:
+    Blob:
+      description: Generic bytes.
+      content: {application/octet-stream: {schema: {type: string, format: binary}}}

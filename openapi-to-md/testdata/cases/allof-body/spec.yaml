@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info: {title: AllOf, version: "1"}
+paths:
+  /widgets:
+    post:
+      operationId: CreateWidget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Base'
+                - type: object
+                  required: [size]
+                  properties:
+                    size: {type: integer, description: Size in millimetres.}
+                    color: {type: string}
+      responses: {'200': {description: ok}}
+  /gadgets:
+    post:
+      operationId: CreateGadget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  additionalProperties: true
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    Base:
+      type: object
+      required: [label]
+      properties:
+        id: {type: string, readOnly: true, description: Assigned by the server.}
+        label: {type: string, description: Display label.}
+        tags: {type: array, items: {type: string}}

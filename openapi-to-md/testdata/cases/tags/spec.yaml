@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info: {title: Tags, version: "1"}
+tags:
+  - {name: zeta, description: Declared first but used last.}
+  - {name: alpha}
+paths:
+  /one: {get: {operationId: GetOne, tags: [alpha, zeta], responses: {'200': {description: ok}}}}
+  /two: {get: {operationId: GetTwo, responses: {'200': {description: ok}}}}
+  /three: {get: {operationId: GetThree, tags: [zeta], responses: {'200': {description: ok}}}}
+  /four: {get: {operationId: GetFour, tags: [alpha], responses: {'200': {description: ok}}}}
+  /five: {get: {operationId: GetFive, tags: [], responses: {'200': {description: ok}}}}

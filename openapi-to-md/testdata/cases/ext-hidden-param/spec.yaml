@@ -1,0 +1,8 @@
+openapi: 3.0.3
+info: {title: Hidden param, version: "1"}
+paths:
+  /x:
+    get:
+      operationId: GetX
+      parameters: [{name: debug, in: query, schema: {type: boolean}, x-mcp-hidden: true}]
+      responses: {'200': {description: ok}}

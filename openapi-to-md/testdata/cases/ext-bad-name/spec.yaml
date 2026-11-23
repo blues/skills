@@ -1,0 +1,5 @@
+openapi: 3.0.3
+info: {title: Bad name, version: "1"}
+paths:
+  /x:
+    get: {operationId: GetX, x-mcp-name: "get x", responses: {'200': {description: ok}}}

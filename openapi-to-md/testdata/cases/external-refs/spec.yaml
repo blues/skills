@@ -1,0 +1,14 @@
+openapi: 3.0.3
+info: {title: External, version: "1"}
+paths:
+  /boats/{boatId}:
+    parameters:
+      - $ref: 'parts/params.yaml#/BoatId'
+    put:
+      operationId: UpdateBoat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: 'parts/schemas.yaml#/Boat'}
+      responses: {'200': {description: ok}}

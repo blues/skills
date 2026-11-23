@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info: {title: Shadow, version: "1"}
+paths:
+  /users/{id}:
+    get: {operationId: GetUser, parameters: [{$ref: '#/components/parameters/UserId'}], responses: {'200': {description: ok}}}
+    delete: {operationId: DeleteUser, parameters: [{$ref: '#/components/parameters/UserId'}], responses: {'204': {description: gone}}}
+  /users/{id}/roles:
+    get: {operationId: GetUserRoles, parameters: [{$ref: '#/components/parameters/UserId'}], responses: {'200': {description: ok}}}
+  /users/{id}/keys:
+    get: {operationId: GetUserKeys, parameters: [{$ref: '#/components/parameters/UserId'}], responses: {'200': {description: ok}}}
+  /users/{id}/logs:
+    get: {operationId: GetUserLogs, parameters: [{$ref: '#/components/parameters/UserId'}], responses: {'200': {description: ok}}}
+  /tags/{id}:
+    get:
+      operationId: GetTag
+      parameters: [{name: id, in: path, required: true, schema: {type: string}}]
+      responses: {'200': {description: ok}}
+  /items/{item-id}:
+    get:
+      operationId: GetItem
+      parameters: [{name: item-id, in: path, required: true, schema: {type: string}, x-mcp-name: item_id}]
+      responses: {'200': {description: ok}}
+components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: Numeric user ID, as returned when the user was created.
+      schema: {type: integer, format: int64}

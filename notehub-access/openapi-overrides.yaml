@@ -1,0 +1,16 @@
+# Product policy for openapi-to-md, applied when openapi.md is generated from
+# openapi.yaml (see .github/workflows/update-openapi.yml and openapi-to-md/README.md).
+# Same fields as the x-mcp-* spec extensions, keyed by operationId.
+OAuth2ClientCredentials:
+  x-mcp-hidden: true
+GetNotefile:
+  parameters:
+    delete: { x-mcp-class: destructive }
+GetDbNote:
+  parameters:
+    delete: { x-mcp-class: destructive }
+CancelJobRun:
+  x-mcp-class: destructive  # a POST that cancels a run
+# Login, if it is ever re-added:
+# Login:
+#   x-mcp-hidden: true

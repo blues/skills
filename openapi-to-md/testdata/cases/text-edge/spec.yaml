@@ -1,0 +1,15 @@
+openapi: 3.0.3
+info: {title: Text edges, version: "1"}
+paths:
+  /items:
+    get:
+      operationId: ListItems
+      parameters:
+        - {name: limit, in: query, description: "# of items to return per page.", schema: {type: integer}}
+        - {name: host, in: query, description: "`[a-z](?:x)` must match; see [the guide](https://example.com/g).", schema: {type: string}}
+        - {name: badge, in: query, description: "![status](badge.svg) Badge style.", schema: {type: string}}
+        - {name: greeting, in: query, schema: {type: string, default: "Hello\nWorld"}}
+        - {name: sep, in: query, schema: {type: string, enum: ["a\tb", "c"]}}
+        - {name: nothing, in: query, schema: {oneOf: [{type: string, enum: [null]}]}}
+        - {name: notes, in: query, description: "## Notes\nFree text, up to 1 KB.", schema: {type: string}}
+      responses: {'200': {description: ok}}

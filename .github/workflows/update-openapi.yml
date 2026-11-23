@@ -89,3 +89,63 @@ jobs:
           # Never force-push: a concurrent edit causes a safe failure and the next run retries.
           git push origin HEAD:master
           echo "$result" >> "$GITHUB_STEP_SUMMARY"
+
+  # Regenerates notehub-access/openapi.md, the compact call reference, beside the mirrored
+  # schema. It is a separate job so that nothing about Go can delay or stop the mirror above:
+  # it runs after the mirror (even if the mirror failed), from master as the mirror left it,
+  # and a failure here only leaves the previous openapi.md in place. Comparing the output on
+  # every run also picks up changes to the generator or to openapi-overrides.yaml.
+  reference:
+    needs: update
+    if: ${{ !cancelled() && github.repository == 'blues/skills' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: openapi-to-md/go.mod
+          cache-dependency-path: openapi-to-md/go.sum
+
+      - name: Regenerate and publish openapi.md
+        run: |
+          # Start from master as the mirror job left it, so the reference matches that schema.
+          git fetch --no-tags origin master
+          git checkout -B master origin/master
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # Never publish from a generator whose tests fail.
+          go test -C openapi-to-md ./...
+          go build -C openapi-to-md -o "$RUNNER_TEMP/openapi-to-md" .
+
+          reference=notehub-access/openapi.md
+          status=0
+          "$RUNNER_TEMP/openapi-to-md" -overrides notehub-access/openapi-overrides.yaml \
+            -o "$RUNNER_TEMP/openapi.md" notehub-access/openapi.yaml \
+            2> "$RUNNER_TEMP/openapi-to-md.log" || status=$?
+          if [[ -s "$RUNNER_TEMP/openapi-to-md.log" ]]; then
+            cat "$RUNNER_TEMP/openapi-to-md.log"
+            { echo '```'; cat "$RUNNER_TEMP/openapi-to-md.log"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if (( status != 0 )); then
+            echo 'openapi.md not regenerated; the previous one is kept.' >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
+          fi
+
+          if cmp -s "$RUNNER_TEMP/openapi.md" "$reference"; then
+            echo 'openapi.md unchanged; no commit needed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cp "$RUNNER_TEMP/openapi.md" "$reference"
+          git add -- "$reference"
+          git commit -m 'Regenerate the Notehub OpenAPI call reference'
+          # Never force-push: a concurrent edit causes a safe failure and the next run retries.
+          git push origin HEAD:master
+          echo 'Published a regenerated openapi.md.' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,4 @@
+openapi: 3.0.3
+info: {title: Dashes, version: "1"}
+paths:
+  /x: {get: {operationId: GetX, responses: {"200": {description: ok}}}}

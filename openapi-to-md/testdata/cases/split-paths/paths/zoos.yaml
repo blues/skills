@@ -1,0 +1,2 @@
+get: {operationId: ListZoos, responses: {'200': {description: ok}}}
+post: {operationId: AddZoo, responses: {'200': {description: ok}}}

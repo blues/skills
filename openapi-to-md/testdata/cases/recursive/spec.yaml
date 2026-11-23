@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info: {title: Recursive, version: "1"}
+paths:
+  /trees:
+    put:
+      operationId: PutTree
+      parameters:
+        - name: filter
+          in: query
+          schema: {$ref: '#/components/schemas/Nested'}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tree: {$ref: '#/components/schemas/Tree'}
+                meta: {$ref: '#/components/schemas/JsonValue'}
+                root: {$ref: '#/components/schemas/Node'}
+                loop: {$ref: '#/components/schemas/A'}
+      responses: {'200': {description: ok}}
+components:
+  schemas:
+    Tree: {type: array, items: {$ref: '#/components/schemas/Tree'}}
+    Nested: {type: array, items: {$ref: '#/components/schemas/Nested'}}
+    JsonValue:
+      oneOf:
+        - {type: string}
+        - {type: number}
+        - {type: boolean}
+        - {type: array, items: {$ref: '#/components/schemas/JsonValue'}}
+        - {type: object, additionalProperties: {$ref: '#/components/schemas/JsonValue'}}
+    Node:
+      type: object
+      properties:
+        name: {type: string}
+        left: {description: Left child., allOf: [{$ref: '#/components/schemas/Node'}]}
+        right: {description: Right child., allOf: [{$ref: '#/components/schemas/Node'}]}
+    A: {description: An A., allOf: [{$ref: '#/components/schemas/B'}]}
+    B: {description: A B., allOf: [{$ref: '#/components/schemas/A'}]}

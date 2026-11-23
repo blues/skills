@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info: {title: Descriptions, version: "1"}
+paths:
+  /reports:
+    get:
+      operationId: ListReports
+      summary: List reports
+      description: Ignored, because a summary is present.
+      parameters:
+        - name: reportType
+          in: query
+          description: Report type.
+          schema: {type: string}
+        - name: format
+          in: query
+          description: |
+            Output format, e.g. `csv` or `json.gz`. Defaults to the account setting.
+          schema: {type: string}
+        - name: owner
+          in: query
+          description: Filter by owner. Matches the owner's email address, case-insensitive.
+          schema: {type: string}
+        - name: ownerUID
+          in: query
+          description: An OwnerUID.
+          schema: {type: string}
+        - name: window
+          in: query
+          description: |
+            - `day`: the last 24 hours
+            - `week`: the last 7 days
+          schema: {type: string}
+        - name: scope
+          in: query
+          description: |
+            What to include. See [the guide](https://example.com/guide) for details.
+            - `mine`, `team`: reports you or your team own (`owner`)
+            - `all` (admins only)
+          schema: {type: string}
+        - name: sort
+          in: query
+          description: |
+            Sort order.
+            - `asc`: oldest first
+            - `desc`: newest first
+          schema: {type: string, enum: [asc, desc]}
+        - name: cursor
+          in: query
+          description: >-
+            An opaque cursor returned by `ListReports` or by GetReportPage, which must be passed back unchanged,
+            byte for byte, including any trailing padding characters, or the next page will not line up correctly.
+          schema: {type: string}
+      responses: {'200': {description: ok}}
+  /reports/{reportId}:
+    get:
+      operationId: GetReportPage
+      description: |
+        Get one page of a report.
+
+        The page is rendered as HTML.
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The report's ID.
+          schema: {type: string}
+      responses: {'200': {description: ok}}
+    delete:
+      operationId: DeleteReport
+      summary: Delete a report
+      parameters:
+        - {name: reportId, in: path, required: true, description: "Report ID, as listed by `ListReports`.", schema: {type: string}}
+      responses: {'204': {description: gone}}

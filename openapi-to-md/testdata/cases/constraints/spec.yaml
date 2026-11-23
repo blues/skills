@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info: {title: Constraints, version: "1"}
+paths:
+  /fleets/{fleetId}:
+    put:
+      operationId: UpdateFleet
+      summary: Update a fleet
+      description: |
+        Change a fleet. Requires the Owner role. Always send `smart_rule_enabled`; leaving it out turns the smart rule off.
+      parameters: [{name: fleetId, in: path, required: true, schema: {type: string}}]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                smart_rule_enabled:
+                  type: boolean
+                  description: Whether the smart rule runs. Always send it; omitting it sets `false`.
+                watchdog_mins:
+                  type: integer
+                  description: Watchdog timeout. Omit or `0` to keep the current value; a negative value turns it off.
+                threshold:
+                  type: number
+                  description: The value to compare against. For heartbeat monitors this is seconds of inactivity.
+                label:
+                  type: string
+                  description: Fleet name. Returns 400 if it is missing. Required.
+                level:
+                  type: string
+                  enum: [low, high]
+                  description: |
+                    Alert level, in seconds of delay. Extra text.
+                    - `low`: wait 60 seconds
+                    - `high`: alert at once
+      responses: {'200': {description: ok}}
+  /devices/dfu:
+    post:
+      operationId: StartUpdate
+      summary: Start firmware updates
+      description: Start updates on matching devices. With no filters, that is every device in the project.
+      parameters: [{name: tag, in: query, schema: {type: string}}]
+      responses: {'200': {description: ok}}

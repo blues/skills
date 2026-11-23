@@ -1,0 +1,17 @@
+openapi: 3.0.3
+info: {title: Nullable, version: "1"}
+paths:
+  /things:
+    post:
+      operationId: CreateThing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string, nullable: true}
+                count: {type: integer, nullable: true, default: 0}
+                ids: {type: array, nullable: true, items: {type: string, format: uuid}}
+      responses: {'200': {description: ok}}

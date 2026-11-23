@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info: {title: Precedence, version: "1"}
+paths:
+  /tasks/{taskId}:
+    get:
+      operationId: GetTask
+      parameters:
+        - {name: taskId, in: path, required: true, schema: {type: string}}
+        - name: purge
+          in: query
+          description: If true, delete the task after reading it.
+          schema: {type: boolean}
+          x-mcp-class: write
+        - name: verbose
+          in: query
+          schema: {type: boolean}
+      responses: {'200': {description: ok}}
+    post:
+      operationId: RunTask
+      x-mcp-class: destructive
+      parameters:
+        - {name: taskId, in: path, required: true, schema: {type: string}}
+        - name: mode
+          in: query
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode: {type: string, description: Mode in the body.}
+      responses: {'200': {description: ok}}
+    delete:
+      operationId: DeleteTask
+      x-mcp-hidden: true
+      parameters:
+        - {name: taskId, in: path, required: true, schema: {type: string}}
+      responses: {'204': {description: gone}}
+  /tasks:
+    get:
+      operationId: ListTasks
+      x-mcp-name: tasks_index
+      responses: {'200': {description: ok}}
