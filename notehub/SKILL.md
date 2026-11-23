@@ -104,7 +104,9 @@ authentication and verification. Reuse an already verified connection.
 ## 2. Read Notehub's skills
 
 **All agents must complete API discovery**, regardless of how they accessed Notehub.
-Read the complete OpenAPI specification and survey its available operations. Then read
+Read the complete OpenAPI specification and survey its available operations, or, if you
+can't hold the complete specification, the operation reference generated from it, as API
+discovery describes. Then read
 or reuse **only one** of the MCP or CLI guides, matching the connection Access established
 and verified: the MCP guide for MCP access, or the CLI guide for CLI access. Access may
 already have used that guide for authentication; retain its invocation guidance here.

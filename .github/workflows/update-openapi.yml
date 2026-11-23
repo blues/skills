@@ -111,7 +111,7 @@ jobs:
           go-version-file: .github/openapi-reference/go.mod
           cache-dependency-path: .github/openapi-reference/go.sum
 
-      - name: Regenerate and publish the operation reference
+      - name: Regenerate and publish the operation reference and contracts
         run: |
           # Start from master as the mirror job left it, so the reference matches that schema.
           git fetch --no-tags origin master
@@ -119,11 +119,15 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
+          # The generator writes the per-operation contracts only once the reference renders.
           reference=notehub-access/openapi-operations.md
+          contracts=notehub-access/operations
           status=0
           go run -C .github/openapi-reference . \
             -overrides overrides.yaml \
             -spec-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml' \
+            -operations-dir "../../$contracts" \
+            -operations-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/operations' \
             ../../notehub-access/openapi.yaml \
             > "$RUNNER_TEMP/openapi-operations.md" 2> "$RUNNER_TEMP/reference.log" || status=$?
           if [[ -s "$RUNNER_TEMP/reference.log" ]]; then
@@ -135,13 +139,13 @@ jobs:
             exit "$status"
           fi
 
-          if cmp -s "$RUNNER_TEMP/openapi-operations.md" "$reference"; then
-            echo 'Operation reference unchanged; no commit needed.' >> "$GITHUB_STEP_SUMMARY"
+          cp "$RUNNER_TEMP/openapi-operations.md" "$reference"
+          git add -A -- "$reference" "$contracts"
+          if git diff --cached --quiet; then
+            echo 'Operation reference and contracts unchanged; no commit needed.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          cp "$RUNNER_TEMP/openapi-operations.md" "$reference"
-          git add -- "$reference"
-          git commit -m 'Regenerate the Notehub API operation reference'
+          git commit -m 'Regenerate the Notehub API operation reference and contracts'
           # Never force-push: a concurrent edit causes a safe failure and the next run retries.
           git push origin HEAD:master
-          echo 'Published a regenerated operation reference.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Published a regenerated operation reference and contracts.' >> "$GITHUB_STEP_SUMMARY"

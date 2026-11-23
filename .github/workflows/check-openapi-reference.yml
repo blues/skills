@@ -7,6 +7,7 @@ on:
       - '.github/workflows/check-openapi-reference.yml'
       - 'notehub-access/openapi.yaml'
       - 'notehub-access/openapi-operations.md'
+      - 'notehub-access/operations/**'
 
 permissions:
   contents: read
@@ -29,13 +30,18 @@ jobs:
       - name: Test the generator
         run: go test -C .github/openapi-reference ./...
 
-      - name: Check the committed reference matches the schema
+      - name: Check the committed reference and contracts match the schema
         run: |
           go run -C .github/openapi-reference . \
             -overrides overrides.yaml \
             -spec-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml' \
+            -operations-dir "$RUNNER_TEMP/operations" \
+            -operations-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/operations' \
             ../../notehub-access/openapi.yaml > "$RUNNER_TEMP/openapi-operations.md"
-          if ! diff -u notehub-access/openapi-operations.md "$RUNNER_TEMP/openapi-operations.md"; then
-            echo '::error file=notehub-access/openapi-operations.md::Out of date. Regenerate it with the command in .github/openapi-reference/README.md.'
+          stale=0
+          diff -u notehub-access/openapi-operations.md "$RUNNER_TEMP/openapi-operations.md" || stale=1
+          diff -r -u notehub-access/operations "$RUNNER_TEMP/operations" || stale=1
+          if (( stale )); then
+            echo '::error::The operation reference or contracts are out of date. Regenerate them with the command in .github/openapi-reference/README.md.'
             exit 1
           fi

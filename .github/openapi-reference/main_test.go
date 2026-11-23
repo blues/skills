@@ -156,11 +156,11 @@ components:
 
 func renderDoc(t *testing.T, doc string, overrides map[string]override) (string, []string) {
 	t.Helper()
-	spec, err := decodeSpec([]byte(doc))
+	spec, _, err := decodeSpec([]byte(doc))
 	if err != nil {
 		t.Fatal(err)
 	}
-	out, warnings, err := render(spec, overrides, "https://example.com/openapi.yaml")
+	out, warnings, err := render(spec, overrides, "https://example.com/openapi.yaml", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -466,7 +466,7 @@ func TestOverrides(t *testing.T) {
 }
 
 func TestRejectsNonOpenAPI3(t *testing.T) {
-	if _, _, err := render(map[string]any{"swagger": "2.0"}, nil, ""); err == nil {
+	if _, _, err := render(map[string]any{"swagger": "2.0"}, nil, "", ""); err == nil {
 		t.Error("expected an error for a Swagger 2.0 document")
 	}
 }

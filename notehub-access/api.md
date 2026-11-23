@@ -2,15 +2,23 @@
 
 The primary contract is the [Notehub OpenAPI specification](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml).
 This YAML file is an unmodified mirror of the production schema which is updated upon every service deployment.
-Download the complete YAML without summarization, cache it for the task, and record its
-retrieval time. Refresh it when a response contradicts the contract.
+Two views of it are generated whenever it changes:
 
-The [operation reference](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi-operations.md)
-is generated from that YAML whenever it changes. It lists every operation with its call
-name, effect (read, write or destructive), method, path, summary and parameters. It is an
-index to the YAML, not a substitute: an operation's full contract, including what its
-response fields mean, is in the YAML. If the two ever disagree, for example because the
-reference couldn't be regenerated after the YAML changed, the YAML is right.
+- The [operation reference](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi-operations.md)
+  lists every operation with its call name, effect (read, write or destructive), method,
+  path, summary and parameters.
+- Each operation's contract, linked from its operationId in the reference, is that
+  operation cut unchanged from the YAML: its parameters, request body and responses, and
+  every component they reference, including what the fields of a response mean.
+
+**Read what you can hold.** If you can keep the complete YAML for the task, download it
+without summarization, cache it, and record its retrieval time. If you can't, or would
+have to read it again with every message, read the operation reference in full instead to
+survey the API, and read an operation's contract before you use it, including wherever
+another page sends you to the YAML for one operation's contract. Either way, refresh what
+you read when a response contradicts it. If a generated view and the YAML ever disagree,
+for example because the views couldn't be regenerated after the YAML changed, the YAML is
+right.
 
 ## Understand the entities and their relationships
 
@@ -38,7 +46,8 @@ Preserve the `smart:` prefix in returned Device memberships, including when cach
 First survey **all** paths, methods, operationIds and tags, which the operation reference
 lists in full, so the tool surface is not limited to remembered operations. For each
 selected operation, resolve `$ref`s in
-path-level and operation-level parameters, body, responses and component schemas.
+path-level and operation-level parameters, body, responses and component schemas; its
+contract already contains every component it references.
 Record required inputs, filters, ordering, limits, timestamps, response shapes, response
 headers, retrieval controls and permissions.
 Use current operations for projects, devices, fleets, notes, events, sessions, schemas,

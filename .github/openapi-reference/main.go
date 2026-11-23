@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
@@ -72,12 +73,14 @@ type override struct {
 func main() {
 	overridesFile := flag.String("overrides", "", "YAML file of effects and notes keyed by operationId")
 	specURL := flag.String("spec-url", "", "URL of the specification, linked from the reference")
+	operationsDir := flag.String("operations-dir", "", "directory to write one contract file per operation into")
+	operationsURL := flag.String("operations-url", "", "URL of that directory, to link each operation from the reference")
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "usage: openapi-reference [-overrides file] [-spec-url URL] openapi.yaml")
+		fmt.Fprintln(os.Stderr, "usage: openapi-reference [-overrides file] [-spec-url URL] [-operations-dir dir [-operations-url URL]] openapi.yaml")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
-	if flag.NArg() != 1 {
+	if flag.NArg() != 1 || (*operationsURL != "" && *operationsDir == "") {
 		flag.Usage()
 		os.Exit(2)
 	}
@@ -86,7 +89,7 @@ func main() {
 	if err != nil {
 		fail(err)
 	}
-	spec, err := decodeSpec(data)
+	spec, root, err := decodeSpec(data)
 	if err != nil {
 		fail(fmt.Errorf("%s: %w", flag.Arg(0), err))
 	}
@@ -101,12 +104,26 @@ func main() {
 		}
 	}
 
-	reference, warnings, err := render(spec, overrides, *specURL)
+	// Without a URL, link each operation relative to a reference written beside the directory.
+	linkURL := *operationsURL
+	if *operationsDir != "" && linkURL == "" {
+		linkURL = filepath.Base(*operationsDir)
+	}
+	reference, warnings, err := render(spec, overrides, *specURL, linkURL)
 	for _, warning := range warnings {
 		fmt.Fprintln(os.Stderr, "warning:", warning)
 	}
 	if err != nil {
 		fail(err)
+	}
+	if *operationsDir != "" {
+		files, warnings := contracts(root, spec, *specURL)
+		for _, warning := range warnings {
+			fmt.Fprintln(os.Stderr, "warning:", warning)
+		}
+		if err := writeContracts(*operationsDir, files); err != nil {
+			fail(err)
+		}
 	}
 	// A partial write must fail, so that a caller keeps its previous complete reference.
 	if _, err := os.Stdout.WriteString(reference); err != nil {
@@ -122,20 +139,21 @@ func fail(err error) {
 // Decode a YAML or JSON specification into plain maps, lists and scalars. Unlike decoding
 // straight into Go values, a date-shaped value such as 2024-01-01 stays the text it is, as
 // it would in JSON, rather than becoming a timestamp.
-func decodeSpec(data []byte) (map[string]any, error) {
+// It also returns the document's root node, from which contract files are cut unchanged.
+func decodeSpec(data []byte) (map[string]any, *yaml.Node, error) {
 	var doc yaml.Node
 	if err := yaml.Unmarshal(data, &doc); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	v, err := plain(&doc, 0)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	spec, ok := v.(map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("not a mapping")
+	if !ok || len(doc.Content) == 0 {
+		return nil, nil, fmt.Errorf("not a mapping")
 	}
-	return spec, nil
+	return spec, doc.Content[0], nil
 }
 
 func plain(n *yaml.Node, depth int) (any, error) {
@@ -208,6 +226,7 @@ func plain(n *yaml.Node, depth int) (any, error) {
 // One operation, ready to print.
 type operation struct {
 	id, call, effect, method, path, summary, note string
+	link                                          string // the operation's contract file, if any
 	deprecated                                    bool
 	otherTags                                     []string // tags beyond the one it is grouped under
 	parameters                                    []string // "path: a*", "query: b, c[]", "body: d*", ...
@@ -231,7 +250,8 @@ func (r *resolver) warnOnce(format string, args ...any) {
 }
 
 // Render the reference, with warnings about anything it had to skip or ignore.
-func render(spec map[string]any, overrides map[string]override, specURL string) (string, []string, error) {
+// With operationsURL, each operationId links to its contract file there.
+func render(spec map[string]any, overrides map[string]override, specURL, operationsURL string) (string, []string, error) {
 	var warnings []string
 	warn := func(format string, args ...any) { warnings = append(warnings, fmt.Sprintf(format, args...)) }
 
@@ -278,6 +298,9 @@ func render(spec map[string]any, overrides map[string]override, specURL string) 
 				warn("%s is not plain ASCII, so its call name may differ from Python's lowercasing in the snake_case rule", op.id)
 			}
 			seen[op.id] = true
+			if operationsURL != "" && op.id != "" {
+				op.link = strings.TrimSuffix(operationsURL, "/") + "/" + contractFile(op.id)
+			}
 			if cb, ok := raw["callbacks"].(map[string]any); ok && len(cb) > 0 {
 				callbacks += len(cb)
 				warn("%s has callbacks (%s), which are not listed", label, strings.Join(sortedKeys(cb), ", "))
@@ -325,7 +348,7 @@ func render(spec map[string]any, overrides map[string]override, specURL string) 
 	}
 
 	var b strings.Builder
-	writeHeader(&b, title, apiVersion, specURL, count, unlisted)
+	writeHeader(&b, title, apiVersion, specURL, count, unlisted, operationsURL != "")
 	for _, tag := range tagOrder(spec, groups) {
 		name := tag
 		if name == "" {
@@ -970,7 +993,7 @@ func tagOrder(spec map[string]any, groups map[string][]operation) []string {
 	return order
 }
 
-func writeHeader(b *strings.Builder, title, version, specURL string, count int, unlisted []string) {
+func writeHeader(b *strings.Builder, title, version, specURL string, count int, unlisted []string, linked bool) {
 	if title == "" {
 		title = "API"
 	}
@@ -985,13 +1008,18 @@ func writeHeader(b *strings.Builder, title, version, specURL string, count int, 
 	} else {
 		intro += " This is a complete index generated from the specification, not a summary of it."
 	}
-	intro += " For an operation's full contract, including its request and response schemas and what" +
-		" the fields of a response mean, read that operation in the specification. If this index and" +
-		" the specification ever disagree, the specification is right."
+	if linked {
+		intro += " Each operationId links to that operation's complete contract, taken unchanged from the" +
+			" specification: its parameters, request body and responses, and every component they" +
+			" reference, including what the fields of a response mean."
+	} else {
+		intro += " For an operation's full contract, including its request and response schemas and what" +
+			" the fields of a response mean, read that operation in the specification."
+	}
+	intro += " If this index and the specification ever disagree, the specification is right."
 
 	fmt.Fprintf(b, "# %s operations\n\n", title)
-	b.WriteString("<!-- Generated by openapi-reference from the OpenAPI specification. Do not edit:\n")
-	b.WriteString("     it is regenerated whenever the specification changes. -->\n\n")
+	b.WriteString(generatedComment + "\n")
 	b.WriteString(wrap(intro, 90) + "\n\n")
 	b.WriteString("Each entry gives:\n\n")
 	b.WriteString("- The operationId, its call name (the operationId in snake_case), its effect, its method\n")
@@ -1012,6 +1040,9 @@ func writeHeader(b *strings.Builder, title, version, specURL string, count int, 
 
 func writeOperation(b *strings.Builder, op operation) {
 	id := "`" + op.id + "`"
+	if op.link != "" {
+		id = "[" + id + "](" + op.link + ")"
+	}
 	if op.call != "" {
 		id += " `" + op.call + "`"
 	}
