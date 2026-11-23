@@ -47,7 +47,10 @@ Simple agents can calculate on returned data during the task; they do not mainta
 Notehub Cache between conversations.
 
 A simple agent using Notehub MCP can read the pages its route needs, from this guide
-through Project Chat, in one fetch: [Simple agent using Notehub MCP](https://raw.githubusercontent.com/blues/skills/refs/heads/master/bundles/simple-agent-mcp.md).
+through Project Chat, in one fetch from the documentation server:
+[https://notehub.md/bundles/simple-agent-mcp.md](https://notehub.md/bundles/simple-agent-mcp.md).
+The [list of those pages](https://raw.githubusercontent.com/blues/skills/refs/heads/master/bundles/simple-agent-mcp.md)
+is kept with these skills.
 
 ## When the harness has prepared the work
 
@@ -66,8 +69,9 @@ those steps would have read, those steps are complete:
   messages and how it asks the user to approve changes. Follow the route they select.
 - For Step 2, the harness may supply a list of every operation (operationId, method,
   path and summary) instead of the complete OpenAPI specification. That list completes
-  the survey; resolve an operation's full contract before using it, for example with
-  the MCP `get_schema` tool.
+  the survey, so don't download the specification. Resolve an operation's full contract
+  before using it from the connected tool, for example with the MCP `get_schema` tool,
+  including where a page sends you to the specification for one operation's contract.
 - Steps the harness has not completed still apply, in order.
 
 A harness that keeps nothing between messages supplies its prepared context with every

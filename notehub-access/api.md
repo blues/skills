@@ -5,6 +5,12 @@ This YAML file is an unmodified mirror of the production schema which is updated
 Download the complete YAML without summarization, cache it for the task, and record its
 retrieval time. Refresh it when a response contradicts the contract.
 
+The one exception is a harness that has prepared the work and supplied a list of every
+operation instead ([When the harness has prepared the work](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#when-the-harness-has-prepared-the-work)).
+Then don't download the YAML: that list is your survey of all operations. Resolve each
+operation's contract from the connected tool before using it, for example with the MCP
+`get_schema` tool, and resolve it again when a response contradicts it.
+
 ## Understand the entities and their relationships
 
 | Entity | Identifier | Relationship |

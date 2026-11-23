@@ -29,7 +29,8 @@ them in one fetch.
 From the documentation server, this page is followed by the full text of each page in
 its `pages` list, in order, each introduced by its title and URL. Read them as though you
 had fetched each one when its step routed you there, and follow the entry guide's steps
-as usual. Read from GitHub, this page is only that list.
+as usual. Read from GitHub, this page is only that list; the combined page is at
+[https://notehub.md/bundles/simple-agent-mcp.md](https://notehub.md/bundles/simple-agent-mcp.md).
 
 Left out, because this route reads them only when the work calls for them or not at all:
 Cloud Computer setup and the Notehub Cache, the `notehub` CLI, Project Training, Firmware
