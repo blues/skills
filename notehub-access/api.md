@@ -5,6 +5,13 @@ This YAML file is an unmodified mirror of the production schema which is updated
 Download the complete YAML without summarization, cache it for the task, and record its
 retrieval time. Refresh it when a response contradicts the contract.
 
+The [operation reference](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi-operations.md)
+is generated from that YAML whenever it changes. It lists every operation with its call
+name, effect (read, write or destructive), method, path, summary and parameters. It is an
+index to the YAML, not a substitute: an operation's full contract, including what its
+response fields mean, is in the YAML. If the two ever disagree, for example because the
+reference couldn't be regenerated after the YAML changed, the YAML is right.
+
 ## Understand the entities and their relationships
 
 | Entity | Identifier | Relationship |
@@ -28,8 +35,9 @@ Preserve the `smart:` prefix in returned Device memberships, including when cach
 
 ## Discover operations and their contracts
 
-First survey **all** paths, methods, operationIds and tags so the tool surface is not
-limited to remembered operations. For each selected operation, resolve `$ref`s in
+First survey **all** paths, methods, operationIds and tags, which the operation reference
+lists in full, so the tool surface is not limited to remembered operations. For each
+selected operation, resolve `$ref`s in
 path-level and operation-level parameters, body, responses and component schemas.
 Record required inputs, filters, ordering, limits, timestamps, response shapes, response
 headers, retrieval controls and permissions.

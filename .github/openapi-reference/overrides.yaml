@@ -1,0 +1,23 @@
+# Effects and notes the mirrored Notehub OpenAPI specification doesn't state yet, keyed by
+# operationId. Each entry can set `effect` (read, write or destructive) and a `note`.
+#
+# The specification is mirrored unmodified, so these live here. Once the specification
+# carries an operation's x-effect or x-effect-note extension, remove its entry: an entry
+# here overrides the specification.
+#
+# The two effects match the Notehub MCP server's own exceptions (x-mcp-annotations in its
+# OpenAPI overlay), so an operation's effect here is the execute tool that runs it.
+
+DeleteDeviceFromFleets:
+  effect: write
+  note: A DELETE, but it only changes fleet membership; the device and the fleets remain.
+
+SetGlobalEventTransformation:
+  effect: destructive
+  note: A POST, but a wrong transformation rewrites or drops every new event the project receives.
+
+GetNotefile:
+  note: With `delete=true` it deletes the notes it returns, which is destructive.
+
+GetDbNote:
+  note: With `delete=true` it deletes the note after returning it, which is destructive.

@@ -1,0 +1,41 @@
+name: Check Notehub API operation reference
+
+on:
+  pull_request:
+    paths:
+      - '.github/openapi-reference/**'
+      - '.github/workflows/check-openapi-reference.yml'
+      - 'notehub-access/openapi.yaml'
+      - 'notehub-access/openapi-operations.md'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: .github/openapi-reference/go.mod
+          cache-dependency-path: .github/openapi-reference/go.sum
+
+      - name: Test the generator
+        run: go test -C .github/openapi-reference ./...
+
+      - name: Check the committed reference matches the schema
+        run: |
+          go run -C .github/openapi-reference . \
+            -overrides overrides.yaml \
+            -spec-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml' \
+            ../../notehub-access/openapi.yaml > "$RUNNER_TEMP/openapi-operations.md"
+          if ! diff -u notehub-access/openapi-operations.md "$RUNNER_TEMP/openapi-operations.md"; then
+            echo '::error file=notehub-access/openapi-operations.md::Out of date. Regenerate it with the command in .github/openapi-reference/README.md.'
+            exit 1
+          fi

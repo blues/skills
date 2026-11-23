@@ -89,3 +89,59 @@ jobs:
           # Never force-push: a concurrent edit causes a safe failure and the next run retries.
           git push origin HEAD:master
           echo "$result" >> "$GITHUB_STEP_SUMMARY"
+
+  # A separate job, so that nothing about Go can delay or stop the mirror above: it runs
+  # after the mirror job, with its own actions and its own time limit, and a failure here
+  # only leaves the previous reference in place.
+  reference:
+    needs: update
+    if: ${{ !cancelled() && github.repository == 'blues/skills' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: .github/openapi-reference/go.mod
+          cache-dependency-path: .github/openapi-reference/go.sum
+
+      - name: Regenerate and publish the operation reference
+        run: |
+          # Start from master as the mirror job left it, so the reference matches that schema.
+          git fetch --no-tags origin master
+          git checkout -B master origin/master
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          reference=notehub-access/openapi-operations.md
+          status=0
+          go run -C .github/openapi-reference . \
+            -overrides overrides.yaml \
+            -spec-url 'https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml' \
+            ../../notehub-access/openapi.yaml \
+            > "$RUNNER_TEMP/openapi-operations.md" 2> "$RUNNER_TEMP/reference.log" || status=$?
+          if [[ -s "$RUNNER_TEMP/reference.log" ]]; then
+            cat "$RUNNER_TEMP/reference.log"
+            { echo '```'; cat "$RUNNER_TEMP/reference.log"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if (( status != 0 )); then
+            echo 'Operation reference not regenerated; the previous one is kept.' >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
+          fi
+
+          if cmp -s "$RUNNER_TEMP/openapi-operations.md" "$reference"; then
+            echo 'Operation reference unchanged; no commit needed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cp "$RUNNER_TEMP/openapi-operations.md" "$reference"
+          git add -- "$reference"
+          git commit -m 'Regenerate the Notehub API operation reference'
+          # Never force-push: a concurrent edit causes a safe failure and the next run retries.
+          git push origin HEAD:master
+          echo 'Published a regenerated operation reference.' >> "$GITHUB_STEP_SUMMARY"

@@ -15,7 +15,9 @@ After connecting, discover `search`, `execute`, `execute_write` and
 `execute_destructive` and read their current schemas. Tool names may carry a harness
 prefix. Search finds server functions, including repository functions absent from the
 public OpenAPI paths. For the general Notehub API, use the current OpenAPI contract to
-map the selected operation's `operationId` to `call_tool`. When the operationId and
+map the selected operation's `operationId` to `call_tool`; the
+[operation reference](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi-operations.md)
+gives each operation's call name and effect. When the operationId and
 resolved parameters are known, skip per-operation `search`/`get_schema` calls; code mode
 can combine bounded related calls and return just the needed evidence:
 
@@ -56,18 +58,26 @@ becomes `get_devices_dfu_status` and `GetDbNote` becomes `get_db_note`.
 | `execute_write` | Reads and POST/PUT/PATCH writes |
 | `execute_destructive` | Those operations plus DELETE and `replace_repository_dataset` |
 
-Exceptions: `delete_device_from_fleets` is a write; `set_global_event_transformation`
-is destructive. Confirm current tool metadata. Tool annotations and the harness govern
-approval; there is no invented `confirm` argument, and not every harness presents the
-same prompt. Stay within the user's existing authorization. A multi-call program is not
-a transaction: earlier calls can succeed before a later failure. Inspect before retrying.
+For an operation that code mode exposes, its effect in the operation reference names its
+tool, including the exceptions to its HTTP method: `delete_device_from_fleets` is a write;
+`set_global_event_transformation` is destructive. The reference lists the whole API, so an
+operation excluded below has an effect but no tool. Confirm current tool metadata. Tool
+annotations and the harness govern approval; there is no invented `confirm` argument, and
+not every harness presents the same prompt. Stay within the user's existing authorization.
+A multi-call program is not a transaction: earlier calls can succeed before a later
+failure. Inspect before retrying.
 Keep outputs small and relevant, but never hide incomplete coverage behind a summary.
 
-The code-mode contract excludes `login`, `o_auth2_client_credentials`,
+The code-mode contract excludes `o_auth2_client_credentials`,
 `get_device_environment_variables_by_pin`, `set_device_environment_variables_by_pin`,
 `delete_project`, `set_global_description`, `delete_global_description`,
-`upload_firmware` and `download_firmware`. MCP code mode cannot upload or download firmware
-files; report that limitation. A switch to the CLI is a transport change under Access, made
+`upload_firmware` and `download_firmware`. It also excludes the `/monitors` operations
+(`get_monitors`, `get_monitor`, `create_monitor`, `update_monitor`, `delete_monitor`); use
+the server's own monitor functions instead (`list_project_monitors`, `preview_monitor_alerts`,
+`create_project_monitor`, `update_project_monitor`, `delete_project_monitor`). An operation
+added to the specification recently may not be served yet (in November 2026,
+`get_sessions`); `search` and `list_tools` show what is. MCP code mode cannot upload or
+download firmware files; report that limitation. A switch to the CLI is a transport change under Access, made
 only for this need or at the user's choice, and not available where the harness forbids a
 second path (e.g. Grok Bot). Do not assume every OpenAPI operation is
 exposed unchanged. If needed, report a concrete limitation; don't reach for raw tokens.
