@@ -6,8 +6,10 @@ description: Continue work with a selected Notehub Project through an ongoing lo
 # Chat about the Project and keep the user informed
 
 Arrive here after the entry cookbook has established access, taught the API, selected
-ProjectUID and loaded the complete product skill set. Retain both independent routing
-decisions: **MCP or Notehub CLI**, and **Cloud Computer or simple agent**.
+ProjectUID and loaded the complete product skill set, or after a harness has done those
+steps for you ([When the harness has prepared the work](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#when-the-harness-has-prepared-the-work)).
+Retain both independent routing decisions: **MCP or Notehub CLI**, and **Cloud Computer
+or simple agent**.
 
 On a **Cloud Computer**, the entry workflow must also have prepared the Notehub Cache
 and **enrolled the selected Project and begun its fill**. If enrollment or known cache

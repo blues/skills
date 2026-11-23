@@ -46,12 +46,41 @@ to either environment using MCP. It is separate from the local **Notehub Cache**
 Simple agents can calculate on returned data during the task; they do not maintain a
 Notehub Cache between conversations.
 
+A simple agent using Notehub MCP can read the pages its route needs, from this guide
+through Project Chat, in one fetch: [Simple agent using Notehub MCP](https://raw.githubusercontent.com/blues/skills/refs/heads/master/bundles/simple-agent-mcp.md).
+
+## When the harness has prepared the work
+
+Some harnesses complete part of this workflow before the agent sees a message. A chat
+assistant built into a Notehub web page, for example, can verify its Notehub MCP
+connection, choose the Project the user has open, read that Project's product skills,
+and give the agent these pages and that product knowledge in its instructions.
+
+When the agent's instructions say which steps the harness has completed, and supply what
+those steps would have read, those steps are complete:
+
+- Do not repeat them by fetching their pages or calling their tools again. Fetch a page
+  only when the work routes to one the harness did not supply.
+- The harness's statements about itself are the routing facts: its access method,
+  whether it runs on a Cloud Computer, which tools it has, what it keeps between
+  messages and how it asks the user to approve changes. Follow the route they select.
+- For Step 2, the harness may supply a list of every operation (operationId, method,
+  path and summary) instead of the complete OpenAPI specification. That list completes
+  the survey; resolve an operation's full contract before using it, for example with
+  the MCP `get_schema` tool.
+- Steps the harness has not completed still apply, in order.
+
+A harness that keeps nothing between messages supplies its prepared context with every
+message. Use it as already read; do not read it again.
+
 ## Basic way of working — skills before tools
 
 **Harness rule (always):** Follow **these skills** before any Notehub MCP or API call.
 Do not bypass this cookbook and jump straight into MCP/API because a tool is connected
 or the user asked a quick data question. Load the linked skill for the current step,
-then use tools only as that step allows.
+then use tools only as that step allows. Steps a harness has completed for you, as
+[When the harness has prepared the work](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#when-the-harness-has-prepared-the-work)
+describes, count as followed.
 
 On a Cloud Computer with cache + maintenance registered: enroll on project open,
 **begin fill immediately**, **report fill started**, and **ALWAYS route Q&A through the
@@ -104,7 +133,8 @@ authentication and verification. Reuse an already verified connection.
 ## 2. Read Notehub's skills
 
 **All agents must complete API discovery**, regardless of how they accessed Notehub.
-Read the complete OpenAPI specification and survey its available operations. Then read
+Read the complete OpenAPI specification and survey its available operations; a harness
+that has prepared the work may supply a list of every operation instead. Then read
 or reuse **only one** of the MCP or CLI guides, matching the connection Access established
 and verified: the MCP guide for MCP access, or the CLI guide for CLI access. Access may
 already have used that guide for authentication; retain its invocation guidance here.
