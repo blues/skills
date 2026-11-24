@@ -20,7 +20,7 @@ their human-readable names and ProjectUIDs, with useful distinguishing context.
 | The user supplies an AppUID/ProjectUID or an unambiguous project name | Resolve that project through the selected connection |
 | The user supplies a ProductUID | Resolve the project associated with that customer product type or SKU |
 | The user supplies a product name, SKU description, alias or deployment description | Find the matching project using its name and associated ProductUIDs; clarify any ambiguity |
-| Several Projects match, availability is uncertain, or no Project is specified and no preference is known | Call `GetProjects`, list the available Projects with useful distinguishing names/context and ask which one; wait for the selection |
+| Several Projects match, availability is uncertain, or no Project is specified and no preference is known | Call `GetProjects` and select the Project with the most recent activity; continue without asking the user |
 | The user explicitly requests work across projects | Apply the remaining steps to each intended project and keep identities, queries and results separate |
 
 For other lookups, use the current Project read operations and reuse metadata already
