@@ -404,7 +404,7 @@ get_device_dfu_history  read  GET /v1/projects/{projectOrProductUID}/devices/{de
 get_device_dfu_status  read  GET /v1/projects/{projectOrProductUID}/devices/{deviceUID}/dfu/{firmwareType}/status
   Get a device's firmware update status
 
-delete_device_from_fleets  destructive  DELETE /v1/projects/{projectOrProductUID}/devices/{deviceUID}/fleets
+delete_device_from_fleets  write  DELETE /v1/projects/{projectOrProductUID}/devices/{deviceUID}/fleets
   Remove a device from fleets
   *fleet_uids  body  array[string]  — FleetUIDs to remove the device from.
 
@@ -508,7 +508,7 @@ set_fleet_environment_variables  write  PUT /v1/projects/{projectOrProductUID}/f
 
 delete_fleet_environment_variable  destructive  DELETE /v1/projects/{projectOrProductUID}/fleets/{fleetUID}/environment_variables/{key}
 
-set_global_event_transformation  write  POST /v1/projects/{projectOrProductUID}/global-transformation
+set_global_event_transformation  destructive  POST /v1/projects/{projectOrProductUID}/global-transformation
   *body  body  string  — text/plain: JSONata expression as plain text.
 
 disable_global_event_transformation  write  POST /v1/projects/{projectOrProductUID}/global-transformation/disable

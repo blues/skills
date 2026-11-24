@@ -11,6 +11,11 @@ GetDbNote:
     delete: { x-mcp-class: destructive }
 CancelJobRun:
   x-mcp-class: destructive  # a POST that cancels a run
+# The MCP server's own exceptions to the method default (its tool annotations, and mcp.md):
+DeleteDeviceFromFleets:
+  x-mcp-class: write        # a DELETE that only changes fleet membership
+SetGlobalEventTransformation:
+  x-mcp-class: destructive  # a POST that rewrites every event the project receives
 # Login, if it is ever re-added:
 # Login:
 #   x-mcp-hidden: true
