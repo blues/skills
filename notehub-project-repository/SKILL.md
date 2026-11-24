@@ -72,10 +72,12 @@ For the tables needed by the question, establish:
 | Load status, archive and table bounds, and latest ingestion | Whether the complete requested history is queryable now: only `ready` or `ready_optimized` means fully loaded |
 | Available records and fields | Whether the question can use Event data, or needs full Session records or other entities from another source |
 
-A row count is an Event count only when the projection keeps every Event of the
-Notefiles in question, one row each. When it keeps only some Events, such as alarms, or
-makes several rows per Event, the dataset cannot count those Events: get the count from
-the Notehub API, as [Answer a question — Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md#3-acquire-only-the-missing-evidence)
+A dataset can count Events only when its projection keeps every Event of the Notefiles
+in question, in at least one row each, with a column identifying the Event, such as its
+EventUID: count distinct values of that column. Rows that match in every column can
+merge, so without one, even one row per Event can undercount. When the projection drops
+Events, such as all but alarms, or their identity, the dataset cannot count those Events:
+get the count from the Notehub API, as [Answer a question — Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md#3-acquire-only-the-missing-evidence)
 describes. While a dataset is still loading, its numbers are partial: report them as
 partial, or get the complete evidence from the Notehub API.
 

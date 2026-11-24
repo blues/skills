@@ -32,7 +32,7 @@ ClickHouse SQL, these details matter:
 |---|---|
 | Table `time` column | Read its projection's time expression. Use efficient time bounds without substituting upload time for the requested measurement time |
 | Generated `location` Point, when present | Its coordinate order is longitude, latitude; verify the actual columns before spatial calculations |
-| Load status from `get_repository_dataset` | Only `ready` or `ready_optimized` means fully loaded; under `loading` or `not_loading` the table is partial or empty. Before `ready_optimized`, replayed rows can repeat: account for deduplication before trusting counts |
+| Load status from `get_repository_dataset` | Only `ready` or `ready_optimized` means fully loaded; under `loading` or `not_loading` the table is partial or empty. Replayed rows can repeat until background merges remove them, even at `ready_optimized`: for an exact count, count distinct Event identifiers or query with `FINAL` |
 | `statistics.truncated`, when returned | Check it before treating returned detail as complete; aggregate or split the requested range when needed |
 
 “Recent” retains the user's intended wall-clock window. Do not shift it to the latest

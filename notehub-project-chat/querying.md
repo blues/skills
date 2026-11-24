@@ -141,13 +141,16 @@ limits. A small sample helps interpret fields but cannot stand in for the comple
 population. Keep enough source evidence to verify or revise the calculation.
 
 To count Events through the Notehub API by receipt time over whole UTC days, weeks or
-months, use `GetEventsUsage` (`aggregate=project` for one total). Its totals are
-Notehub's own counts by receipt time and include Events deleted since; say the count is
-by receipt time. It picks periods by when each starts, inclusive at both ends, so an
-`endDate` at midnight also returns the day beginning then; it cannot count part of a
-day. For part of a day, count the Events `GetEvents` returns with `dateType=uploaded`
-over that part; for capture time, use `dateType=captured`, its default. Say a `GetEvents`
-count covers only Events still stored.
+months, use `GetEventsUsage` with `aggregate=project`, leaving out `endDate`. It returns
+one total per period, picked by when each starts: add the periods the window covers. Its
+totals are Notehub's own counts by receipt time and include Events deleted since; say the
+count is by receipt time. Summaries lag: a period is final only once a later one is
+returned, so otherwise say the last may still be filling in. It cannot count part of a
+day. For part of a day, or for capture time, count the Events `GetEvents` returns over the
+window with `dateType=uploaded` for receipt time or `captured`, its default, for capture
+time. `uploaded` filters on an Event's last change, so keep only Events not marked
+`deleted` whose own `received` (or `when`) falls in the window. Say a `GetEvents` count
+covers only Events still stored.
 
 A foreground agent may use temporary files for a bounded analysis or export, but does not
 start a persistent synchronized database or background job. Explain the actual time and
