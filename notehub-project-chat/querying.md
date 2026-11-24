@@ -11,12 +11,14 @@ and loaded skills to resolve product terminology, NotefileID, Event `body` field
 database columns. Ask only about ambiguity that changes the answer. Analytical times
 default to UTC unless the user specifies otherwise.
 
-Every Event has two times: when the device captured it and when Notehub received it. A
-device can hold Events for hours before uploading them, so counts by the two differ. Use
-the one the question means: readings taken mean capture time; received, arrived or
-uploaded mean receipt time. For a count that doesn't say which, count by receipt time
-and say so. Count the whole window by one basis; never add a count by one to a count by
-the other.
+The Notecard may supply two optional sets of fields, prefixed `when` and `where`, which
+it records when it captures an Event's `body` or `payload`. Notehub supplies three sets
+that pertain to the upload instead: `received`, the epoch time, with fractional seconds,
+at which it received the uploaded data from the Notecard, and the `tower_` and `tri_`
+locations. `best_` is Notehub's pick among `where_`, `tri_` and `tower_`, and
+`best_location_type` says which. When a question doesn't say which time it means, use
+`when`, the time of the action on the Notecard or product, and say so; use `received` for
+an Event without `when`.
 
 | If you need to | Read | Then |
 |---|---|---|
