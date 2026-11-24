@@ -57,15 +57,31 @@ terminology, Event `body` meanings and their mapping to Repository columns.
 A Notefile's JSON schema helps interpret its Event body; it does not by itself describe
 a transformed Repository table.
 
+A table's schema is not its definition. For each table the query will use, read its
+dataset with `get_repository_dataset` (a table's name is its dataset's name) before
+trusting what its rows mean or how complete they are. It returns the dataset's
+Notefiles, its projection and its load status.
+
 For the tables needed by the question, establish:
 
 | Check | What it establishes |
 |---|---|
 | ProjectUID, FleetUID or NotefileID filters | Which population and Events are included |
-| Projection and row meaning | Whether a row represents an Event, an individual measurement expanded from an Event, or another derived quantity |
+| Projection and row meaning | A row is whatever the projection makes: one per Event, one per measurement expanded from an Event, only some Events, or another derived quantity |
 | Time expression and available timestamp columns | Whether the query measures capture, upload or another documented time; use the actual schema |
-| Archive bounds, table bounds, loading progress and latest ingestion | Whether the complete requested history is queryable now |
+| Load status, archive and table bounds, and latest ingestion | Whether the complete requested history is queryable now: only `ready` or `ready_optimized` means fully loaded |
 | Available records and fields | Whether the question can use Event data, or needs full Session records or other entities from another source |
+
+A dataset can count the Events a question asks about only when its projection keeps every
+one of them, in at least one row each, with a column identifying the Event, such as its
+EventUID: count distinct values of that column. Rows that match in every column can
+merge, so without one, even one row per Event can undercount. The question, not the
+dataset, decides which Events count: a dataset that keeps only alarms can count alarms,
+but a question about a device's Events, with no condition, counts all of them. When the
+projection drops Events the question counts, or their identity, the dataset cannot count
+them: get the count from the Notehub API, as [Answer a question — Step 3](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/querying.md#3-acquire-only-the-missing-evidence)
+describes. While a dataset is still loading, its numbers are partial: report them as
+partial, or get the complete evidence from the Notehub API.
 
 An `_session.qo` Event table is not the full Session API. Preserve that distinction when
 combining Repository history with other evidence. Check configured filters, retention,

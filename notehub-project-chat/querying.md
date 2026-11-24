@@ -11,6 +11,15 @@ and loaded skills to resolve product terminology, NotefileID, Event `body` field
 database columns. Ask only about ambiguity that changes the answer. Analytical times
 default to UTC unless the user specifies otherwise.
 
+The Notecard may supply two optional sets of fields, prefixed `when` and `where`, which
+it records when it captures an Event's `body` or `payload`. Notehub supplies three sets
+that pertain to the upload instead: `received`, the epoch time, with fractional seconds,
+at which it received the uploaded data from the Notecard, and the `tower_` and `tri_`
+locations. `best_` is Notehub's pick among `where_`, `tri_` and `tower_`, and
+`best_location_type` says which. When a question doesn't say which time it means, use
+`when`, the time of the action on the Notecard or product, and say so; use `received` for
+an Event without `when`.
+
 | If you need to | Read | Then |
 |---|---|---|
 | Recheck a product rule after a change or recover missing knowledge | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Reuse the full skill set already read; refresh or recover it only when needed |
@@ -132,6 +141,22 @@ For an unfamiliar source, inspect its schema and a small bounded sample first. F
 and aggregate near the data, batch compatible reads and use the documented response
 limits. A small sample helps interpret fields but cannot stand in for the complete
 population. Keep enough source evidence to verify or revise the calculation.
+
+To count Events through the Notehub API by receipt time over whole UTC days, weeks or
+months, use `GetEventsUsage` with `aggregate=project`, leaving out `endDate`. It returns
+one total per period, picked by when each starts: add the periods the window covers. Its
+totals are Notehub's own counts by receipt time and include Events deleted since; say the
+count is by receipt time. Summaries lag: a period is final only once a later one is
+returned, so otherwise say the last may still be filling in. It counts every Event of the
+chosen devices, fleets or Notefiles; it cannot filter on `body` fields or count part of a
+day.
+
+Otherwise, count the Events `GetEvents` returns, keeping only those not marked `deleted`
+whose own `received` or `when` falls in the window. For capture time, filter with
+`dateType=captured`, its default, over the window. For receipt time, use
+`dateType=uploaded` with the window's start and no `endDate`: it filters on when each
+Event was stored or last changed, which can follow its receipt. Say a `GetEvents` count
+covers only Events still stored.
 
 A foreground agent may use temporary files for a bounded analysis or export, but does not
 start a persistent synchronized database or background job. Explain the actual time and
