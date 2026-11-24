@@ -145,11 +145,15 @@ months, use `GetEventsUsage` with `aggregate=project`, leaving out `endDate`. It
 one total per period, picked by when each starts: add the periods the window covers. Its
 totals are Notehub's own counts by receipt time and include Events deleted since; say the
 count is by receipt time. Summaries lag: a period is final only once a later one is
-returned, so otherwise say the last may still be filling in. It cannot count part of a
-day. For part of a day, or for capture time, count the Events `GetEvents` returns over the
-window with `dateType=uploaded` for receipt time or `captured`, its default, for capture
-time. `uploaded` filters on an Event's last change, so keep only Events not marked
-`deleted` whose own `received` (or `when`) falls in the window. Say a `GetEvents` count
+returned, so otherwise say the last may still be filling in. It counts every Event of the
+chosen devices, fleets or Notefiles; it cannot filter on `body` fields or count part of a
+day.
+
+Otherwise, count the Events `GetEvents` returns, keeping only those not marked `deleted`
+whose own `received` or `when` falls in the window. For capture time, filter with
+`dateType=captured`, its default, over the window. For receipt time, use
+`dateType=uploaded` with the window's start and no `endDate`: it filters on when each
+Event was stored or last changed, which can follow its receipt. Say a `GetEvents` count
 covers only Events still stored.
 
 A foreground agent may use temporary files for a bounded analysis or export, but does not
