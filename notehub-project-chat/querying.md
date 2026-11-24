@@ -11,6 +11,13 @@ and loaded skills to resolve product terminology, NotefileID, Event `body` field
 database columns. Ask only about ambiguity that changes the answer. Analytical times
 default to UTC unless the user specifies otherwise.
 
+Every Event has two times: when the device captured it and when Notehub received it. A
+device can hold Events for hours before uploading them, so counts by the two differ. Use
+the one the question means: readings taken mean capture time; received, arrived or
+uploaded mean receipt time. For a count that doesn't say which, count by receipt time
+and say so. Count the whole window by one basis; never add a count by one to a count by
+the other.
+
 | If you need to | Read | Then |
 |---|---|---|
 | Recheck a product rule after a change or recover missing knowledge | [Reading product knowledge](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/product-knowledge.md) | Reuse the full skill set already read; refresh or recover it only when needed |
@@ -132,6 +139,15 @@ For an unfamiliar source, inspect its schema and a small bounded sample first. F
 and aggregate near the data, batch compatible reads and use the documented response
 limits. A small sample helps interpret fields but cannot stand in for the complete
 population. Keep enough source evidence to verify or revise the calculation.
+
+To count Events through the Notehub API by receipt time over whole UTC days, weeks or
+months, use `GetEventsUsage` (`aggregate=project` for one total). Its totals are
+Notehub's own counts by receipt time and include Events deleted since; say the count is
+by receipt time. It picks periods by when each starts, inclusive at both ends, so an
+`endDate` at midnight also returns the day beginning then; it cannot count part of a
+day. For part of a day, count the Events `GetEvents` returns with `dateType=uploaded`
+over that part; for capture time, use `dateType=captured`, its default. Say a `GetEvents`
+count covers only Events still stored.
 
 A foreground agent may use temporary files for a bounded analysis or export, but does not
 start a persistent synchronized database or background job. Explain the actual time and

@@ -11,14 +11,17 @@ connection; authentication stays inside MCP.
 ## Discover the supported functions
 
 Use MCP search and read the returned schemas for Repository functions. These can include
-`list_repositories`, `describe_schema`, `get_table_sample` and `query_repository`; use
-what the connected server exposes. These functions may exist beyond the public OpenAPI
-paths. Reuse interface definitions already discovered while they remain valid.
+`list_repositories`, `describe_schema` (tables and their columns), `get_repository_dataset`
+(one dataset's definition, meaning its Notefiles and projection, and its load status),
+`get_table_sample` and `query_repository`; use what the connected server exposes. These
+functions may exist beyond the public OpenAPI paths. Reuse interface definitions already
+discovered while they remain valid.
 
 Match the selected ProjectUID to the Repository's `project_uids`, and retain RepositoryUID
 from `uid`. Pass it explicitly under the tool's actual parameter name, such as
-`repository_uid`. Keep any FleetUID restrictions with that scope; do not rely on a tool
-defaulting to the first Repository.
+`repositoryUID`. Keep any FleetUID restrictions with that scope; do not rely on a tool
+defaulting to the first Repository. Each table is one dataset of the same name: pass that
+name as `dataset_name` to read the definition and load status the cookbook's Step 2 checks.
 
 ## Apply the query engine's contract
 
@@ -29,7 +32,7 @@ ClickHouse SQL, these details matter:
 |---|---|
 | Table `time` column | Read its projection's time expression. Use efficient time bounds without substituting upload time for the requested measurement time |
 | Generated `location` Point, when present | Its coordinate order is longitude, latitude; verify the actual columns before spatial calculations |
-| Loading and optimization state | Account for unfinished backfill or replay deduplication before trusting counts |
+| Load status from `get_repository_dataset` | Only `ready` or `ready_optimized` means fully loaded; under `loading` or `not_loading` the table is partial or empty. Before `ready_optimized`, replayed rows can repeat: account for deduplication before trusting counts |
 | `statistics.truncated`, when returned | Check it before treating returned detail as complete; aggregate or split the requested range when needed |
 
 “Recent” retains the user's intended wall-clock window. Do not shift it to the latest
