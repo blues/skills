@@ -83,17 +83,15 @@ the default native tracking serializer; inspect the decoded output and project m
 
 ## Journey definition depends on firmware and configuration
 
-Displacement-confirmed tracking opens a candidate on qualifying accelerometer motion, then
-confirms displacement against a saved location before starting the journey. GPS
-displacement over a configurable window keeps it alive; recent accelerometer motion
-provides a fallback while GPS is unavailable. Its defaults include 150 meters and a
-five-minute window; use the device's configured values. For accelerometer-only tracking,
-interpret motion and the quiet timer according to that mode's configuration. This is not
-universally “one accelerometer interrupt starts a journey; five quiet minutes ends it”.
-Ping mode and tracking mode also change which records are expected. Firmware through
-v11.4.1 has none of this: a journey starts on accelerometer motion and ends after
-`_gps_journey_secs` (default 300 s) without motion, with no `start`/`stop` markers, ping
-mode, or `sats`/`snr`. Check `firmware_notecard` before applying either model.
+Displacement-confirmed tracking opens a candidate on qualifying accelerometer motion,
+then confirms displacement against a saved location before starting the journey.
+GPS displacement over a configurable window keeps it alive; recent accelerometer
+motion provides a fallback while GPS is unavailable. Its defaults include
+150 meters and a five-minute window; use the device's configured values. For
+accelerometer-only tracking, interpret motion and the quiet timer according to that
+mode's configuration.
+This is not universally “one accelerometer interrupt starts a journey; five quiet
+minutes ends it”. Ping mode and tracking mode also change which records are expected.
 
 A start marker can be backdated to when the candidate opened at its saved origin, and
 `journey` is that marker's time, so it equals the start record's `when` and precedes the

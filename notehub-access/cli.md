@@ -65,10 +65,7 @@ credential files, supply `--token`, print an inherited token, or add Authorizati
 If status reports an environment credential override, report the source without its
 value and follow the guide; do not silently change the user's environment. Log out only
 when requested. Unattended jobs must run in an environment where this same authorized
-login works and refreshes; do not copy secrets into job configuration. The CLI refreshes
-its tokens automatically, but a sign-in that makes no Notehub API call for 72 hours still
-expires; the daily maintenance task keeps it active. If it expires, ask the user to sign
-in again rather than falling back to another credential.
+login works and refreshes; do not copy secrets into job configuration.
 
 ## Call the API
 

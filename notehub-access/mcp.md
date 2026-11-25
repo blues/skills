@@ -101,8 +101,5 @@ Specific guards still apply:
 - The OAuth session lives with the connector, not on the Cloud Computer. Notehub tools
   are callable only from agent turns, not from box scripts. Do not install the CLI,
   store a token or set a token environment variable as a second path.
-- The connector refreshes its tokens, but a sign-in that makes no Notehub call for 72
-  hours still expires; the daily maintenance task keeps it active. If it expires, ask the
-  user to reconnect.
 - Large results can be saved to a file with the dynamic-tool call's `write_to_file`
   option. This is how the cache handoff passes fetched batches to its worker.

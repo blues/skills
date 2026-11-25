@@ -80,6 +80,30 @@ mode. It is not a measured battery chemistry identification. Tracking has `usb` 
 not battery percentage. The same physical voltage can have different significance
 with different battery configuration, temperature, load and wiring.
 
+## `_power.qo` is a source-transition log
+
+For records produced by `card.power.notify`, the Notecard observes USB and/or carrier
+charging sense independently and emits debounced source transitions. It does not produce
+a generic energy-usage time series or a record of every modem on/off cycle.
+
+| Body field | Meaning |
+|---|---|
+| `source` string | `usb` or `charging`. Analyze each source separately. |
+| `from-state`, `to-state` string | `unknown`, `off` or `on`. Unknown means no established/observable state. |
+| `minutes` integer | Rounded observed duration since the preceding report, credited across committed states. Normally the prior state's dwell; if reporting was delayed across transitions it can cover intermediate states too. It is not time in the new state or remaining battery life. |
+| `voltage` number | Supply volts sampled for the notification, using Mojo voltage when active. |
+| `voltage_mode` string | Current voltage-regime classification; depends on configuration. |
+
+The state machine starts unknown after boot. `unknown → off` is establishment of the
+first observed level, not evidence that an external supply failed at that moment.
+Charging sense becoming unavailable can report a transition to unknown. Delayed
+processing can coalesce transitions into a net state change. Short changes
+can be suppressed by debounce and minimum dwell; reporting need not capture every
+physical edge. Duration uses heartbeat observation, is rounded, and saturates for
+very long dwell (roughly 49 days). Do not use it as a
+precision outage stopwatch. Emission and sync configuration also differ: a queued
+transition may arrive later.
+
 ## Battery questions need product knowledge
 
 For “how much battery is left?”, seek a calibrated state-of-charge/coulomb model or
@@ -96,29 +120,5 @@ explain a drain pattern; it cannot by itself quantify the drain in mAh.
 For “why is consumption higher?”, align valid counter/charge deltas with sessions,
 failed connections, signal, GPS seeks and product operating modes. Correlation may
 suggest a cause; do not claim the host, battery or antenna failed from one counter.
-
-## `_power.qo` is a source-transition log
-
-For records produced by `card.power.notify`, the Notecard observes USB and/or carrier
-charging sense independently and emits debounced source transitions. It does not produce
-a generic energy-usage time series or a record of every modem on/off cycle.
-
-| Body field | Meaning |
-|---|---|
-| `source` string | `usb`, `charging` or `hibernate`. Analyze each source separately. For `hibernate`, `off → on` marks entering `card.hibernate` and `on → off` leaving it. |
-| `from-state`, `to-state` string | `unknown`, `off` or `on`. Unknown means no established/observable state. |
-| `minutes` integer | Observed duration since the preceding report in whole minutes, rounded down, credited across committed states. Normally the prior state's dwell; if reporting was delayed across transitions it can cover intermediate states too. It is not time in the new state or remaining battery life. |
-| `voltage` number | Supply volts sampled for the notification, using Mojo voltage when active. |
-| `voltage_mode` string | Current voltage-regime classification; depends on configuration. |
-
-The state machine starts unknown after boot. `unknown → off` is establishment of the
-first observed level, not evidence that an external supply failed at that moment.
-Charging sense becoming unavailable can report a transition to unknown. Delayed
-processing can coalesce transitions into a net state change. Short changes
-can be suppressed by debounce and minimum dwell; reporting need not capture every
-physical edge. Duration uses heartbeat observation, is rounded down, and saturates for
-very long dwell (roughly 49 days). Do not use it as a
-precision outage stopwatch. Emission and sync configuration also differ: a queued
-transition may arrive later.
 
 Reference: [Notecard card requests](https://dev.blues.io/api-reference/notecard-api/card-requests/latest/#card-power).
