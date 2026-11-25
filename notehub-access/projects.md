@@ -55,13 +55,13 @@ Record the project's name and identifiers from the lookup:
 Bind the selected project to the verified account. Keep its ProductUIDs as associated
 identifiers, not additional projects or alternate names for its AppUID/ProjectUID.
 
-A subproject can inherit its product skills from a parent Project. Inherited skills are
-read-only from the subproject, and a subproject's users are normally not members of the
-parent, so don't look up or act on the parent Project. A skill write to the subproject
-fails with 400 and `details.reason` `inherited_from_parent`; don't retry it, and tell the
-user the skills are managed in the parent Project. Inheritance does not expand the query
-scope or enroll the parent Project in the cache. Carry the relationship into Training:
-changes to shared parent knowledge may affect other subprojects.
+A subproject can inherit its product skills from a parent Project. Retain the
+ProjectUID of the Project that owns those skills when verified by Project metadata
+or a previous Skills API response; otherwise resolve it during product reading next.
+Keep that ProjectUID separate from the selected ProjectUID. Inheritance does not
+expand the query scope or enroll the parent Project in the cache. Carry the
+relationship into Training: changes to shared parent knowledge may affect other
+subprojects.
 
 Record permissions from service responses and available role metadata. Read access is
 enough for Q&A and training drafts; the later workflows verify publishing, operational
@@ -107,7 +107,8 @@ combines Notehub Skills with Product Skills to craft the query.
 
 **Complete when:** a successful read verifies the Project under the selected account,
 and known relationships, Repository availability and permission limits are recorded.
-Unknown write permission or inherited, read-only skills do not block continuing.
+Unknown write permission or a parent Project awaiting verification during product
+reading does not block continuing.
 
 ## 3. Enroll the project and check its cloud cache
 
@@ -171,8 +172,8 @@ reason to skip enrollment or to bypass the cache for Q&A.
 
 ## 4. Summarize the selection and continue
 
-Carry the verified account, ProjectUID, associated ProductUIDs, whether its skills are
-inherited, relevant permissions, RepositoryUID and query availability, and, on a Cloud
+Carry the verified account, ProjectUID, associated ProductUIDs and any parent
+ProjectUID, relevant permissions, RepositoryUID and query availability, and, on a Cloud
 Computer, cache location and readiness into the next step.
 
 Briefly identify the selected project and summarize recent activity when current metadata
@@ -183,7 +184,7 @@ introduction.
 
 | Selection is complete | Continue with | Then |
 |---|---|---|
-| A Project has been chosen, resumed or switched | [Entry guide — Step 5](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#5-read-the-products-skills) | Read or reuse its current product skills, then continue the requested work |
+| A Project has been chosen, resumed or switched | [Entry guide — Step 5](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md#5-read-the-products-skills) | Read or reuse its current product skills, verify which Project owns them, then continue the requested work |
 
 Keep the selected account and ProjectUID until the user changes projects or access
 changes. On a project or account switch, repeat these steps for the new scope before

@@ -91,10 +91,6 @@ covered. If complete recent coverage cannot be established from that bound, use 
 scan or documented capture-time backfill plus overlapping modification scan. State service
 retention gaps. Do not assume advancing a cursor proves that all historical events exist.
 
-Each Project has a retention period, which is never shorter than 72 hours. Run the Notehub
-Cache Maintenance Task at least daily so the cache receives every Event before it ages
-out.
-
 One project-wide `GetSessions` stream covers every Device's Sessions, including Devices
 that appear later; do not enumerate Devices to fetch Sessions. Do not silently discard
 retained history when a Device tombstone arrives. `_session.qo` is supplementary Event
