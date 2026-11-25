@@ -12,7 +12,7 @@ Read the rows that apply to the current step; reuse context already established.
 | If you need to | Read | Then |
 |---|---|---|
 | Establish a missing connection or authentication | [Access](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/SKILL.md) | Return with the selected authenticated transport |
-| Resolve a missing or changed Project selection | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified ProjectUID and whether its skills are inherited |
+| Resolve a missing or changed Project selection | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified ProjectUID and any known parent ProjectUID |
 
 Start with schemas, a few recent event bodies, fleet/device descriptions and relevant
 nonsecret configuration. Look at full Sessions when the question needs them.
