@@ -113,8 +113,7 @@ notification.
 The maintenance task's fill phase runs at the configured refresh interval across
 enrolled projects. For each due project, serialize writes per database, keep stream
 definitions stable, and budget work across streams so a large Event backlog cannot
-starve other entities or projects. Every stream and project in one Organization shares
-its quota of 7 Notehub API requests per minute; see Cache, Step 4.
+starve other entities or projects.
 
 1. Validate the account and ProjectUID. A mismatch stops work for that Project; do not
    reuse its cursor under another account or ProjectUID. A network failure does not

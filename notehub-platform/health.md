@@ -25,6 +25,7 @@ Read the rows that apply to the current step; reuse context already established.
 | `_log.qo` | Configured Notecard diagnostics, often more verbose and subsystem-specific | Log schema below; emission is conditional |
 | `_session.qo` | Notehub-generated communication start/end Events | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md); much of the data is Event metadata, not body |
 | `_track.qo` or configured tracking file | Notecard tracking and supported Notehub fence transitions | [Tracking](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md), [location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
+| `_power.qo` | Supported Notecard USB, charging and hibernation source transitions | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) |
 | `_motion.qo` or configured motion file | Notecard accelerometer reporting | Motion schema below |
 | `_temp.qo` | Configured automatic temperature/diagnostic reporting | Temperature schema below |
 | `_button.qo` or configured button file | Notecard button / AUX GPIO reporting | Button schema below |

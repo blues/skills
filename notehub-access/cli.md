@@ -57,20 +57,18 @@ detached login process finishes), do not promise to keep watching. Ask the user 
 or background wakeups. When you resume, run `notehub auth status --json` and confirm
 `signed_in` and the expected `user` before continuing.
 
-If login reports that polling sign-in is unavailable, ask the user to run `notehub login`
-on the machine running the CLI. Use a personal access token only if the user offers one,
-provided as `NOTEHUB_TOKEN` through their environment's secret settings; don't ask them
-to create one, even where `--help-agent` suggests it.
+If login reports that polling sign-in is unavailable, the `notehub` CLI is out of date:
+ask the user to upgrade it, then sign in again. Never suggest a personal access token.
 
 The CLI stores and refreshes credentials itself. Never run `auth token`, inspect its
 credential files, supply `--token`, print an inherited token, or add Authorization headers.
 If status reports an environment credential override, report the source without its
 value and follow the guide; do not silently change the user's environment. Log out only
 when requested. Unattended jobs must run in an environment where this same authorized
-login works and refreshes; do not copy secrets into job configuration. A browser sign-in
-expires after 72 hours without an API call (refreshes don't count), so a scheduled job
-must make a real Notehub call at least every three days. If it expires, ask the user to
-sign in again rather than falling back to another credential.
+login works and refreshes; do not copy secrets into job configuration. The CLI refreshes
+its tokens automatically, but a sign-in that makes no Notehub API call for 72 hours still
+expires; the daily maintenance task keeps it active. If it expires, ask the user to sign
+in again rather than falling back to another credential.
 
 ## Call the API
 
@@ -130,8 +128,5 @@ ordinary Notehub APIs for supported questions. Do not establish a second authent
 path to obtain Repository access.
 
 On 401 check status/refresh; on 403 check permissions; on 400/404 check the current
-contract and resource. The API allows 7 requests per minute per billing account
-(Organization). The CLI waits out `Retry-After` and retries a 429 for up to a minute; a
-429 that still reaches you means the Organization's limit is exhausted, so pause the work
-rather than retrying at once. After an uncertain write, inspect the resource before
-retrying: a lost response does not mean the write failed.
+contract and resource. Back off for rate limits. After an uncertain write, inspect the
+resource before retrying: a lost response does not mean the write failed.

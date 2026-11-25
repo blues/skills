@@ -55,14 +55,13 @@ Record the project's name and identifiers from the lookup:
 Bind the selected project to the verified account. Keep its ProductUIDs as associated
 identifiers, not additional projects or alternate names for its AppUID/ProjectUID.
 
-A subproject can inherit its product skills from a parent Project. The API does not report
-a Project's parent: `GetProject` has no parent field, and `GetSkills` returns the
-subproject's own UID. A skill write to a subproject fails with 400 and `details.reason`
-`inherited_from_parent`, and its message names the parent ProjectUID; recognize that
-rather than retrying, or ask the user. Keep any parent ProjectUID separate from the
-selected ProjectUID. Inheritance does not expand the query scope or enroll the parent
-Project in the cache. Carry the relationship into Training: changes to shared parent
-knowledge may affect other subprojects.
+A subproject can inherit its product skills from a parent Project. Inherited skills are
+read-only from the subproject, and a subproject's users are normally not members of the
+parent, so don't look up or act on the parent Project. A skill write to the subproject
+fails with 400 and `details.reason` `inherited_from_parent`; don't retry it, and tell the
+user the skills are managed in the parent Project. Inheritance does not expand the query
+scope or enroll the parent Project in the cache. Carry the relationship into Training:
+changes to shared parent knowledge may affect other subprojects.
 
 Record permissions from service responses and available role metadata. Read access is
 enough for Q&A and training drafts; the later workflows verify publishing, operational
@@ -108,7 +107,7 @@ combines Notehub Skills with Product Skills to craft the query.
 
 **Complete when:** a successful read verifies the Project under the selected account,
 and known relationships, Repository availability and permission limits are recorded.
-Unknown write permission or an unidentified parent Project does not block continuing.
+Unknown write permission or inherited, read-only skills do not block continuing.
 
 ## 3. Enroll the project and check its cloud cache
 
@@ -172,8 +171,8 @@ reason to skip enrollment or to bypass the cache for Q&A.
 
 ## 4. Summarize the selection and continue
 
-Carry the verified account, ProjectUID, associated ProductUIDs and any parent
-ProjectUID, relevant permissions, RepositoryUID and query availability, and, on a Cloud
+Carry the verified account, ProjectUID, associated ProductUIDs, whether its skills are
+inherited, relevant permissions, RepositoryUID and query availability, and, on a Cloud
 Computer, cache location and readiness into the next step.
 
 Briefly identify the selected project and summarize recent activity when current metadata

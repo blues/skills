@@ -25,10 +25,9 @@ Reuse the access, API knowledge, Project selection and complete product knowledg
 already established by the entry workflow. Do not repeat that setup or provision
 Cloud Computer infrastructure during an interview.
 
-Retain the selected ProjectUID and, when skills are inherited, the parent ProjectUID that
-owns them; only a 400 `inherited_from_parent` write error or the user can name it. Reads
-and drafts can proceed without write permission; publication must use the owning Project
-and its actual access settings.
+Retain the selected ProjectUID and whether its skills are inherited from a parent
+Project. Reads and drafts can proceed without write permission. Inherited skills can't be
+published from the subproject; tell the user they're managed in the parent Project.
 
 Read or reuse a complete current Skills API snapshot, including every document's
 content, `kinds` and revision, even documents nothing links to. Internalize the

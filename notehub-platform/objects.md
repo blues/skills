@@ -116,8 +116,9 @@ whose data flows into it. A ProductUID routes/provisions
 that product's devices into the project; a human product description in firmware metadata
 is a different value.
 
-A Fleet, identified by FleetUID, is a group of Devices; each Device lists its FleetUIDs. A
-Device may belong to several Fleets. Smart Fleets automatically add or remove Devices
+A Fleet, identified by FleetUID, is not a container: its Devices are the Devices whose
+`fleet_uids` currently include its FleetUID, which `GetFleetDevices` queries. A Device may
+belong to several Fleets. Smart Fleets automatically add or remove Devices
 based on dynamic characteristics. Membership is not proof of a physical installation or
 location, or of membership at an earlier time. Use the Project's product knowledge for
 those meanings.

@@ -79,8 +79,8 @@ For other entities, use the key named in the operation's response schema.
 
 A cursor orders **modifications**, not capture time. Devices and Sessions reappear
 whenever they change. For Events, the only modifications are storage and deletion: a
-stored Event never reappears except with `deleted: true`, and retention purges send no
-tombstone. Late events may describe old measurements. Retention and analytical windows
+stored Event never reappears except with `deleted: true`. Late events may describe old
+measurements. Retention and analytical windows
 are separate from the cursor. A Note's `note.delete` event is not automatically a
 deletion of that Event row: follow the entity's tombstone contract. Do not deduplicate
 by equal sensor values or drop raw suspect evidence.

@@ -12,8 +12,8 @@ retrieval time. Refresh it when a response contradicts the contract.
 | Organization | organizationUID (`billing_account_uid` in project bodies) | Owns and is billed for Projects; people are Project members with a role |
 | Project | ProjectUID, also called AppUID | Contains Devices, Fleets, Routes, Events and Sessions; ProjectUID and AppUID are synonymous |
 | Device | DeviceUID | Tagged with the FleetUIDs of the many Fleets to which it belongs |
-| Fleet | FleetUID | A group of Devices; membership lives on each Device's `fleet_uids`, and `GetFleetDevices` lists a Fleet's Devices |
-| Smart Fleet | FleetUID | A Fleet whose Devices are automatically added or removed based on dynamic characteristics; API responses list its members by the bare FleetUID, once |
+| Fleet | FleetUID | Not a container: a Fleet's Devices are the Devices whose `fleet_uids` currently include its FleetUID, and `GetFleetDevices` queries which Devices are tagged with it right now |
+| Smart Fleet | FleetUID | A Fleet whose Devices are automatically added or removed based on dynamic characteristics; its FleetUID can carry a `smart:` prefix where membership is stored (`smart:fleet:…` in routed Events and Repository rows), while v1 API fleet lists return the bare FleetUID. Strip a leading `smart:` before comparing |
 | Route | RouteUID | Defines processing and delivery of Events within a Project |
 | Event | EventUID | Tagged with the DeviceUID of the one Device that generated it |
 | Session | SessionUID | Tagged with the DeviceUID of the one Device that generated it |
@@ -38,12 +38,8 @@ headers, retrieval controls and permissions.
 Use current operations for projects, devices, fleets, notes, events, sessions, schemas,
 environment variables, routes, firmware and skills as the task needs them.
 
-Use bounded discovery calls before broad retrieval. The Notehub API allows 7 requests per
-minute per billing account (Organization), shared by all of its clients; a request over
-the limit returns 429 with `Retry-After` and `X-RateLimit-*` headers. Plan large reads
-within that budget. Distinguish an error, an empty successful response and a truncated
-response. Obey Retry-After where present (the `notehub` CLI already waits it out and
-retries), otherwise use bounded exponential backoff with jitter; stop and report
-sustained failures. Retry reads safely. For writes with an uncertain outcome, read
-current state before retrying.
+Use bounded discovery calls before broad retrieval. Distinguish an error, an empty
+successful response and a truncated response. Obey Retry-After where present, otherwise
+use bounded exponential backoff with jitter; stop and report sustained failures. Retry
+reads safely. For writes with an uncertain outcome, read current state before retrying.
 Do not silently substitute a different account, project or time filter.

@@ -29,9 +29,9 @@ scoped to the verified account, either in columns or by an isolated database bin
 | Logical table | Suggested key | Main contents |
 |---|---|---|
 | Projects | `project_uid` | Verified account, human-readable Project name, associated ProductUIDs, other Project metadata, enrollment state and cache location |
-| Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships as returned, raw JSON and deletion/freshness state. The API lists Smart Fleet members by the plain FleetUID and omits deleted Fleets; use `GetFleets` (each Fleet's smart rule) to tell which memberships are rule-driven |
+| Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships preserving any `smart:` prefix (v1 API lists now return bare FleetUIDs and omit deleted Fleets), raw JSON and deletion/freshness state |
 | Sessions | `project_uid`, `session_uid` | Full Session data and the DeviceUID of the one Device that generated it |
-| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture (`when`) and arrival (`received`) times, the batch cursor that delivered them, and tombstones. Events carry no per-row modification time |
+| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture (`when`), arrival (`received`) and modification times (from the cursor of the batch that delivered them), and tombstones |
 | Schemas | `project_uid`, `notefile_id` | Current full schema, fetch time and change hash, with history where needed |
 | Monitors | `project_uid`, `monitor_id` | What is watched, requested or inferred origin, checking and notification preferences, pause state and progress needed to resume |
 
@@ -91,12 +91,9 @@ covered. If complete recent coverage cannot be established from that bound, use 
 scan or documented capture-time backfill plus overlapping modification scan. State service
 retention gaps. Do not assume advancing a cursor proves that all historical events exist.
 
-On the Essentials plan, the Events API (cursor reads included) returns only Events Notehub
-stored or deleted in the last 7 days, plus the Project's 100 newest Events, with no signal
-that older ones exist. A 30-day bootstrap there yields about 7 days, and the cache builds
-longer history only from enrollment forward. Record that as service retention, not cache
-coverage. Retention purges leave no tombstones, so an Event's absence from a feed is not a
-deletion.
+Each Project has a retention period, which is never shorter than 72 hours. Run the Notehub
+Cache Maintenance Task at least daily so the cache receives every Event before it ages
+out.
 
 One project-wide `GetSessions` stream covers every Device's Sessions, including Devices
 that appear later; do not enumerate Devices to fetch Sessions. Do not silently discard
@@ -124,16 +121,11 @@ or SessionUID keys defined above. Persist last attempt, last completed scan, cur
 partial/error state, coverage boundaries and the time basis for those boundaries. An
 empty successful final batch advances freshness; a failed request never does.
 
-Bound work per invocation. The Notehub API allows 7 requests per minute per billing
-account (Organization), shared by every client of that Organization; a request over the
-limit returns 429 with `Retry-After` and `X-RateLimit-*` headers. Budget pages per run
-against that quota: this is why Devices, Events and Sessions each page as one project-wide
-stream. If a backlog exceeds the budget, retain the committed cursor, mark incomplete and
-schedule a continuation through the real scheduler. On 429 wait at least `Retry-After`,
-with jitter; the `notehub` CLI already waits it out and retries. Do not let a retry loop
-consume the entire scheduler or flood the API. Keep the previous usable data on failure,
-labeled stale or partial. Log counts and failure classes rather than raw customer records
-or credentials.
+Bound work per invocation. If a backlog exceeds the budget, retain the committed cursor,
+mark incomplete and schedule a continuation through the real scheduler. Back off rate
+limits with jitter, respecting Retry-After. Do not let a retry loop consume the entire
+scheduler or flood the API. Keep the previous usable data on failure, labeled stale or
+partial. Log counts and failure classes rather than raw customer records or credentials.
 
 ## 5. Build typed views from verified meaning
 

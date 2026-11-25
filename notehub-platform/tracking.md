@@ -20,7 +20,10 @@ Read the rows that apply to the current step; reuse context already established.
 | `body.status` | Interpretation |
 |---|---|
 | Missing | An ordinary tracking point; the template drops its empty status. Unchanged coordinates or the same fix time can suppress a redundant ordinary point. |
-| `no-sat` | A GPS seek was attempted and gave up. It can carry old location context; it does not establish a fresh position. |
+| `start` | Journey origin marker. Uses the saved departure location; its time is the `journey` value, which precedes the confirming fix. |
+| `stop` | Journey end marker, emitted before the active journey ID is cleared. Its position can still be the last known fix. |
+| `ping` | Ping-mode interval record whose seek got a fix. Unchanged location does not suppress the promised interval record; never part of a journey. Intervals without a fix use `no-sat` (seek gave up), `gps-fail`, `penalty`, `no-modem` or `gps-busy` (no seek), each carrying the last known location. |
+| `no-sat` | A GPS seek was attempted and gave up. In ping mode it accounts for that interval. It can carry old location context; it does not establish a fresh position. |
 | `heartbeat` | Tracking liveness/status report according to configuration, not necessarily a new GPS fix. |
 | `usb` | USB state change reported through tracking; inspect `body.usb`. Not a modem cycle. |
 | `fence` | Fence transition; inspect `fence` and `inside_fence`. Service-generated variants can contain only these three body fields. |
@@ -42,15 +45,17 @@ Event envelope as explained in location.
 | Fields / type | Meaning, units and validity |
 |---|---|
 | `status` string | Record type above. |
-| `time` integer | Time of the device's stored fix itself; Event `where_when` can be later. It can predate Event capture; not upload time. A service-generated fence record need not have it. |
-| `journey` integer | Start time of the journey, when motion began it, so it is at or before every record's `when`. Group by project, DeviceUID and journey; it is not globally unique. Zero/absence does not identify a real journey. |
+| `time` integer | Time of the device's stored fix itself, or saved origin time for a start marker; Event `where_when` can be later. It can predate Event capture; not upload time. A service-generated fence record need not have it. |
+| `journey` integer | The `start` marker's time: when the journey candidate opened, not when it was confirmed. Group by project, DeviceUID and journey; it is not globally unique. Zero/absence does not identify a real journey. |
 | `jcount` integer | Sequence of records emitted while that journey is active. Can include statuses and gaps from lost/filtered history. It is not a distance or an API total-row count. |
 | `motion` integer | Accelerometer events since the tracking subsystem's last motion-counter reset, normally associated with track/seek reporting. Some heartbeat paths retain above-threshold motion for the next seek. Threshold-sensitive; not a lifetime count, meters, speed, steps, journey count, or Session `moved`. |
-| `seconds` number | Producer-dependent interval. On an eligible derived segment, difference between fix times; on other located points, how long the GPS took to get the fix; on `no-sat`, seek duration. Other status records omit it. Never assume a universal sampling period. |
+| `seconds` number | Producer-dependent interval. On journey points after the first, difference between fix times; on other located points and `ping` records, how long the GPS took to get the fix; on `no-sat`, seek duration. Other status records omit it. Never assume a universal sampling period. |
 | `distance` number | Meters of straight-line displacement from the preceding eligible fix. Not cumulative journey distance. |
 | `velocity` number | Derived displacement divided by fix-time seconds, in meters/second. Not necessarily the receiver's instantaneous speed. Multiply by 3.6 for km/h. |
 | `bearing` number | Initial geographic bearing of the point-to-point segment, degrees clockwise from north. Not a magnetometer reading or device orientation. Undefined/unstable for negligible displacement. |
 | `dop` number | Horizontal dilution of precision (dimensionless); lower generally indicates better satellite geometry. Not an error radius in meters or a guarantee of accuracy. |
+| `sats` integer | Satellites used for the last GPS fix reported by the receiver, not necessarily satellites merely visible during a failed seek. |
+| `snr` integer | Strongest per-satellite signal quality (C/N0 reported by GSV) from the latest complete receiver sentence set, in the receiver's dB convention. Not an average or cellular SINR. `sats` and `snr` reset per seek and are clamped to 0–255 in the tracking template, which drops 0, so absence can mean unavailable. |
 | `voltage` number | Supply voltage in volts, not remaining battery percentage. |
 | `usb`, `charging` boolean | USB presence and normalized charging indication where supported. `false` is dropped, so absence can mean false or unavailable sensing; compare configuration. |
 | `daily_charging_mins` integer | Charging fraction across rolling hourly observation buckets, scaled to minutes/day. Requires observations in all 24 buckets; zero before enough valid history does not mean no charging. Not today's calendar-day accumulated minutes. |
@@ -63,32 +68,41 @@ Event envelope as explained in location.
 | `button` boolean | Not set by Notecard firmware; present only if the host supplied it in `card.location.track` `body`. Button presses are `button` status records. It does not replace the separate button/GPIO file. |
 | `inside_fence` boolean, `fence` string | Whether inside any configured fence, and fence names/state. On transition records `+name` means just entered, `-name` just left, bare names mean still inside. Ordinary records list current inside names. Absence can mean unsupported/unconfigured; use known fence configuration. |
 
-Only ordinary records (no `status`) take the full-point calculation path. Distance,
-bearing and velocity are present only on journey points with `jcount` ≥ 2 that have a
-valid previous fix. `jcount:1`, points outside a journey and status records carry none of
-them despite movement. Even when present, validate positive elapsed time and fix quality.
-**Do not read a missing speed as “stationary”.**
+In the normal tracking producer, ordinary and `ping` records take the full-point
+calculation path; the separate button producer does not. Distance, bearing and velocity
+are present only on journey points with `jcount` ≥ 2 that have a valid previous fix;
+`jcount:2` is measured from the `start` marker. Ping mode disables journeys, so `ping`
+records never carry them, and neither do `jcount:1` or points outside a journey, despite
+movement. Even later, validate positive elapsed time and fix quality. **Do not read a
+missing speed as “stationary”.**
 
-Only during a journey can the host seed recognized fields and attach a payload to the next
-record; outside one, both are ignored. System-owned measurements overwrite relevant
+Only during a journey can the host seed recognized fields and attach a payload to the
+next record; outside one, both are ignored. System-owned measurements overwrite relevant
 defaults. Custom templates can remove fields. Do not assume arbitrary host keys survive
 the default native tracking serializer; inspect the decoded output and project mapping.
 
-## How a journey starts and ends
+## Journey definition depends on firmware and configuration
 
-With tracking on in periodic mode, a journey starts when the accelerometer reports
-motion and ends after `_gps_journey_secs` (default 300 seconds) without motion; use the
-device's configured value. Motion sensitivity and tracking mode change which records
-are expected.
+Displacement-confirmed tracking opens a candidate on qualifying accelerometer motion, then
+confirms displacement against a saved location before starting the journey. GPS
+displacement over a configurable window keeps it alive; recent accelerometer motion
+provides a fallback while GPS is unavailable. Its defaults include 150 meters and a
+five-minute window; use the device's configured values. For accelerometer-only tracking,
+interpret motion and the quiet timer according to that mode's configuration. This is not
+universally “one accelerometer interrupt starts a journey; five quiet minutes ends it”.
+Ping mode and tracking mode also change which records are expected. Firmware through
+v11.4.1 has none of this: a journey starts on accelerometer motion and ends after
+`_gps_journey_secs` (default 300 s) without motion, with no `start`/`stop` markers, ping
+mode, or `sats`/`snr`. Check `firmware_notecard` before applying either model.
 
-`journey` is the start time, so it is at or before every record's `when`. No record
-marks the end: later records simply stop carrying that `journey` value. Records that
-stop mid-journey can mean ongoing movement, delayed upload, reset, retention or
-incomplete coverage.
+A start marker can be backdated to when the candidate opened at its saved origin, and
+`journey` is that marker's time, so it equals the start record's `when` and precedes the
+confirming fix. It is an identifier and grouping aid. A missing stop can
+mean ongoing movement, delayed upload, reset, retention or incomplete coverage.
 
-Capture cadence and sync cadence are separate. Sync configuration governs when queued
-points are uploaded, not how many records were captured. A gap in `received` does not
-prove a gap in fixes, and a burst of arrivals is not sudden travel.
+Capture cadence and sync cadence are separate. A configured ping sync divisor governs
+when queued points are uploaded, not how many interval records were captured. A gap in
+`received` does not prove a gap in fixes, and a burst of arrivals is not sudden travel.
 
 ## Journey API is a view, not the raw trace
 
@@ -105,7 +119,7 @@ journey when filtering solely on its start identifier.
 
 The single-journey detail endpoint paginates a **location-filtered, deduplicated** view:
 it requires `best_lat` and `best_lon` and removes consecutive identical coordinates.
-It can omit a no-satellite or other status record at the same position. Use raw
+It can omit a stop, no-satellite or other status record at the same position. Use raw
 Event history or repositories to count statuses, audit `jcount` continuity, determine a stop, or
 calculate quantities that need every record. Its displayed point count need not equal
 summary `total_events`.
