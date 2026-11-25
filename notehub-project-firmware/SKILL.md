@@ -82,7 +82,8 @@ Distinguish an action on selected Devices from changing a Fleet's ongoing desire
 firmware settings. Fleet settings can affect Devices that join later. Inspect inherited
 settings and overrides before changing their owning scope. Recheck membership before a
 bulk action; choose explicit DeviceUIDs if the request covers only the observed members.
-Never let a missing filter expand a Fleet or Device request to the entire Project.
+Never let a missing filter, or one that matches nothing, expand a Fleet or Device request
+to the entire Project.
 
 Reuse the user's authorization for the stated image, population and action. Ask only
 when a consequential target, image or scope is unresolved or falls outside that request.
@@ -96,10 +97,14 @@ the user's request; preserve its criteria for proceeding or stopping.
 Choose the operation for the actual request, through the established authenticated
 proxy. Verify the current parameter and body definitions before calling it.
 
+Before calling `PerformDfuAction`, read `GetDevicesDfuStatus` with the same filters and
+confirm the matched DeviceUIDs are the intended population and not empty. If nothing
+matches, don't call it. Prefer explicit `deviceUID` filters taken from that read.
+
 | Requested change | Operation or procedure | Verify immediately |
 |---|---|---|
 | Request an update for selected Devices, including a Fleet-filtered population | `PerformDfuAction` with `action=update`, the correct `firmwareType`, explicit filters and `filename` body | Acceptance for the intended scope, then read current status |
-| Cancel requested updates | `PerformDfuAction` with `action=cancel` and the intended scope | Current request/configuration and Device status; cancellation does not establish a rollback |
+| Cancel requested updates | `PerformDfuAction` with `action=cancel` and the intended scope | Current request/configuration, the effective `_fw`/`_fwc` from `GetDeviceEnvironmentHierarchy`, and Device status. `cancel` only removes Device-scope values: if a Fleet or the Project sets the image, the update continues although status shows `canceled`. Cancellation does not establish a rollback |
 | Change ongoing desired firmware or update windows at Device or Fleet scope | The documented environment-variable operations and [DFU configuration](https://dev.blues.io/notehub/host-firmware-updates/environment-variables-for-dfu/) | Settings at the changed scope and their effective values for affected Devices |
 
 Desired host and Notecard firmware use `_fw` and `_fwc`, respectively. Preserve unrelated
@@ -118,8 +123,10 @@ specific failure is understood. Device installation may still be pending.
 
 Read status and, when useful, history for the selected firmware type. Compare the latest
 reported `current.version` with the intended image and inspect the relevant attempt and
-reporting time. The attempt's `current_version` describes its starting version. Neither
-100% download, an inactive `dfu_in_progress`, nor silence proves that the target is running.
+reporting time. For host firmware, `current.version` can be the downloaded target's
+version until the host reports its own; confirm it against Device `firmware_host`. The
+attempt's `current_version` describes its starting version. Neither 100% download, an
+inactive `dfu_in_progress`, nor silence proves that the target is running.
 
 Summarize counts and exceptions: reported running target, awaiting contact, downloading,
 ready/installing, failed, canceled or unconfirmed, as supported by actual evidence. Use

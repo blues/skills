@@ -26,14 +26,19 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 ## 1. Verify MCP access and find the enabled Repository
 
 First verify that the selected access method is MCP. If it is the CLI, this query
-capability is unavailable; use the cache or ordinary Notehub APIs for supported work.
-Keep the established access method unless the user chooses to change it.
+capability isn't supported through the CLI (it needs MCP); use the cache or ordinary
+Notehub APIs for supported work. Keep the established access method unless the user
+chooses to change it.
 
 With MCP, reuse the Repository information retained during Project Selection, or use
 its Repository read/list capability. Verify that a Repository is enabled for this
-Project. Match the returned `project_uids` to the selected ProjectUID and retain the
-RepositoryUID returned in `uid`. Pass it explicitly
-when querying; do not rely on a tool defaulting to the first available Repository.
+Project. Match the selected ProjectUID against each Repository's `project_uids`, and the
+Project's FleetUIDs (from `GetFleets`) against its `fleet_uids`. A Project can have one
+Project-wide Repository and several fleet-scoped ones. Use the one whose scope matches
+the question's population, say which one you used, and never add results from
+overlapping Repositories together. Retain the RepositoryUID returned in `uid` and pass it
+explicitly when querying; do not rely on a tool defaulting to the first available
+Repository.
 
 | If you need to | Read | Then |
 |---|---|---|
@@ -84,8 +89,11 @@ describes. While a dataset is still loading, its numbers are partial: report the
 partial, or get the complete evidence from the Notehub API.
 
 An `_session.qo` Event table is not the full Session API. Preserve that distinction when
-combining Repository history with other evidence. Check configured filters, retention,
-deletions and unfinished backfill before claiming that a result covers all history.
+combining Repository history with other evidence. A Repository keeps every Event it
+receives, including Events later deleted in Notehub, so its counts can exceed
+`GetEvents`. Its history starts at the oldest Event Notehub still held when the
+Repository was created. Check configured filters, the earliest `time` in the table and
+unfinished backfill before claiming that a result covers all history.
 
 **Complete when:** the table definitions support the intended product meaning and the
 available population, time range, freshness and any gaps are known.

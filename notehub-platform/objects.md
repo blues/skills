@@ -54,10 +54,10 @@ subsets; inspect the response, including any route transform or column mapping.
 | `err` | An error associated with the operation or processing. Read its scope; a lookup failure need not mean the device failed. |
 | `firmware_host`, `firmware_notecard` | Last-known reported firmware strings attached when available. Not proof of an update at Event capture time. See firmware. |
 | `best_*`, `where_*`, `tower_*`, `tri_*`, `triangulate` | Location families and lookup inputs. See location; they carry separate timestamps and provenance. |
-| `sku`, `ordering_code`, `firmware` | Hardware identification and a numeric firmware identifier when supplied, typically in session context. Do not treat numeric firmware as a semantic-version string. |
+| `sku`, `ordering_code`, `firmware` | Hardware identification. `firmware` is defined but not currently populated; use `firmware_notecard`. |
 | `rssi`, `sinr`, `rsrp`, `rsrq`, `bars`, `rat`, `bearer`, `cellid`, `bssid`, `ssid`, `iccid`, `apn` | Connection snapshot, principally on session-begin Events; also available on some other platform Events. Definitions are in sessions. They are not automatically measured for every application note. |
 | `voltage`, `temp`, `moved`, `orientation`, `power_charging`, `power_usb`, `power_primary`, `power_mah` | Device/session snapshot. `moved` is a timestamp, not a count. See sessions and power. Distinguish these from similarly named body fields. |
-| `hub_*`, `card_*` | Session usage reports with different provenance and timing; see sessions. Do not sum both for the same session. |
+| `hub_*` | Notehub's session usage report on `session.end`; see sessions. The schema's `card_*` fields are not populated. |
 
 ### Time, absence and precision
 
@@ -73,18 +73,21 @@ subsets; inspect the response, including any route transform or column mapping.
   Session times and raw `dfu.card.began/updated` use Unix seconds. Normalize explicitly.
 - Date filters can select capture or upload time. For readings, use capture time;
   for delivery delay, compare both. Test device-clock plausibility and late arrivals.
-- Many native fields omit zero values. Compact templates can also materialize an
-  unmeasured field as `0`, `false` or an empty string. A schema alone cannot recover
-  presence before encoding. Preserve nullability in analysis, and qualify unresolvable
-  zero-versus-unavailable cases rather than using `COALESCE(..., 0)` indiscriminately.
+- Many native fields omit zero values. Templated Notefiles also drop `0`, `false` and
+  empty-string fields, so a real zero and an unmeasured field both arrive as a missing
+  key. A schema alone cannot recover presence before encoding. Preserve nullability in
+  analysis, and qualify unresolvable zero-versus-unavailable cases rather than using
+  `COALESCE(..., 0)` indiscriminately.
 - Numeric template encoding can round values. More decimal digits in JSON are not
   evidence of that much measurement accuracy. Latitude or longitude equal to zero
   individually is valid; do not drop every point on the equator or prime meridian.
 
 ## Device fields
 
-A Device may belong to many Fleets. Its `fleet_uids` lists their FleetUIDs; Smart Fleet
-memberships have a `smart:` prefix. Preserve those returned values in the cache.
+A Device may belong to many Fleets. Its `fleet_uids` lists each one once by its bare
+FleetUID, Smart Fleets included, and omits Fleets since deleted. Routed Events and
+Repository rows can keep the stored `smart:fleet:…` spelling; strip a leading `smart:`
+before joining across surfaces.
 
 | Fields | Meaning |
 |---|---|
@@ -95,26 +98,29 @@ memberships have a `smart:` prefix. Preserve those returned values in the cache.
 | `gps_location`, `tower_location`, `triangulated_location`, `best_location`, `tower_info` | Current cached locations and serving-cell identity. See location. |
 | `firmware_notecard`, `firmware_host`, `dfu` | Reported versions and reported update state, not simply desired firmware. See firmware. |
 | `cellular_usage[]` | Per-SIM accounting: `iccid`, current-plan bytes `used` and `limit`, `lifetime_used` bytes and `last_updated` Unix time. Check freshness; plan renewal changes the accounting window. |
-| `sensors[]` | Associated `sensor_uid` and `last_activity_date` for that sensor, when supported. These are not additional Notecards. |
-| `recent_when`, `recent_event_count[]`, `recent_session_count[]`, `recent_session_seconds[]` | Optional daily activity summary, anchored at the response time; index 0 is today, 1 yesterday, and so on, in the service's UTC day buckets. A partial current day is not comparable to a full prior day. Do not assume a fixed array length or use this as unrestricted history. |
-| `health_log[]` | A bounded recent cache, optionally included. It can differ from the health-log endpoint's filtering and is not the full `_health.qo` history. See health. |
+| `sensors[]` | Associated `sensor_uid` and `last_activity_date` (day resolution, UTC midnight) for that sensor, when supported. These are not additional Notecards. |
+| `recent_when`, `recent_event_count[]`, `recent_session_count[]`, `recent_session_seconds[]` | Daily activity summary, only in Jobs device reports with the activity option, not from the Device endpoints. Anchored at the response time; index 0 is today, 1 yesterday, and so on, in the service's UTC day buckets. A partial current day is not comparable to a full prior day. Do not assume a fixed array length or use this as unrestricted history. |
+| `health_log[]` | A bounded recent cache, only in Jobs device reports with the health option. It can differ from the health-log endpoint's filtering and is not the full `_health.qo` history. Use Get Device Health Log otherwise. See health. |
 
 ## Project, Fleet and configuration semantics
 
-Accounts, identified by AccountUID, contain Projects. Each Project contains Devices,
-Fleets, Routes, Events and Sessions.
+An Organization (organizationUID, `billing_account_uid` in project bodies) owns and is
+billed for Projects; people are Project members with a role. Each Project contains
+Devices, Fleets, Routes, Events and Sessions.
 
 Every Project has a human-readable name and one unique programmatic GUID, called either
 AppUID or ProjectUID (`uid` in the project response). Those two names mean the same
-identifier. Each project also has multiple unique ProductUID text strings representing
-customer product types or SKUs whose data flows into it. A ProductUID routes/provisions
+identifier. Each project also has zero or more unique ProductUID text strings (one
+created through the API starts with none) representing customer product types or SKUs
+whose data flows into it. A ProductUID routes/provisions
 that product's devices into the project; a human product description in firmware metadata
 is a different value.
 
-A Fleet, identified by FleetUID, is a list of DeviceUIDs. A Device may belong to several
-Fleets. Smart Fleets automatically add or remove Devices based on dynamic characteristics.
-Membership is not proof of a physical installation or location, or of membership at an
-earlier time. Use the Project's product knowledge for those meanings.
+A Fleet, identified by FleetUID, is a group of Devices; each Device lists its FleetUIDs. A
+Device may belong to several Fleets. Smart Fleets automatically add or remove Devices
+based on dynamic characteristics. Membership is not proof of a physical installation or
+location, or of membership at an earlier time. Use the Project's product knowledge for
+those meanings.
 
 Environment responses distinguish variables set at that scope, defaults and effective
 values. For example, device responses expose `environment_variables`,

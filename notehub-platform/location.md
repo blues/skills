@@ -2,7 +2,9 @@
 
 For “where is it now?”, report the latest known location **with its observation time
 and source**. For “where was this reading taken?”, use that Event's location context
-and compare its fix time with capture time. Today's Device object cannot supply the
+and compare its location time with capture time. `where_when` is when the location was
+last known valid, which can be later than the fix for a stationary device; in
+`_track.qo`, `body.time` is the fix time. Today's Device object cannot supply the
 historical location of all its Events.
 
 ## Choose the relevant reference
@@ -43,7 +45,8 @@ Device `tower_info` instead spells the final identifier `cell_id`.
 - `tower_*` is a serving-cell lookup location, not a GPS position of the device.
   Coverage can extend far from a tower; a precise-looking decimal is not precise
   device positioning. Cell identity is the MCC/MNC/LAC/cell tuple, not cell ID alone.
-- `tri_*` is a service lookup from scanned Wi-Fi access points and/or cellular radios.
+- `tri_*` is a service lookup from scanned cell towers, or WiFi access points if no
+  cells were scanned; Notehub uses one radio type per lookup.
   “Triangulated” does not promise geometric three-tower triangulation, a fixed radius,
   or better accuracy than every GPS fix. `tri_points`/`towers` counts lookup inputs,
   not satellites. `triangulate` and Session `scan` describe inputs, not the result.
@@ -80,9 +83,11 @@ from the decoded body. Query `where_lat/where_lon/where_when`, not presumed
 `body._lat/body._lon` or `body.lat/body.lon`. A custom host body may independently
 contain coordinates with its own meaning.
 
-Privacy/fuzz configuration can coarsen visible coordinates. Device-derived distance
-and velocity can use unfuzzed fixes, so recalculating from displayed coordinates can
-differ. Do not silently “correct” one with the other.
+Privacy/fuzz configuration can coarsen visible coordinates. Device-derived distance and
+velocity can use unfuzzed fixes, so recalculating from displayed coordinates can differ.
+Do not silently “correct” one with the other. With `_suppress_where`, Notecard
+substitutes a fixed placeholder location (OLC `7MV8XWQF+HW`, about 27.98888, 86.92519, fix
+time `1717171717`). Treat it as “location withheld”, never as a real position.
 
 For a map, retain source/time and distinguish radio estimates from GPS points. For
 distance or speed, restrict to compatible, credible fixes, positive time deltas and

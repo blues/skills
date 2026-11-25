@@ -59,9 +59,9 @@ session credentials.
   ProjectUID to the registry) and `status` (coverage and freshness).
 - A scheduled agent turn at the refresh interval runs `plan` and stops quietly when it
   is empty. For each due item, it fetches one batch with a read-only MCP call. It saves
-  the raw response, wrapped in an envelope (`project_uid`, `stream`, `device_uid` for
-  sessions, `requested_cursor`, `fetched_at`), to a file, then runs `ingest` on that
-  file. It repeats while `has_more` is true, within a per-run batch budget.
+  the raw response, wrapped in an envelope (`project_uid`, `stream`, `requested_cursor`,
+  `fetched_at`), to a file, then runs `ingest` on that file. It repeats while `has_more`
+  is true, within a per-run batch budget.
 - Pass responses through files, not through the turn's own text, so batch size does not
   drive model usage.
 - The pure-Python scheduler keeps running storage checks, purge and optimization. It
@@ -81,7 +81,7 @@ and saves it to a file:
 
 ```json
 {"project_uid": "app:...", "stream": "devices|events|sessions|schemas",
- "device_uid": "dev:... (sessions only)", "requested_cursor": "0",
+ "requested_cursor": "0",
  "fetched_at": "2026-10-30T14:00:00Z", "response": {"devices": [], "has_more": false, "next_cursor": "..."}}
 ```
 
@@ -107,24 +107,25 @@ Have the harness save large results to a file and pass that file to `ingest`.
 
 | Command | Does |
 |---|---|
-| `plan` | For each active enrolled project, list devices and events with their saved cursors (`"0"` if none), sessions for each known device, and schemas when a daily refresh is due |
+| `plan` | For each active enrolled project, list devices, events and the project's one sessions stream with their saved cursors, and schemas when a daily refresh is due |
 | `ingest FILE...` | Parse each envelope. Ignore any text wrapper around the JSON. Validate and commit it |
-| `enroll APP_UID LABEL` | Add the project to the registry; the next fetch turn performs its first fill |
+| `enroll APP_UID LABEL` | Add the project to the registry and save each stream's starting cursor: `"0"` for devices, and a start 30 days ago in epoch microseconds for events and sessions (see Cache). The next fetch turn performs its first fill |
 | `status` | Per project: counts, last successful ingest and cursor positions |
 
 **Ingest rules**, the core of the worker:
 
 ```python
 def ingest(con, env):
-    p, s, dev = env["project_uid"], env["stream"], env.get("device_uid")
+    p, s = env["project_uid"], env["stream"]
     if not enrolled(con, p):
         return "rejected:not-enrolled"
-    key = s if s != "sessions" else f"sessions:{dev}"
+    key = s
     saved = saved_cursor(con, p, key) or "0"
     if s != "schemas" and str(env["requested_cursor"]) != saved:
         return "rejected:superseded"          # a newer batch already committed
     r = env["response"]
-    rows = r if s == "schemas" else r.get(s, [])
+    # MCP code mode wraps a top-level array response, such as schemas, as {"result": [...]}
+    rows = (r.get("result", r) if isinstance(r, dict) else r) if s == "schemas" else r.get(s, [])
     nxt, more = (None, False) if s == "schemas" else (r.get("next_cursor"), bool(r.get("has_more")))
     if more and (not nxt or nxt == saved):
         return "rejected:bad-cursor"          # has_more without progress
@@ -142,8 +143,7 @@ def ingest(con, env):
 
 Keep cursors as opaque strings. Use the actual fetch time, never the ingest time.
 Serialize writers with a file lock. Test with synthetic envelopes in a disposable
-database first: a replayed envelope must be rejected, and a new device must make
-`plan` add its sessions stream.
+database first: a replayed envelope must be rejected.
 
 ## 4. Determine scheduling and restart recovery
 

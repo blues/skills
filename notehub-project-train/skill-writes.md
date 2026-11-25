@@ -15,9 +15,14 @@ wrapping, timestamp-based filename or manual old-version cleanup.
 
 ## Address the Project and skill
 
-For subprojects, writes must target the parent Project that owns the skills. Use its
-ProjectUID and make the shared effect clear; queries still use the selected
-ProjectUID. Discover actual access settings; do not promise that shared skills are
+For subprojects, writes must target the parent Project that owns the skills. A
+subproject's `GetSkills` returns its own UID in `project_uid`, and no read names the
+parent. A write through the subproject fails with 400 `inherited_from_parent`, whose
+message names the parent ProjectUID. Publishing then needs write access in the parent
+itself; a member of only the subproject can read inherited skills but not change them. Use
+the parent's ProjectUID and make the shared effect clear; queries still use the selected
+ProjectUID. Replacing an existing skill also needs the project's Delete permission, not
+only create. Discover actual access settings; do not promise that shared skills are
 visible only to a particular role or that a public-readable project is private.
 
 Use the returned `links.self`, or encode the **entire** skill name as one path component,

@@ -17,11 +17,11 @@ Read the rows that apply to the current step; reuse context already established.
 | Notecard | The communications module associated with a DeviceUID; it can report its own state and carry host-generated data |
 | Device | Identified by DeviceUID and tagged with its FleetUID memberships; represents a Notecard and its last-known metadata/configuration, not proof that the host machine is healthy or its latest measurement is fresh |
 | Notehub | The cloud service managing devices, project data, routing and APIs |
-| Account | Identified by AccountUID; contains Projects |
+| Organization | Identified by organizationUID (`billing_account_uid` in project bodies); owns and is billed for Projects. People are Project members with a role |
 | Project | Identified by ProjectUID, synonymous with AppUID, and has a human-readable name; contains Devices, Fleets, Routes, Events and Sessions |
-| ProductUID | A unique text string representing a customer product type or SKU whose data flows into a project; each project has multiple ProductUIDs, distinct from its AppUID/ProjectUID and display name |
-| Fleet | Identified by FleetUID; a list of DeviceUIDs belonging to that Fleet. Present membership does not establish historical membership |
-| Smart Fleet | A Fleet whose Devices are automatically added or removed based on dynamic characteristics; its FleetUID has a `smart:` prefix when listed in a Device's memberships |
+| ProductUID | A unique text string representing a customer product type or SKU whose data flows into a project; a project has zero or more ProductUIDs (one created through the API starts with none), distinct from its AppUID/ProjectUID and display name |
+| Fleet | Identified by FleetUID; a group of Devices, each listing its FleetUIDs in `fleet_uids`. Present membership does not establish historical membership |
+| Smart Fleet | A Fleet whose Devices are automatically added or removed based on dynamic characteristics. API responses list it by its bare FleetUID; routed Events and Repository rows can still carry the stored `smart:fleet:…` spelling |
 | Route | Identified by RouteUID; defines processing and delivery of Events within a Project |
 | Note | A JSON document stored/synchronized in a Notefile; database-like Notes and queued Notes have different lifecycles |
 | Notefile | A named collection with direction and storage semantics, often `.qo` for outbound queued data, `.qi` for inbound, `.db` for database-like data; verify the actual producer and use |

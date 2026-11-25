@@ -46,10 +46,10 @@ actual content to organize reading and recognize which rules apply to a question
 Missing or unfamiliar kinds do not exclude a document from the full reading, and a tag
 alone does not establish what its content means.
 
-For subprojects, reads inherit skills from the parent Project. Retain the returned
-`project_uid` separately from the selected ProjectUID. Use the Project's actual
-access settings when explaining who can read the knowledge; shared does not mean
-private to a particular role.
+For subprojects, reads inherit skills from the parent Project, but `project_uid` and
+`links` in the response name the Project you asked for, not the parent; no read names the
+parent. Use the Project's actual access settings when explaining who can read the
+knowledge; shared does not mean private to a particular role.
 
 ## Handle individual reads and content errors
 

@@ -15,7 +15,7 @@ Read the rows that apply to the current step; reuse context already established.
 | Resolve a missing or changed Project selection | [Project Selection](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/projects.md) | Return with the verified ProjectUID and any known parent ProjectUID |
 
 Start with schemas, a few recent event bodies, fleet/device descriptions and relevant
-nonsecret configuration. Look at full per-device Sessions when the question needs them.
+nonsecret configuration. Look at full Sessions when the question needs them.
 Request only relevant route fields; connection settings may contain secrets. Avoid dumps
 of environment values or route credentials into transcripts or drafts. Product names and
 field shapes can guide questions but cannot prove what a sensor measures.

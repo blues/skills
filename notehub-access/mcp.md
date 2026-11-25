@@ -37,14 +37,18 @@ becomes `get_devices_dfu_status` and `GetDbNote` becomes `get_db_note`.
 - Free-form JSON or a non-JSON body uses a single `body` argument. Inspect the schema;
   do not wrap a normal object's properties under `body`.
 - Headers retain their exact names, e.g. `"If-Match": "\"revision\""`.
-- If a query parameter and body property share a name, use `<name>__query` for the query.
+- If a parameter and body property share a name, the parameter gets its location as a
+  suffix, `<name>__<location>`, for example `<name>__query`.
 - Never send `X-Repository-Key`; the authenticated session supplies repository access.
 - Return the result explicitly. A final expression also works; `print()` output is not
   the result. Lists and strings may be wrapped as `{"result": ...}`; unwrap only the
   transport envelope, not a similarly named property in a resource.
 - Always `await call_tool(...)`; an un-awaited call returns a coroutine, not data.
-- A tool result may arrive as a JSON **string** rather than an object (observed for
-  `get_events`). Check `isinstance(r, str)` and `json.loads(r)` before reading keys.
+- A block may make at most 10 `call_tool` calls and can import only `json`, `math`, `re`
+  and `datetime`. Split larger work across blocks.
+- `get_devices`, `get_device_sessions`, `get_events`, `get_fleet_devices`,
+  `get_fleet_events` and `get_route_logs_by_route` return Notehub's JSON as a **string**;
+  `json.loads` it. The `execute` tool description lists the current set.
 - Large pages work: a 10,000-event `get_events` page (about 11 MB) returns in about
   1–3 s. Return a compact summary when you only need counts or cursors.
 
@@ -63,14 +67,14 @@ same prompt. Stay within the user's existing authorization. A multi-call program
 a transaction: earlier calls can succeed before a later failure. Inspect before retrying.
 Keep outputs small and relevant, but never hide incomplete coverage behind a summary.
 
-The code-mode contract excludes `login`, `o_auth2_client_credentials`,
+The code-mode contract excludes `o_auth2_client_credentials`,
 `get_device_environment_variables_by_pin`, `set_device_environment_variables_by_pin`,
 `delete_project`, `set_global_description`, `delete_global_description`,
 `upload_firmware` and `download_firmware`. MCP code mode cannot upload or download firmware
 files; report that limitation. A switch to the CLI is a transport change under Access, made
 only for this need or at the user's choice, and not available where the harness forbids a
-second path (e.g. Grok Bot). Do not assume every OpenAPI operation is
-exposed unchanged. If needed, report a concrete limitation; don't reach for raw tokens.
+second path (e.g. Grok Bot). Do not assume every OpenAPI operation is exposed unchanged. If
+needed, report a concrete limitation; don't reach for raw tokens.
 
 Specific guards still apply:
 
@@ -80,8 +84,8 @@ Specific guards still apply:
 - Setting firmware environment variables `_fw`, `_fwc`, `_fwm`, `_fwc_retry` or
   `_fwc_min_version` requires `update_firmware=true`. For removal use the explicit
   delete operation, not an empty string or `-`.
-- Use dedicated single-device enable/disable/provision operations rather than
-  constructing a `create_job` for one device.
+- `create_job` refuses enable, disable and provision requests for any number of devices.
+  Use `enable_device`, `disable_device` or `provision_device` for each device.
 
 ## Grok Bot only
 
@@ -97,5 +101,8 @@ Specific guards still apply:
 - The OAuth session lives with the connector, not on the Cloud Computer. Notehub tools
   are callable only from agent turns, not from box scripts. Do not install the CLI,
   store a token or set a token environment variable as a second path.
+- The sign-in expires after 72 hours without a Notehub call (refreshes don't count), so
+  scheduled work must make a real call at least every three days. If it expires, ask
+  the user to reconnect.
 - Large results can be saved to a file with the dynamic-tool call's `write_to_file`
   option. This is how the cache handoff passes fetched batches to its worker.

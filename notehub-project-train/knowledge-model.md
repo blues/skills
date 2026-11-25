@@ -79,8 +79,9 @@ it is documentation. And **is it shape rather than data?** "Three phase currents
 an amp, and a sustained reading above the nameplate rating is an overload" is shape; "on Tuesday
 unit 4021 drew 9.1 amps" is neither. Hunt these shapes deliberately, and write what each means in the asker's words: **names
 that lie**; **opaque names**; **arrays where position is meaning**; **integers that are really
-enums**; **implied units**; **templated encodings**, where an omitted field arrives as a zero so
-absence and a real zero are alike on the wire; **the same quantity under two names** in two
+enums**; **implied units**; **templated encodings**, where Notehub drops zero, false, empty-string
+and null values from the body (unless the device sent the note with `full:true`), so a real zero
+and an omitted field both arrive as a missing key; **the same quantity under two names** in two
 Notefiles, where a join on one name drops half the fleet; and **absence as the signal**, where the
 meaningful event is the note that never arrived. Each is a hole in knowledge area 2; the four rungs and the
 `sentinels` and `derivation` kinds are how you close them.

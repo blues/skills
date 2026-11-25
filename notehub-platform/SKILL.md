@@ -32,9 +32,9 @@ platform manual or repeat meanings already verified in the current context.
 | Firmware version, rollout, update stuck or failed | Device's last-reported firmware, target-specific DFU status/history, effective desired configuration | [Firmware](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/firmware.md) |
 | Online, offline, check-ins, sessions, weak signal, connection failures | Device freshness and Session records; `_session.qo` for event history | [Sessions and connectivity](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md), [Health and system files](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/health.md) |
 | Notecard data usage, traffic, plan balance | Session period counters for traffic; SIM usage for plan accounting; Usage API for Notehub consumption | [Sessions and connectivity](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md) |
-| Position, GPS versus cell tower or Wi-Fi location | Event location families for history; Device locations for latest known position | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
+| Position, GPS versus cell tower or WiFi location | Event location families for history; Device locations for latest known position | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
 | Journeys, speed, bearing, distance, geofences | Tracking bodies together with Event location metadata; journey API only with its filtering understood | [Tracking and journeys](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md), [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) |
-| Modem power cycles, battery life, energy, charging | Session high-power counters, Mojo measurements, `_power.qo` transitions; product battery model | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) |
+| Modem power cycles, battery life, energy, charging | Session high-power counters and power flags, Mojo measurements, tracking `usb`/`charging`; product battery model | [Power](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/power.md) |
 | Reboots, diagnostics, motion, temperature, button events | `_health.qo`, `_health_host.qo`, `_log.qo` and the relevant system file | [Health and system files](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/health.md) |
 | Project, Fleet, Device or Event fields; a field not listed here | Exact endpoint response and schema, then its producer and project meaning | [Objects, metadata and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) |
 
@@ -51,8 +51,8 @@ platform manual or repeat meanings already verified in the current context.
    it contains Event envelopes, decoded bodies, full Session records or a derived view.
    A dataset named “sessions” is not proof that all Session API fields are present.
 4. Check field presence, firmware generation, configuration, timestamps and coverage
-   before deriving an answer. A missing optional field, template-produced zero, stale
-   snapshot or filtered history cannot establish that something never happened.
+   before deriving an answer. A missing optional field (templates also drop real zeros),
+   stale snapshot or filtered history cannot establish that something never happened.
 5. Distinguish observed values, derived estimates and unavailable quantities in the
    answer. Give the as-of time where it matters. For an uncovered field, preserve the
    uncertainty and consult its current authoritative definition; do not infer meaning

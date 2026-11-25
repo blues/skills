@@ -34,9 +34,9 @@ in manageable groups until every document has been read.
 |---|---|---|
 | Check the response contract, handle a 413, or refresh an existing snapshot | [Skills API reading contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Preserve a complete, consistent set of content, kinds and revisions; individual reads are the fallback when the full response is too large |
 
-Keep the selected ProjectUID distinct from the returned `project_uid` when skills are
-inherited from a parent Project. Preserve the original snapshot as the immutable baseline
-for Training, separately from any later working drafts.
+When skills are inherited from a parent Project, the returned `project_uid` is still the
+selected ProjectUID; no read names the parent. Preserve the original snapshot as the
+immutable baseline for Training, separately from any later working drafts.
 
 A successful empty set means the Project has no stored product knowledge; an API failure
 means it could not be read. Record which it is. Native platform questions can still be
@@ -82,13 +82,15 @@ Build an internal understanding of how customer language maps to the actual data
 these mappings with their source skill names, headings and revisions so they can be
 checked and reused in Q&A, query preparation and Training.
 
-1. **Identify the NotefileID.** Every Event carries its NotefileID in `file`. This tags
-   the data in its `body` with the specific JSON schema describing its fields and types.
+1. **Identify the NotefileID.** Every Event carries its NotefileID in `file`, which
+   selects the schema for the fields in its `body`.
 2. **Read that Notefile's schema.** Use the Notehub Cache's Schemas table when available
    and current, looking up ProjectUID and NotefileID. Otherwise call
    `GetNotefileSchemas` through the established connection and select the entry whose
-   `notefile` matches the Event's NotefileID. This API returns the Project's Notefile
-   schemas and their field definitions.
+   `notefile` matches the Event's NotefileID. It lists the `body` fields Notehub has seen
+   and their JSON types (string, number, boolean, array, object), inferred from received
+   Events. It includes fields from every firmware version seen and has no units, ranges
+   or meaning.
 3. **Combine structure with meaning.** Use the schema's field names and types alongside
    the product skills' terminology, units and interpretation rules. Trace the same
    fields into database columns when queries use a cached or transformed representation.

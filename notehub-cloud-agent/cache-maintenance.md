@@ -31,7 +31,7 @@ contain algorithms and data rules; return to this procedure after the needed sec
 |---|---|---|
 | Execution inputs and durable state | [Worker context](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#common-execution-context) | Exact invocation, database locator, scope and restartable progress |
 | Storage monitoring on every run | [Storage monitoring](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#storage-monitoring) | Free space/quota checks, established housekeeping and a working low-space wake-up path |
-| Fill and refresh | [Acquisition](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#acquisition) | Devices, Events, full per-device Sessions, metadata and schema snapshots, with atomic cursor progress |
+| Fill and refresh | [Acquisition](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#acquisition) | Devices, Events, full Sessions, metadata and schema snapshots, with atomic cursor progress |
 | Daily purge, schema refresh and optimization | [Daily maintenance](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-cloud-agent/jobs.md#maintenance) | Retention, daily schema checks and improvements based on fields actually queried |
 
 Set per-project work budgets, timeouts, retry/backoff and overlap control. One large or

@@ -270,7 +270,9 @@ it uses, whether it alerts and to whom - because people ask about what the dashb
 those words go in `vocabulary` and its layout in `presentation`. Fleet rules repay the same
 attention - a fleet defined by `$exists(body.t) = false or body.t = 0` teaches you more than the
 schema will - but a fleet name is a clue, not a definition, and today's membership is not
-historical. Feeds `notefiles`, `population`, `config`.
+historical. Each Event's `fleets` lists the device's memberships when Notehub processed it (fleets
+deleted since are omitted), so per-event membership is historical. Feeds `notefiles`,
+`population`, `config`.
 
 ### F. Host firmware
  *(Knowledge area 2.)* Ask for the firmware that drives the Notecard, and

@@ -25,9 +25,10 @@ Reuse the access, API knowledge, Project selection and complete product knowledg
 already established by the entry workflow. Do not repeat that setup or provision
 Cloud Computer infrastructure during an interview.
 
-Retain the selected ProjectUID and, when skills are inherited, the parent
-ProjectUID that owns them. Reads and drafts can proceed without write permission;
-publication must use the owning Project and its actual access settings.
+Retain the selected ProjectUID and, when skills are inherited, the parent ProjectUID that
+owns them; only a 400 `inherited_from_parent` write error or the user can name it. Reads
+and drafts can proceed without write permission; publication must use the owning Project
+and its actual access settings.
 
 Read or reuse a complete current Skills API snapshot, including every document's
 content, `kinds` and revision, even documents nothing links to. Internalize the
@@ -38,7 +39,7 @@ useful layout and knowledge; restructuring is not a reason to discard detail.
 | If you need to | Read | Complete by |
 |---|---|---|
 | Recover missing access or Project context | [Entry workflow](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub/SKILL.md) | Complete only the missing prerequisites and return with the selected Project |
-| Obtain all stored content, kinds and revisions | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Hold a complete baseline, including unlinked documents and the owning ProjectUID |
+| Obtain all stored content, kinds and revisions | [Read product skills](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Hold a complete baseline, including unlinked documents |
 | Organize findings and tag skills | [Knowledge model](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/knowledge-model.md) | Preserve one owner per fact and all applicable kinds; a document may have several kinds |
 | Understand what the resulting set must provide | [Output contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-train/output-contract.md) | Know how a later agent will read, use and resume the saved knowledge |
 

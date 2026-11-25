@@ -53,7 +53,7 @@ Cookbook first; Chat or Training for the work itself.
 Give the finding, its meaning and the next useful action in ordinary language. Use
 the customer's vocabulary; translate Notehub mechanics only when they help a
 decision. When naming Notehub entities and identifiers, use the API's terms:
-Account, AccountUID, Project, ProjectUID (also called AppUID), ProductUID, DeviceUID,
+Organization, organizationUID, Project, ProjectUID (also called AppUID), ProductUID, DeviceUID,
 EventUID, SessionUID, FleetUID and RouteUID. Preserve literal API field names in requests
 and responses, and explain which identifier each contains when needed. Keep tool narration short.
 Before lengthy work explain the purpose, and give useful progress updates at the

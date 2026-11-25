@@ -57,12 +57,20 @@ detached login process finishes), do not promise to keep watching. Ask the user 
 or background wakeups. When you resume, run `notehub auth status --json` and confirm
 `signed_in` and the expected `user` before continuing.
 
+If login reports that polling sign-in is unavailable, ask the user to run `notehub login`
+on the machine running the CLI. Use a personal access token only if the user offers one,
+provided as `NOTEHUB_TOKEN` through their environment's secret settings; don't ask them
+to create one, even where `--help-agent` suggests it.
+
 The CLI stores and refreshes credentials itself. Never run `auth token`, inspect its
 credential files, supply `--token`, print an inherited token, or add Authorization headers.
 If status reports an environment credential override, report the source without its
 value and follow the guide; do not silently change the user's environment. Log out only
 when requested. Unattended jobs must run in an environment where this same authorized
-login works and refreshes; do not copy secrets into job configuration.
+login works and refreshes; do not copy secrets into job configuration. A browser sign-in
+expires after 72 hours without an API call (refreshes don't count), so a scheduled job
+must make a real Notehub call at least every three days. If it expires, ask the user to
+sign in again rather than falling back to another credential.
 
 ## Call the API
 
@@ -100,15 +108,15 @@ operation's parameter names and permitted values.
 | Fields on methods other than GET/HEAD | Fields become JSON body properties; put query parameters in the encoded path |
 | Nested/complete JSON | `--input request.json` or `--input -`; cannot mix with field flags |
 | Repeated query keys | Encode them in the path; repeated fields are not a substitute |
-| Conditional read | `--header 'If-None-Match: "ETAG_FROM_THIS_REPRESENTATION"'` reuses an unchanged cached response; never add an Authorization header |
+| Conditional read | `--header 'If-None-Match: "ETAG_FROM_THIS_REPRESENTATION"'` with `--include`; reuse the cached response only when the status line says 304, because a 304 otherwise prints an empty body and exits 0. Never add an Authorization header |
 | Response headers | `--include` precedes the body with status/headers; parse separately |
 
 Stdout is the response body, stderr diagnostics; HTTP failures exit nonzero. A successful
 response can have an empty body. Avoid `--verbose` unless needed; logs can contain
 customer data. `--pretty` buffers output, so avoid it for streams. For binary firmware,
 use the documented `notehub firmware get <firmware> [path]` to download and
-`notehub firmware upload <path> [name]` to upload, rather than `notehub api`, which may
-append a newline to binary content.
+`notehub firmware upload <path> [name]` to upload, rather than `notehub api`, whose
+output can gain a trailing newline.
 
 `--paginate` follows modified cursors (starting at `0` unless supplied), emits successive
 responses rather than one JSON document, and fails on incomplete cursor metadata or
@@ -116,10 +124,14 @@ nonadvancing cursors with more data. Omit it when the calling worker needs contr
 each batch and its checkpoint; use individual API requests instead.
 
 The CLI's API proxy covers the OpenAPI surface. The special Project Repository query
-capability requires MCP access and a Repository enabled for the Project; it is unavailable
-through the CLI. Use the Notehub Cache or ordinary Notehub APIs for supported questions.
-Do not establish a second authentication path to obtain Repository access.
+capability requires MCP access and a Repository enabled for the Project; it isn't
+supported through the CLI, so use MCP for it. Without MCP, use the Notehub Cache or
+ordinary Notehub APIs for supported questions. Do not establish a second authentication
+path to obtain Repository access.
 
 On 401 check status/refresh; on 403 check permissions; on 400/404 check the current
-contract and resource. Back off for rate limits. After an uncertain write, inspect the
-resource before retrying: a lost response does not mean the write failed.
+contract and resource. The API allows 7 requests per minute per billing account
+(Organization). The CLI waits out `Retry-After` and retries a 429 for up to a minute; a
+429 that still reaches you means the Organization's limit is exhausted, so pause the work
+rather than retrying at once. After an uncertain write, inspect the resource before
+retrying: a lost response does not mean the write failed.
