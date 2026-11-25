@@ -122,7 +122,7 @@ Notehub generates these Events; no host `note.add` is necessary.
 | Shape | Where the useful data lives |
 |---|---|
 | `req="session.begin"`, `body.opened=true`, `body.why` | Start reason in the body. Radio, supply, motion, power and firmware context principally in the **Event envelope**, not the body. |
-| `req="session.end"`, `body.closed=true`, `body.why` | End reason in the body. Service usage fields can include `hub_last_work_done`, `hub_duration_secs`, `hub_events_routed`, `hub_rcvd_bytes`, `hub_sent_bytes`, `hub_tcp_sessions`, `hub_tls_sessions`, `hub_rcvd_notes`, `hub_sent_notes`, named from the device's side (`rcvd` is downlink to the device). `hub_wire_rcvd_bytes` and `hub_wire_sent_bytes` are raw TCP/TLS socket bytes named from Notehub's side, so `hub_wire_rcvd_bytes` is uplink; other transports omit them. Omission is not a complete zero report. |
+| `req="session.end"`, `body.closed=true`, `body.why` | End reason in the body. Service usage fields can include `hub_last_work_done`, `hub_duration_secs`, `hub_events_routed`, `hub_rcvd_bytes`, `hub_sent_bytes`, `hub_tcp_sessions`, `hub_tls_sessions`, `hub_sent_notes`, named from the device's side (`rcvd` is downlink to the device). `hub_wire_rcvd_bytes` and `hub_wire_sent_bytes` are raw TCP/TLS socket bytes named from Notehub's side, so `hub_wire_rcvd_bytes` is uplink; other transports omit them. Omission is not a complete zero report. |
 
 Notehub emits only these two shapes. The Event schema also defines `card_*` usage
 fields, but Notehub doesn't populate them: the device's own counts appear only when
