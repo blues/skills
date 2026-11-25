@@ -34,9 +34,9 @@ in manageable groups until every document has been read.
 |---|---|---|
 | Check the response contract, handle a 413, or refresh an existing snapshot | [Skills API reading contract](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/project-skills.md) | Preserve a complete, consistent set of content, kinds and revisions; individual reads are the fallback when the full response is too large |
 
-When skills are inherited from a parent Project, the returned `project_uid` is still the
-selected ProjectUID; no read names the parent. Preserve the original snapshot as the
-immutable baseline for Training, separately from any later working drafts.
+Keep the selected ProjectUID distinct from the returned `project_uid` when skills are
+inherited from a parent Project. Preserve the original snapshot as the immutable baseline
+for Training, separately from any later working drafts.
 
 A successful empty set means the Project has no stored product knowledge; an API failure
 means it could not be read. Record which it is. Native platform questions can still be
