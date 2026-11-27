@@ -16,7 +16,7 @@ An uploaded binary or desired environment value is not an installed version.
 | Device `firmware_notecard`, `firmware_host` | Latest reported version strings known to Notehub, not a fresh interrogation of hardware. A host can report a plain string or richer version metadata. |
 | Event `firmware_notecard`, `firmware_host` | Versions known when that context was attached. A session-begin Event can precede processing of newly reported version state; delayed application Events need not carry their capture-time firmware. |
 | Device `dfu.card`, `dfu.user` | Most recently reported update state for Notecard and host respectively. `user` means host firmware here, not a Notehub user account. Missing object means no state exposed, not “never updated”. |
-| DFU status/history `current` | Last reported running version and available build metadata for the selected target. This is the place to compare the reported version with the target. |
+| DFU status/history `current` | Last reported running version and available build metadata for the selected target. This is the place to compare the reported version with the target. For host firmware, if the host has never reported a version (`dfu.status`/`hub.set` `version`), Notehub fills `current.version` from the file being downloaded, which may not be installed; trust it only when Device `firmware_host` or `dfu.user.version` is non-empty and matches (parse JSON version metadata first). |
 | Status `status` / history `history[]` | Latest requested attempt / list of attempts. Within an attempt, `current_version` is the **version before that request**; it is not synonymous with top-level `current.version`. |
 | Attempt `requested_version` | Desired version derived from the selected upload's metadata. May fall back to a filename, a deleted-file indication or unknown. Not necessarily a comparable semantic version. |
 | Attempt `initiated` | Time the request/attempt was established, RFC3339; late reports can affect reconstructed timing. Not proof download began then. |
@@ -69,7 +69,8 @@ confirmed old versions. Parse known version formats; lexical string sorting can 
 `10.x` before `9.x`, and some host strings are not versions suitable for ordering.
 
 For “did this update work?”, identify the attempt and target, inspect its timeline,
-compare top-level `current.version` with the intended image/version, and check the
+compare top-level `current.version` with the intended image/version (for host firmware,
+only once the host reports its version), and check the
 reporting time. Say “requested”, “awaiting sync”, “downloading”, “downloaded/ready”,
 “reported running target”, “failed” or “not yet confirmed” according to the evidence.
 Downloading 100%, a finished attempt or `dfu_in_progress=false` alone is insufficient.

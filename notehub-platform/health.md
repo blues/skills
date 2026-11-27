@@ -20,7 +20,7 @@ Read the rows that apply to the current step; reuse context already established.
 
 | File | Producer / use | Where its meaning is defined |
 |---|---|---|
-| `_health.qo` | Notecard operational/health messages, including boot and DFU diagnostics | Log schema below |
+| `_health.qo` | Notecard operational/health messages, including boot and DFU diagnostics, plus Notehub warnings (for example a Note it can't decode or encode over NTN). Notecard doesn't create them while NTN is the active transport | Log schema below |
 | `_health_host.qo` | Host-submitted health messages through the Notecard | Same basic log shape; host's method/text vocabulary requires project knowledge |
 | `_log.qo` | Configured Notecard diagnostics, often more verbose and subsystem-specific | Log schema below; emission is conditional |
 | `_session.qo` | Notehub-generated communication start/end Events | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md); much of the data is Event metadata, not body |
@@ -29,7 +29,7 @@ Read the rows that apply to the current step; reuse context already established.
 | `_motion.qo` or configured motion file | Notecard accelerometer reporting | Motion schema below |
 | `_temp.qo` | Configured automatic temperature/diagnostic reporting | Temperature schema below |
 | `_button.qo` or configured button file | Notecard button / AUX GPIO reporting | Button schema below |
-| `_geolocate.qo` | Notehub radio-geolocation result/diagnostic | Body can include `location`, `country`, `radios` or `err`; coordinate result is in Event `tri_*` context, with optional `triangulate` inputs |
+| `_geolocate.qo` | Notehub radio-geolocation result/diagnostic | Body has `location`, `country` and `radios` (a count of each radio type in the scan); coordinate result is in Event `tri_*` context, with optional `triangulate` inputs |
 | `_tower.qo` | Notehub serving-tower update | Body `location`, `country`, `tower_lat`, `tower_lon`, `tower_time`, `tower` (cell tuple); optional `weather`/`weather_err` follow their own response schema |
 | `_socket.qo` | Notehub socket usage report | Body `bytes_sent`, `bytes_rcvd` for that socket operation; not whole-device lifetime/SIM usage |
 | `_env.dbs`, `_env.qis` | Environment/configuration and device-reported management state | Per-note management schemas; use effective environment and public Device/DFU APIs rather than treating every management body as a sensor reading |
@@ -46,13 +46,14 @@ actual file, producer and configuration to interpret unfamiliar system records.
 |---|---|
 | `text` string | Diagnostic message. Interpret the whole message with method, firmware and time; wording is not a permanent machine enum. |
 | `method` string | Subsystem/event category, such as boot or DFU where supplied. Host-defined values need the project's vocabulary. |
-| `alert` boolean | Message flagged for attention by its producer. Not a universal severity scale, safety alarm or diagnosis. |
+| `alert` boolean | Set only on `_health_host.qo` entries whose host passed `alert` to `hub.log`; Notecard and Notehub don't set it on `_health.qo` or `_log.qo`. Not a universal severity scale, safety alarm or diagnosis. |
 | `voltage` number | Supply volts sampled for health/power diagnostics where available. |
 | `voltage_mode` string | Configured voltage operating classification. Not charge percentage. |
 | `milliamp_hours` number | Mojo accumulator when present. Use power, including resets and charging. |
 
-Fields vary by method/build/template. The log template can materialize defaults even
-when a message did not supply a measurement. There is no guarantee that all log
+Fields vary by method/build/template. These files are templated, and Notehub drops zero,
+`false` and empty fields from templated Notes, so a missing field can mean not measured or
+a real 0 or `false`. There is no guarantee that all log
 messages contain valid voltage or charge readings. Timestamp and location usually
 live in the Event envelope.
 
@@ -76,8 +77,8 @@ boundaries/periodically, not guaranteed instantaneous live streams.
 | `tilt` integer | Count of detected orientation changes since the preceding report. Not an angle in degrees. |
 | `orientation` string | Orientation category relative to the device's axes. Not compass heading. Mounting determines its product meaning. |
 | `movements` string | Encoded time buckets of motion events, newest first. In this encoding `0`–`9` represent 0–9, `A`–`P` represent 10–25, and `Z` represents 26 or more. Bucket duration comes from motion configuration; do not read it as a decimal number or infer a duration from string length alone. |
-| `voltage`, `temperature` number | Supply volts and onboard temperature in degrees Celsius. Missing/default and sensor-failure rules still apply. |
-| `alert` boolean | Whether this report was flagged as an alert by the motion producer/configuration. |
+| `voltage`, `temperature` number | Supply volts and onboard temperature in degrees Celsius. Missing-field and sensor-failure rules still apply. |
+| `alert` boolean | `true` only when `card.motion.sync` produced the report, which Notecard syncs immediately; `card.motion.track` reports don't set it. Not a severity. |
 
 Cadence, sensitivity, orientation triggers and motion thresholds are configurable.
 Motion events can be vibration while the product stays in place, and a moving vehicle
@@ -89,14 +90,17 @@ Session/Event `moved` is instead a **last-motion timestamp**.
 The default `temperature` is normally the Notecard's onboard sensor, but an attached
 supported environmental sensor can replace it and supply `humidity` (%RH) and
 `pressure` (Pa for BME measurements). It is not automatically ambient air or the
-customer's process temperature. Onboard errors can leave `temperature=0`.
+customer's process temperature. An onboard read error leaves `temperature` absent,
+because the template drops 0.
 
 Other fields include `voltage` (V), `usb` (presence), `count` (report-generation counter,
-not degrees or seconds) and `sn` (attached sensor serial in the BME path, not Event
+not degrees or seconds) and `sn` (serial number of an attached ENS210 sensor; BME280s
+report none; not Event
 device `sn`). Configured diagnostics can add `temp_mcu`, `temp_accel`, `temp_modem`
 (degrees Celsius), `cycles` (cumulative modem data-power cycles), `resets` (cumulative
-hard-reset count) and `milliamp_hours` (Mojo accumulator). `motion` can be constructed
-as a motion-event delta but is absent from some default templates; verify the emitted
+modem hard-reset count, not Notecard reboots) and `milliamp_hours` (Mojo accumulator).
+Firmware v7.2.1 and later, and LTS v6.2.2 and later, don't emit `motion`;
+verify the emitted
 schema. Counters have their own initialization/reset scope and are not all lifetime
 counts. Emission can be periodic or change-triggered; silence is not necessarily a
 missing heartbeat.

@@ -28,15 +28,15 @@ scoped to the verified account, either in columns or by an isolated database bin
 
 | Logical table | Suggested key | Main contents |
 |---|---|---|
-| Projects | `project_uid` | AccountUID, human-readable Project name, associated ProductUIDs, other Project metadata, enrollment state and cache location |
-| Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships preserving any `smart:` prefix, raw JSON and deletion/freshness state |
+| Projects | `project_uid` | Verified account, human-readable Project name, associated ProductUIDs, other Project metadata, enrollment state and cache location |
+| Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships preserving any `smart:` prefix (v1 API lists now return bare FleetUIDs and omit deleted Fleets), raw JSON and deletion/freshness state |
 | Sessions | `project_uid`, `session_uid` | Full Session data and the DeviceUID of the one Device that generated it |
-| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture/modified times and tombstones |
+| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture (`when`) and arrival (`received`) times, and tombstones |
 | Schemas | `project_uid`, `notefile_id` | Current full schema, fetch time and change hash, with history where needed |
 | Monitors | `project_uid`, `monitor_id` | What is watched, requested or inferred origin, checking and notification preferences, pause state and progress needed to resume |
 
 Here `project_uid` stores ProjectUID (also called AppUID); those names refer to the
-same unique project GUID. The project's multiple ProductUID strings identify
+same unique project GUID. The project's ProductUID strings identify
 customer product types or SKUs feeding that project and do not create separate
 project cache entries. Use separate typed key columns, such as `project_uid` and
 `device_uid`, rather than concatenating ProjectUID and DeviceUID into one string. A
@@ -79,24 +79,22 @@ The folder README and shared memory locate the cache; live state stays in the da
 | Projects | Retain metadata for enrolled projects; refresh on first use and during daily maintenance |
 | Devices | Complete Project scan with modified cursor `0`; upsert by DeviceUID in `uid`, apply documented `deleted` tombstones; keep the full current population |
 | Events | `GetEvents`, upsert by `event`, apply its `deleted` tombstones; retain at least the latest 30 days and prune only after 45 days |
-| Full Sessions | `GetDeviceSessions` for each DeviceUID, upsert by SessionUID in `session` within the ProjectUID and DeviceUID; updates replace prior session estimates; same recent retention |
+| Full Sessions | `GetSessions`, one project-wide stream with a modified cursor; upsert by SessionUID in `session` with the DeviceUID in `device`; updates replace prior session estimates; same recent retention. Use `GetDeviceSessions` only for a targeted single-device read |
 | Notefile Schemas | Complete `GetNotefileSchemas` snapshot on enrollment and daily by default, sooner when needed; no modified cursor; swap only after a successful full response |
 | Product skills | Read the catalog and needed content, or a complete content snapshot; check metadata periodically, reuse unchanged documents and recheck dependent views/monitors when meaning changes |
 
 A start cursor in epoch microseconds bounds **modification time**, not capture time.
-Bootstrap Events from a synthesized start cursor **30 days ago** (never page through
+Bootstrap Events and Sessions from a synthesized start cursor **30 days ago** (never page through
 older data the cache will not use; the 45-day figure is only the purge buffer) where the contract supports
 it, then verify that the requested capture-time window is covered. If complete recent
 coverage cannot be established from that bound, use a complete scan or documented
 capture-time backfill plus overlapping modification scan. State service retention gaps.
 Do not assume advancing a cursor proves that all historical events exist.
 
-Discover all devices before claiming Session coverage; maintain per-device progress,
-including newly discovered devices. Failures on one device leave that part of the Session
-population incomplete. A current-device scan may omit removed devices whose historic
-Sessions still matter: reconcile identities from retained Events/repository history where
-available and state the remaining limit. Do not silently discard retained history when
-a Device tombstone arrives. `_session.qo` is supplementary Event evidence, not full Sessions.
+One project-wide `GetSessions` stream covers every Device's Sessions, including Devices
+that appear later; do not enumerate Devices to fetch Sessions. Do not silently discard
+retained history when a Device tombstone arrives. `_session.qo` is supplementary Event
+evidence, not full Sessions.
 
 Consult the live schema for each stream's tombstone support. In particular, do not invent
 a Session `deleted` field or interpret absence in an incremental response as deletion.
@@ -110,7 +108,7 @@ Implement the batch transaction below using the endpoint's current cursor contra
 |---|---|---|
 | Poll for changes in Events, Sessions, Devices, and more | [Modified cursors](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-project-chat/modified-cursors.md) | Apply exact cursor, batching and deletion semantics |
 
-Namespace checkpoints by account, ProjectUID, entity, DeviceUID, filters and
+Namespace checkpoints by account, ProjectUID, entity, filters and
 projection contract. Each maintenance task's fill phase rereads the registry and
 budgets work fairly across active projects. Commit a batch's upserts/tombstones and
 its exact returned cursor in one transaction. Bulk-load JSON; don't issue per-row
@@ -159,7 +157,7 @@ bindings separately when recipes require them and the evidence supports them. A 
 beyond cache coverage uses the Project Repository when MCP access and an enabled
 Repository are available, or the ordinary Notehub API. Never label the cache's oldest
 row as the service's retention policy. Verify bootstrap completeness, schema
-snapshots, retention and all-device orchestration as part of the maintenance task.
+snapshots, retention and stream orchestration as part of the maintenance task.
 
 Return the verified model or coverage result to the procedure that called this resource.
 
@@ -197,7 +195,8 @@ FROM events ORDER BY project_uid, file, captured;
 ```
 
 `best_lat`/`best_lon` are Notehub's chosen best fix, which already falls back from GPS
-(`where_*`) to tower or triangulation; in sampled data no Event lacked `best_lat` while
+(`where_*`) to triangulation (`tri_*`), then to the cell tower (`tower_*`); in sampled
+data no Event lacked `best_lat` while
 having another fix, so no `coalesce` is needed. `where_lat`/`where_lon` keep the GPS-only
 fix for track analysis. Promote a field when the query log shows bots joining back to
 `events.data` for it: Event UIDs are random, so that join scans every `events.data` row
@@ -244,7 +243,7 @@ for catch-up and for steady-state incremental polls.
 | Stream | Time-windowed? | Initial cursor |
 |---|---|---|
 | Devices | No | **`0`** (full scan) |
-| Sessions (per device) | No | **`0`** (full scan per DeviceUID), but only for Devices whose `last_activity` is within the last 30 days; skip stale Devices entirely |
+| Sessions | Yes (same epoch-microsecond modified cursor as Events) | One project-wide `GetSessions` stream. Synthesize start as Unix epoch **microseconds** 30 days ago, as for Events; resume with opaque `next_cursor` thereafter. |
 | Events | Yes (modified cursor is epoch microseconds) | Synthesize start as Unix epoch **microseconds** 30 days ago (the bootstrap above); **do not** start Events at `0` when filling a recent window. Resume with opaque `next_cursor` thereafter. |
 | Notefile Schemas | N/A | Full snapshot; no modified cursor |
 
@@ -255,7 +254,7 @@ incremental changes from the saved cursors.
 
 When acquisition uses Notehub MCP `execute` (agent-turn fetch handoff), each fetch batch
 must be **one** `execute` block with **exactly one** `await call_tool(...)` (typically
-`get_events` / `get_devices` / session fetch at `pageSize=10000`, or the largest size
+`get_events` / `get_devices` / `get_sessions` at `pageSize=10000`, or the largest size
 the transport allows). Do not pack multiple pages into one execute. Write the envelope
 to a file, ingest locally, then start a **new** execute for the next batch while
 `has_more` is true.

@@ -20,9 +20,9 @@ Read the rows that apply to the current step; reuse context already established.
 | `body.status` | Interpretation |
 |---|---|
 | Missing/empty | Usually an ordinary tracking point, but inspect `button` and the rest of the shape: a button-only annotation also lacks status. Template decoding can produce an empty string. Unchanged coordinates or the same fix time can suppress a redundant ordinary point. |
-| `start` | Journey origin marker. Can use a saved departure time/location that precedes confirmation and the `journey` timestamp. |
+| `start` | Journey origin marker. Can use a saved departure time/location that precedes confirmation; its time is the `journey` value. |
 | `stop` | Journey end marker, emitted before the active journey ID is cleared. Its position can still be the last known fix. |
-| `ping` | Periodic ping-mode point. Unchanged location does not suppress the promised interval record. Not proof of a journey or a new successful fix. |
+| `ping` | Periodic ping-mode point whose seek got a fix. Unchanged location does not suppress the promised interval record. Not proof of a journey. |
 | `no-sat` | A GPS seek was attempted and gave up. In ping mode it accounts for that interval. It can carry old location context; it does not establish a fresh position. |
 | `heartbeat` | Tracking liveness/status report according to configuration, not necessarily a new GPS fix. |
 | `usb` | USB state change reported through tracking; inspect `body.usb`. Not a modem cycle. |
@@ -48,7 +48,7 @@ Event envelope as explained in location.
 |---|---|
 | `status` string | Record type above. |
 | `time` integer | Location time from the device's stored fix, or saved origin time for a start marker. It can predate Event capture; not upload time. A service-generated fence record need not have it. |
-| `journey` integer | Identifier based on the journey's beginning/confirmation time. Group by project, DeviceUID and journey; it is not globally unique. Zero/absence does not identify a real journey. |
+| `journey` integer | Identifier based on the journey's beginning time (the start marker's time). Group by project, DeviceUID and journey; it is not globally unique. Zero/absence does not identify a real journey. |
 | `jcount` integer | Sequence of records emitted while that journey is active. Can include statuses and gaps from lost/filtered history. It is not a distance or an API total-row count. |
 | `motion` integer | Accelerometer events since the tracking subsystem's last motion-counter reset, normally associated with track/seek reporting. Some heartbeat paths retain above-threshold motion for the next seek. Threshold-sensitive; not a lifetime count, meters, speed, steps, journey count, or Session `moved`. |
 | `seconds` number | Producer-dependent interval. On an eligible derived segment, difference between fix times; on `no-sat`, seek duration. Status/ping paths can supply zero or another interval. Never assume a universal sampling period. |
@@ -72,8 +72,8 @@ Event envelope as explained in location.
 
 In the normal tracking producer, ordinary and `ping` records take the full-point
 calculation path; the separate button producer does not. Distance/bearing/velocity additionally require a valid prior fix and
-`jcount > 2`. The first journey point is an origin marker, and the next cannot safely
-measure across the origin/departure gap. Therefore early points and points outside a
+`jcount` ≥ 2. The first journey point is an origin marker, and the second is measured
+from it. Therefore the first point and points outside a
 journey can have zero/default speed despite movement. Even later, validate positive
 elapsed time and fix quality. **Do not convert uncomputed zero speed into “stationary”.**
 
@@ -94,8 +94,8 @@ mode's configuration.
 This is not universally “one accelerometer interrupt starts a journey; five quiet
 minutes ends it”. Ping mode and tracking mode also change which records are expected.
 
-A start marker can be backdated to when the candidate opened at its saved origin.
-`journey` can consequently be later than the first Event's `when`. It is an identifier
+A start marker can be backdated to when the candidate opened at its saved origin, and
+`journey` is that marker's time. It is an identifier
 and grouping aid, not always the earliest observed capture time. A missing stop can
 mean ongoing movement, delayed upload, reset, retention or incomplete coverage.
 

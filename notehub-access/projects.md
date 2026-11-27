@@ -50,7 +50,7 @@ Record the project's name and identifiers from the lookup:
 |---|---|
 | Project name | Every project has a human-readable name; use it in conversation |
 | AppUID / ProjectUID | Synonymous names for the project's unique programmatic GUID; retain the ProjectUID returned by the API |
-| ProductUIDs | Every project has multiple unique ProductUID text strings representing customer product types or SKUs whose data flows into that project; retain the associated strings, including any used in selection |
+| ProductUIDs | Every project has zero or more unique ProductUID text strings (one created through the API has none until `CreateProduct`) representing customer product types or SKUs whose data flows into that project; retain the associated strings, including any used in selection |
 
 Bind the selected project to the verified account. Keep its ProductUIDs as associated
 identifiers, not additional projects or alternate names for its AppUID/ProjectUID.
@@ -85,9 +85,13 @@ foreground agents as well as Cloud Computer agents using MCP. Some callers say
 API is a particular table/projection within the Repository.
 
 When using MCP, check whether this Project has a Repository enabled using its Repository
-read/list operations or already verified information. Match `project_uids` to ProjectUID
-and retain its RepositoryUID, name and availability. When using the CLI, record that
-Repository querying is unavailable through this access method and continue selection.
+read/list operations or already verified information. A Repository covers either a
+whole Project (`project_uids` holds its ProjectUID) or some of its Fleets (`project_uids`
+is empty and `fleet_uids` holds FleetUIDs), and a Project can have several Project-wide
+Repositories and fleet-scoped ones. Match the ProjectUID against `project_uids`
+and the Project's FleetUIDs from `GetFleets` against `fleet_uids`; retain each match's
+RepositoryUID, name, scope and availability. When using the CLI, record that Repository
+querying isn't supported through the CLI (it needs MCP) and continue selection.
 Keep absence, denied access and an unavailable query capability distinct. Inspect the
 tables and historical coverage when a question needs them; selection need not scan the
 archive. Lack of a Repository does not block work using the cache or ordinary API.
@@ -133,8 +137,8 @@ enrolled; choosing, opening, or loading a project **is** an enrollment trigger.
    it **now**. Preserve pauses and exclusions. A paused or excluded enrollment remains so unless
    the user asks to resume it; skip its fill and schedule checks below, and record that state.
 2. **Start missing acquisition immediately (required).** For a new active enrollment,
-   begin a bounded first fill **now** of project/Device metadata, recent Events, full
-   per-device Sessions and the complete Notefile Schema snapshot. Apply the cache's
+   begin a bounded first fill **now** of project/Device metadata, recent Events, recent
+   full Sessions and the complete Notefile Schema snapshot. Apply the cache's
    coverage and retention rules; record the first schema refresh and next daily due time.
    **Report to the user in this turn** that enrollment succeeded and fill has started
    (cache initializing), not only after fill completes. With the agent-turn fetch

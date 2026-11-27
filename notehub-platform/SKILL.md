@@ -51,8 +51,8 @@ platform manual or repeat meanings already verified in the current context.
    it contains Event envelopes, decoded bodies, full Session records or a derived view.
    A dataset named “sessions” is not proof that all Session API fields are present.
 4. Check field presence, firmware generation, configuration, timestamps and coverage
-   before deriving an answer. A missing optional field, template-produced zero, stale
-   snapshot or filtered history cannot establish that something never happened.
+   before deriving an answer. A missing optional field (templates also drop real zeros),
+   stale snapshot or filtered history cannot establish that something never happened.
 5. Distinguish observed values, derived estimates and unavailable quantities in the
    answer. Give the as-of time where it matters. For an uncovered field, preserve the
    uncertainty and consult its current authoritative definition; do not infer meaning

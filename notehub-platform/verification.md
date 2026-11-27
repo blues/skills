@@ -16,7 +16,7 @@ to every answer.
 | A journey's start and stop | [Tracking](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md) | Use the device's tracking mode and configuration to interpret its journey markers |
 | Journey detail results | [Tracking](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/tracking.md) | The endpoint filters coordinate-less and consecutive duplicate-position Events; use raw Events for status counts, stops and sequence completeness |
 | Location “best” | [Location](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/location.md) | Selected source and observation time matter; best does not mean fresh or most accurate |
-| Zero or absent template fields | [Objects and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) | Distinguish measured zero from an encoding default or unavailable observation |
+| Zero or absent template fields | [Objects and time](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/objects.md) | Templated Notes drop zero, `false` and empty fields unless added with `full:true`, so a missing key can be a measured zero or an unavailable observation |
 | Secondary-SIM usage | [Sessions](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-platform/sessions.md) | Secondary bytes are a breakdown already included in total cellular bytes |
 
 ## Historical records and device-specific meaning

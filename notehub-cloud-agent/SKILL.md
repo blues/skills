@@ -54,7 +54,7 @@ the cache discoverable through a nearby README and shared memory fact.
 
 Register or reuse a task with a refresh goal of **every 15 minutes**. If the Cloud
 Computer's background scheduler cannot meet that goal, refresh as often as it permits:
-the user may want to be notified of changes. Refresh Devices, Events, full per-device
+the user may want to be notified of changes. Refresh Devices, Events, full
 Sessions, project metadata and Notefile Schemas. Use modified cursors where supported.
 Run daily purge, schema refresh and optimization using queried-field
 history. Each run also checks available storage and quotas, waking the agent when

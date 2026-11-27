@@ -112,16 +112,17 @@ notification.
 
 The maintenance task's fill phase runs at the configured refresh interval across
 enrolled projects. For each due project, serialize writes per database, keep stream
-definitions stable, and budget work across streams/devices so a large Event backlog
+definitions stable, and budget work across streams so a large Event backlog
 cannot starve other entities or projects.
 
 1. Validate the account and ProjectUID. A mismatch stops work for that Project; do not
    reuse its cursor under another account or ProjectUID. A network failure does not
    initiate repeated login.
 2. Poll Devices through the saved modified cursor using transactional batch ingestion.
-   Enroll new DeviceUIDs into Session streams. Preserve historical records when
+   Preserve historical records when
    a Device is deleted and track historical-device coverage gaps separately.
-3. Poll Events and each due full-Session stream with their own saved exact cursors.
+3. Poll Events and the project's full-Session stream (`GetSessions`) with their own saved
+  exact cursors.
    Commit each batch with its checkpoint. A batch budget leaves a resumable partial stream.
    Apply only the entity's documented deletion markers; equal values are not duplicates.
 4. On first fill, fetch project metadata and the complete Notefile Schema snapshot to
@@ -138,7 +139,7 @@ cannot starve other entities or projects.
    the meaning revision they implement. Return per-stream progress and continuation needs.
 
 Use Cache to establish bootstrap and retention rules. `has_more=false` proves
-completion of a scan, not capture-time coverage or all-device Session completeness. Each
+completion of a scan, not capture-time coverage. Each
 stream can succeed or fail independently; a project summary retains that distinction.
 Use bounded backoff and scheduler continuation rather than a busy loop. A healthy poller
 and a healthy product are separate conclusions.
@@ -149,7 +150,7 @@ Apply this to each due modified-cursor stream. Use the database access design ch
 in Cache, including serialization of overlapping work. Each attempt belongs to the
 verified account, ProjectUID and saved stream definition. Use DeviceUID for Device
 upserts, EventUID for Event upserts and SessionUID for Session upserts, retaining
-the associated DeviceUID for per-device Session streams. These are the record keys
+each Session's associated DeviceUID. These are the record keys
 below.
 
 ```text

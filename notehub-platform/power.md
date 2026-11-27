@@ -7,7 +7,7 @@ There is no universal native field for “battery life remaining”.
 | Question | Evidence | Essential limitation |
 |---|---|---|
 | Modem on/off cycles and on-time | Session `hp_cycles_*` and `hp_secs_*` snapshots | Cumulative counters, not exact on/off timestamps |
-| Notecard rebooted | `_health.qo` boot diagnostics, supported reset counters | Different from modem cycling; logs depend on capture/upload |
+| Notecard rebooted | `_health.qo` entries whose `text` starts with `boot` (method `boot` also tags restart requests) | Different from modem cycling; no Notefile body counts Notecard reboots; logs depend on capture/upload |
 | USB or charging state changed | `_power.qo`, tracking `usb`/`charging`, Session power flags | Sensed source state, not whole-product power consumption |
 | Charge used | Mojo-backed `power_mah` / `milliamp_hours` | mAh accumulator with reset, sign and wiring caveats |
 | Energy used | Charge/current plus appropriate voltage history and measurement scope | mAh alone is not Wh |
@@ -57,7 +57,7 @@ The hardware coulomb counter supplies signed charge increments using the configu
 sense resistance. The accumulator can decrease while charging and can be reset
 through power-counter controls/configuration. Persistence does not make it an
 ever-increasing lifetime measure. Missing/zero does not prove a device used no charge:
-Mojo may be absent, not initialized, reset, unreported, or template-defaulted.
+Mojo may be absent, not initialized, reset, unreported, or a real zero a template dropped.
 
 Establish which load and current path the sense circuit measures. Do not label this
 “whole product consumption” unless the project's wiring supports that claim. Keep
@@ -75,7 +75,7 @@ latest voltage multiplied by a lifetime charge total is not a measured energy hi
 `power_usb` is detected USB presence; `power_charging` is normalized charging indication
 where sensing is available; `power_primary` reflects the configured primary-battery
 mode. It is not a measured battery chemistry identification. Tracking has `usb` and
-`charging` at body level. Boolean defaults/omission can hide unsupported sensing.
+`charging` at body level. A missing flag can mean `false` or unsupported sensing.
 `voltage` is volts; `voltage_mode` classifies the configured voltage operating regime,
 not battery percentage. The same physical voltage can have different significance
 with different battery configuration, temperature, load and wiring.
@@ -121,4 +121,4 @@ For “why is consumption higher?”, align valid counter/charge deltas with ses
 failed connections, signal, GPS seeks and product operating modes. Correlation may
 suggest a cause; do not claim the host, battery or antenna failed from one counter.
 
-Reference: [Notecard card requests](https://dev.blues.io/api-reference/notecard-api/card-requests/).
+Reference: [Notecard card requests](https://dev.blues.io/api-reference/notecard-api/card-requests/latest/#card-power).

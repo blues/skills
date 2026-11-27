@@ -110,7 +110,8 @@ name; that is the one split that needs no justification. Each entry carries, in 
   change, a button - what governs the rate, and what changes it. **What its silence means** is part
   of this: a file that appears only on alarm and one that should appear hourly imply opposite things
   when nothing arrives.
-- **Whether it is templated**, because that decides whether an omitted field arrives as a zero, and
+- **Whether it is templated**, because a templated body arrives without its zero, false and empty
+  fields unless sent with `full:true`, so a missing key there may be a real zero, and
   **which generations send it** where they differ.
 - **Which timestamp means what**: the field carrying measurement time and the field carrying arrival
   time, **by name**; whether the device clock can be unset or wrong on this file; and which of the

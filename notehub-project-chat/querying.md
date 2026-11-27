@@ -154,9 +154,9 @@ day.
 Otherwise, count the Events `GetEvents` returns, keeping only those not marked `deleted`
 whose own `received` or `when` falls in the window. For capture time, filter with
 `dateType=captured`, its default, over the window. For receipt time, use
-`dateType=uploaded` with the window's start and no `endDate`: it filters on when each
-Event was stored or last changed, which can follow its receipt. Say a `GetEvents` count
-covers only Events still stored.
+`dateType=uploaded` with the window's start and no `endDate`: it filters on when Notehub
+stored each Event, at or just after its `received` time. Say a `GetEvents` count covers
+only Events still stored.
 
 A foreground agent may use temporary files for a bounded analysis or export, but does not
 start a persistent synchronized database or background job. Explain the actual time and
@@ -186,6 +186,9 @@ edge cases that could change an unfamiliar result.
 - Historical fleet membership, configuration and serial-to-device binding may differ
   from today's snapshot. Mark unavailable historical bindings instead of projecting
   today's state backward.
+- The `fleetUID` filter on `GetEvents` and `GetEventsUsage` uses each device's current
+  fleets. For the fleets a device was in at the time, use each Event's `fleets` field,
+  or a fleet-scoped Repository, which uses it.
 
 Follow recipe status: answerable, conditional or blocked. An assumption stays visible in
 the answer and cannot become a silent alarm threshold. If two sources disagree, check

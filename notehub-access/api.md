@@ -1,7 +1,7 @@
 # Discovering and using the Notehub API
 
 The primary contract is the [Notehub OpenAPI specification](https://raw.githubusercontent.com/blues/skills/refs/heads/master/notehub-access/openapi.yaml).
-This YAML file is an unmodified mirror of the production schema which is updated upon every service deployment.
+This YAML file is an unmodified mirror of the production schema, checked every 30 minutes and updated when it changes.
 Download the complete YAML without summarization, cache it for the task, and record its
 retrieval time. Refresh it when a response contradicts the contract.
 
@@ -9,22 +9,24 @@ retrieval time. Refresh it when a response contradicts the contract.
 
 | Entity | Identifier | Relationship |
 |---|---|---|
-| Account | AccountUID | Contains Projects |
+| Organization | organizationUID (`billing_account_uid` in CreateProject/CloneProject requests; project responses don't include it) | Owns and is billed for Projects; its members have an Organization role, and each Project's members a separate Project role (people outside the Organization can join a Project unless the Organization restricts invites to members) |
 | Project | ProjectUID, also called AppUID | Contains Devices, Fleets, Routes, Events and Sessions; ProjectUID and AppUID are synonymous |
 | Device | DeviceUID | Tagged with the FleetUIDs of the many Fleets to which it belongs |
-| Fleet | FleetUID | A list of DeviceUIDs belonging to that Fleet |
-| Smart Fleet | FleetUID | A Fleet whose Devices are automatically added or removed based on dynamic characteristics; its FleetUID has a `smart:` prefix when listed in a Device's memberships |
+| Fleet | FleetUID | Not a container: a Fleet's Devices are the Devices whose `fleet_uids` currently include its FleetUID, and `GetFleetDevices` queries which Devices are tagged with it right now |
+| Smart Fleet | FleetUID | A Fleet whose Devices are automatically added or removed based on dynamic characteristics; its FleetUID can carry a `smart:` prefix where membership is stored (`smart:fleet:…` in routed Events and Repository rows), while v1 API fleet lists return the bare FleetUID. Strip a leading `smart:` before comparing |
 | Route | RouteUID | Defines processing and delivery of Events within a Project |
 | Event | EventUID | Tagged with the DeviceUID of the one Device that generated it |
 | Session | SessionUID | Tagged with the DeviceUID of the one Device that generated it |
 
-Every Project also has a human-readable name and multiple unique ProductUID text strings
-representing customer product types or SKUs whose data flows into that Project.
+Every Project also has a human-readable name and zero or more unique ProductUID text
+strings (a Project created through the API has none until `CreateProduct`) representing
+customer product types or SKUs whose data flows into that Project.
 ProductUID is distinct from ProjectUID/AppUID.
 
 Use DeviceUID to relate Events and Sessions to their Device within the selected
 ProjectUID. EventUID and SessionUID identify the individual Event and Session records.
-Preserve the `smart:` prefix in returned Device memberships, including when caching them.
+Routed Events can still carry the stored `smart:fleet:…` spelling; strip the `smart:`
+prefix before joining those to API FleetUIDs.
 
 ## Discover operations and their contracts
 

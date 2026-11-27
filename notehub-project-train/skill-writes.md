@@ -17,7 +17,8 @@ wrapping, timestamp-based filename or manual old-version cleanup.
 
 For subprojects, writes must target the parent Project that owns the skills. Use its
 ProjectUID and make the shared effect clear; queries still use the selected
-ProjectUID. Discover actual access settings; do not promise that shared skills are
+ProjectUID. Replacing an existing skill also needs the project's Delete permission, not
+only create. Discover actual access settings; do not promise that shared skills are
 visible only to a particular role or that a public-readable project is private.
 
 Use the returned `links.self`, or encode the **entire** skill name as one path component,

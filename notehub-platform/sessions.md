@@ -58,7 +58,7 @@ API/dataset. Internal lifetime snapshots `this` and `next` are not the public `p
 | `rssi` | Received signal strength in dBm; less negative generally means stronger. Applicable meaning depends on radio technology. |
 | `rsrp` | LTE reference-signal received power in dBm. |
 | `rsrq` | LTE reference-signal received quality in dB. |
-| `sinr` | Signal to interference-plus-noise ratio in dB on modern firmware. Some firmware before build 15323 / 3.5.2 reported raw modem values 0–250; the documented source correction for that generation is `-20 + raw/5`. Verify the version at the measurement before converting. |
+| `sinr` | Signal to interference-plus-noise ratio in dB. Notecard firmware 3.4.1 and earlier reported raw modem values 0–250, which convert as `-20 + raw/5`; 3.5.1 and later report that dB value. Verify the version at the measurement before converting. On 2G/3G, `-20` means not measured. |
 | `bars` | Device-reported or service-derived ordinal signal category (typically 1–4); 0/absence can mean unavailable. Not a linear physical measurement. |
 
 Do not average bars as though they were dBm, or combine raw legacy SINR with scaled
@@ -87,12 +87,14 @@ do not mean 1,700 total bytes.
 
 `period.notes_sent` and `notes_rcvd` count transferred notes, not JSON fields or Event
 rows. `sessions_tcp` and `sessions_tls` count connections by type, not modem cycles;
-do not add them and label the sum “unique sessions” without checking their relationship
-on that transport.
+on device actuals, `sessions_tls` is a subset of `sessions_tcp`. Do not add them and
+label the sum “unique sessions”.
 
 For ordinary sessions, usage starts as a service-side estimate. At a later connection,
 device cumulative statistics can replace the previous period's byte, note and connection
-counts with deltas, and `usage_actual` becomes true. These are **replacement values**,
+counts with deltas, and `usage_actual` becomes true. The deltas run from this Session's
+start to the next one's, so they include traffic outside this connection. These are
+**replacement values**,
 not another period to add. A closed session can therefore change. Negative cumulative
 deltas from resets are clamped to zero during service reconciliation; an actual-marked
 zero does not necessarily demonstrate no traffic. Missing device totals can also limit
@@ -121,12 +123,13 @@ Notehub generates these Events; no host `note.add` is necessary.
 | Shape | Where the useful data lives |
 |---|---|
 | `req="session.begin"`, `body.opened=true`, `body.why` | Start reason in the body. Radio, supply, motion, power and firmware context principally in the **Event envelope**, not the body. |
-| `req="session.end"`, `body.closed=true`, `body.why` | End reason in the body. Service usage fields can include `hub_last_work_done`, `hub_duration_secs`, `hub_events_routed`, `hub_rcvd_bytes`, `hub_sent_bytes`, `hub_tcp_sessions`, `hub_tls_sessions`, `hub_rcvd_notes`, `hub_sent_notes`. Omission is not a complete zero report. |
-| Device-derived usage correction, where that surface emits it | `card_rcvd_bytes`, `card_sent_bytes`, their `_secondary` variants, `card_tcp_sessions`, `card_tls_sessions`, `card_rcvd_notes`, `card_sent_notes`, associated with the prior session. Verify the emitted operation/shape instead of assuming every deployment stores a third Event. |
+| `req="session.end"`, `body.closed=true`, `body.why` | End reason in the body. Service usage fields can include `hub_last_work_done`, `hub_duration_secs`, `hub_events_routed`, `hub_rcvd_bytes`, `hub_sent_bytes`, `hub_tcp_sessions`, `hub_tls_sessions`, `hub_sent_notes`, named from the device's side (`rcvd` is downlink to the device). `hub_wire_rcvd_bytes` and `hub_wire_sent_bytes` are raw TCP/TLS socket bytes named from Notehub's side, so `hub_wire_rcvd_bytes` is uplink; other transports omit them. Omission is not a complete zero report. |
 
-`hub_` versus `card_` distinguishes the reporting source, not two disjoint streams of
-traffic. Prefer the refreshed Session record for the reconciled period. Do not count
-each phase/correction Event as a separate connection or sum `hub_*` and `card_*`.
+Notehub emits only these two shapes. The Event schema also defines `card_*` usage
+fields, but Notehub doesn't populate them: the device's own counts appear only when
+Notehub rewrites the earlier Session's `period` and sets `usage_actual: true`. Use the
+refreshed Session record for reconciled usage. Do not count the begin and end Events as
+separate connections.
 
 ## “Has this device gone dark?”
 

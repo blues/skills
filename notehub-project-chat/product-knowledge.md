@@ -82,13 +82,16 @@ Build an internal understanding of how customer language maps to the actual data
 these mappings with their source skill names, headings and revisions so they can be
 checked and reused in Q&A, query preparation and Training.
 
-1. **Identify the NotefileID.** Every Event carries its NotefileID in `file`. This tags
-   the data in its `body` with the specific JSON schema describing its fields and types.
+1. **Identify the NotefileID.** Every Event carries its NotefileID in `file`, which
+   selects the schema for the fields in its `body`.
 2. **Read that Notefile's schema.** Use the Notehub Cache's Schemas table when available
    and current, looking up ProjectUID and NotefileID. Otherwise call
    `GetNotefileSchemas` through the established connection and select the entry whose
-   `notefile` matches the Event's NotefileID. This API returns the Project's Notefile
-   schemas and their field definitions.
+   `notefile` matches the Event's NotefileID. It lists the `body` fields Notehub has seen
+   and their JSON types (string, number, boolean, array, object), inferred from received
+   Events. It keeps fields from earlier firmware versions too (until the project's schemas
+   pass 1,000 fields in total, when the least recently updated are pruned down to 500) and
+   has no units, ranges or meaning.
 3. **Combine structure with meaning.** Use the schema's field names and types alongside
    the product skills' terminology, units and interpretation rules. Trace the same
    fields into database columns when queries use a cached or transformed representation.
