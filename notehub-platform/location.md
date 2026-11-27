@@ -45,8 +45,8 @@ Device `tower_info` instead spells the final identifier `cell_id`.
 - `tower_*` is a serving-cell lookup location, not a GPS position of the device.
   Coverage can extend far from a tower; a precise-looking decimal is not precise
   device positioning. Cell identity is the MCC/MNC/LAC/cell tuple, not cell ID alone.
-- `tri_*` is a service lookup from scanned cell towers, or WiFi access points if no
-  cells were scanned; Notehub uses one radio type per lookup.
+- `tri_*` is a service lookup from scanned cell towers of any cellular type, or WiFi access
+  points if no usable cells were scanned; Notehub never combines cells and WiFi in one lookup.
   “Triangulated” does not promise geometric three-tower triangulation, a fixed radius,
   or better accuracy than every GPS fix. `tri_points`/`towers` counts lookup inputs,
   not satellites. `triangulate` and Session `scan` describe inputs, not the result.
@@ -86,7 +86,7 @@ contain coordinates with its own meaning.
 Privacy/fuzz configuration can coarsen visible coordinates. Device-derived distance
 and velocity can use unfuzzed fixes, so recalculating from displayed coordinates can
 differ. Do not silently “correct” one with the other. With `_suppress_where`, Notecard
-substitutes a fixed placeholder location (OLC `7MV8XWQF+HW`, about 27.98888, 86.92519).
+substitutes a fixed placeholder location (OLC `7MV8XWQF+HW`, about 27.989, 86.925).
 Identify it by the OLC or coordinates: `body.time` is `1717171717`, but Event `where_when`
 can advance past it. Treat it as “location withheld”, never as a real position.
 

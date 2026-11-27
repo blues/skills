@@ -90,8 +90,8 @@ checked and reused in Q&A, query preparation and Training.
    `notefile` matches the Event's NotefileID. It lists the `body` fields Notehub has seen
    and their JSON types (string, number, boolean, array, object), inferred from received
    Events. It keeps fields from earlier firmware versions too (until the project's schemas
-   pass 1,000 fields, when the least recently seen are pruned) and has no units, ranges
-   or meaning.
+   pass 1,000 fields in total, when the least recently updated are pruned down to 500) and
+   has no units, ranges or meaning.
 3. **Combine structure with meaning.** Use the schema's field names and types alongside
    the product skills' terminology, units and interpretation rules. Trace the same
    fields into database columns when queries use a cached or transformed representation.

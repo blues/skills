@@ -31,12 +31,12 @@ scoped to the verified account, either in columns or by an isolated database bin
 | Projects | `project_uid` | Verified account, human-readable Project name, associated ProductUIDs, other Project metadata, enrollment state and cache location |
 | Devices | `project_uid`, `device_uid` | Current Device data, FleetUID memberships preserving any `smart:` prefix (v1 API lists now return bare FleetUIDs and omit deleted Fleets), raw JSON and deletion/freshness state |
 | Sessions | `project_uid`, `session_uid` | Full Session data and the DeviceUID of the one Device that generated it |
-| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture (`when`), arrival (`received`) and modification times (from the cursor of the batch that delivered them), and tombstones |
+| Events | `project_uid`, `event_uid` | Raw Event data, DeviceUID of the one Device that generated it, SessionUID and Notefile references, capture (`when`) and arrival (`received`) times, and tombstones |
 | Schemas | `project_uid`, `notefile_id` | Current full schema, fetch time and change hash, with history where needed |
 | Monitors | `project_uid`, `monitor_id` | What is watched, requested or inferred origin, checking and notification preferences, pause state and progress needed to resume |
 
 Here `project_uid` stores ProjectUID (also called AppUID); those names refer to the
-same unique project GUID. The project's multiple ProductUID strings identify
+same unique project GUID. The project's ProductUID strings identify
 customer product types or SKUs feeding that project and do not create separate
 project cache entries. Use separate typed key columns, such as `project_uid` and
 `device_uid`, rather than concatenating ProjectUID and DeviceUID into one string. A

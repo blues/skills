@@ -45,8 +45,9 @@ that single response is written to a file. A new execute is required for the nex
 
 **Always request `pageSize=10000` (10K batches)** for modified-cursor
 scans wherever the operation supports `pageSize`; 10000 is the server's maximum, and
-larger values are silently reduced to it. If a page times out with a 500, retry with a
-smaller page. Do not default to 500 or other small pages for cache fill. Where supported,
+larger values are silently reduced to it. If a page times out (an HTTP 500, or an MCP
+tool's 30-second limit), retry with a smaller page.
+Do not default to 500 or other small pages for cache fill. Where supported,
 `pageSize` is the API parameter for batch size; modified-cursor scans advance with
 `cursor`, never `pageNum`.
 
@@ -78,9 +79,11 @@ For other entities, use the key named in the operation's response schema.
 
 ## 3. Verify what the completed scan covers
 
-A cursor orders **modifications**, not capture time. Devices and Sessions reappear
-whenever they change. For Events, the only modifications are storage and deletion: a
-stored Event never reappears except with `deleted: true`. Late
+A cursor orders **modifications**, not capture time. Sessions reappear whenever they change;
+Devices too, except that a newer `last_activity` alone doesn't move a Device's cursor. For
+Events, only storage and deletion move it: a stored Event never reappears except with
+`deleted: true`, even though Notehub later updates its routing `status` (and can strip a long
+`payload`) in place. Late
 events may describe old measurements. Retention and analytical windows are separate
 from the cursor. A Note's `note.delete` event is not automatically a deletion of that
 Event row: follow the entity's tombstone contract. Do not deduplicate by equal sensor

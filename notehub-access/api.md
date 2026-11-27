@@ -9,7 +9,7 @@ retrieval time. Refresh it when a response contradicts the contract.
 
 | Entity | Identifier | Relationship |
 |---|---|---|
-| Organization | organizationUID (`billing_account_uid` in CreateProject/CloneProject requests; project responses don't include it) | Owns and is billed for Projects; people have an Organization role and, separately, a role on each Project they belong to |
+| Organization | organizationUID (`billing_account_uid` in CreateProject/CloneProject requests; project responses don't include it) | Owns and is billed for Projects; its members have an Organization role, and each Project's members a separate Project role (people outside the Organization can join a Project unless the Organization restricts invites to members) |
 | Project | ProjectUID, also called AppUID | Contains Devices, Fleets, Routes, Events and Sessions; ProjectUID and AppUID are synonymous |
 | Device | DeviceUID | Tagged with the FleetUIDs of the many Fleets to which it belongs |
 | Fleet | FleetUID | Not a container: a Fleet's Devices are the Devices whose `fleet_uids` currently include its FleetUID, and `GetFleetDevices` queries which Devices are tagged with it right now |

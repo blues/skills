@@ -99,7 +99,7 @@ report none; not Event
 device `sn`). Configured diagnostics can add `temp_mcu`, `temp_accel`, `temp_modem`
 (degrees Celsius), `cycles` (cumulative modem data-power cycles), `resets` (cumulative
 modem hard-reset count, not Notecard reboots) and `milliamp_hours` (Mojo accumulator).
-Firmware v7.2.1 and later doesn't emit `motion`;
+Firmware v7.2.1 and later, and LTS v6.2.2 and later, don't emit `motion`;
 verify the emitted
 schema. Counters have their own initialization/reset scope and are not all lifetime
 counts. Emission can be periodic or change-triggered; silence is not necessarily a

@@ -105,8 +105,9 @@ before joining across surfaces.
 ## Project, Fleet and configuration semantics
 
 An Organization (organizationUID, `billing_account_uid` in CreateProject/CloneProject
-requests; project responses don't include it) owns and is billed for Projects; people have
-an Organization role and, separately, a role on each Project they belong to. Each Project contains
+requests; project responses don't include it) owns and is billed for Projects; its members have
+an Organization role, and each Project's members a separate Project role. A Project's members
+can include people outside the Organization unless it restricts invites to members. Each Project contains
 Devices, Fleets, Routes, Events and Sessions.
 
 Every Project has a human-readable name and one unique programmatic GUID, called either

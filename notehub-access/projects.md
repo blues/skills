@@ -87,8 +87,8 @@ API is a particular table/projection within the Repository.
 When using MCP, check whether this Project has a Repository enabled using its Repository
 read/list operations or already verified information. A Repository covers either a
 whole Project (`project_uids` holds its ProjectUID) or some of its Fleets (`project_uids`
-is empty and `fleet_uids` holds FleetUIDs), and a Project can have a Project-wide
-Repository and several fleet-scoped ones. Match the ProjectUID against `project_uids`
+is empty and `fleet_uids` holds FleetUIDs), and a Project can have several Project-wide
+Repositories and fleet-scoped ones. Match the ProjectUID against `project_uids`
 and the Project's FleetUIDs from `GetFleets` against `fleet_uids`; retain each match's
 RepositoryUID, name, scope and availability. When using the CLI, record that Repository
 querying isn't supported through the CLI (it needs MCP) and continue selection.
