@@ -123,10 +123,10 @@ specific failure is understood. Device installation may still be pending.
 
 Read status and, when useful, history for the selected firmware type. Compare the latest
 reported `current.version` with the intended image and inspect the relevant attempt and
-reporting time. For host firmware, `current.version` can be the downloaded target's
-version until the host reports its own; confirm it against Device `firmware_host`. The
-attempt's `current_version` describes its starting version. Neither 100% download, an
-inactive `dfu_in_progress`, nor silence proves that the target is running.
+reporting time. For host firmware, `current.version` can be the target image's
+version from the moment its download starts, until the host reports its own; confirm it against Device `firmware_host`. The
+attempt's `current_version` describes its starting version. Neither
+100% download, an inactive `dfu_in_progress`, nor silence proves that the target is running.
 
 Summarize counts and exceptions: reported running target, awaiting contact, downloading,
 ready/installing, failed, canceled or unconfirmed, as supported by actual evidence. Use

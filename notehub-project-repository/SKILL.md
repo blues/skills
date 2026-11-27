@@ -27,18 +27,18 @@ Follow [working style](https://raw.githubusercontent.com/blues/skills/refs/heads
 
 First verify that the selected access method is MCP. If it is the CLI, this query
 capability isn't supported through the CLI (it needs MCP); use the cache or ordinary
-Notehub APIs for supported work. Keep the established access method unless the user
-chooses to change it.
+Notehub APIs for supported work.
+Keep the established access method unless the user chooses to change it.
 
 With MCP, reuse the Repository information retained during Project Selection, or use
 its Repository read/list capability. Verify that a Repository is enabled for this
 Project. Match the selected ProjectUID against each Repository's `project_uids`, and the
-Project's FleetUIDs (from `GetFleets`) against its `fleet_uids`. A Project can have one
-Project-wide Repository and several fleet-scoped ones. Use the one whose scope matches
-the question's population, say which one you used, and never add results from
-overlapping Repositories together. Retain the RepositoryUID returned in `uid` and pass it
-explicitly when querying; do not rely on a tool defaulting to the first available
-Repository.
+Project's FleetUIDs (from `GetFleets`) against its `fleet_uids`. A Project can have one or more
+Project-wide Repositories and several fleet-scoped ones. Use the one whose scope matches the
+question's population, say which one you used, and never add results from overlapping
+Repositories together. Retain the
+RepositoryUID returned in `uid` and pass it explicitly
+when querying; do not rely on a tool defaulting to the first available Repository.
 
 | If you need to | Read | Then |
 |---|---|---|

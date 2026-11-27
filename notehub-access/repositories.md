@@ -21,11 +21,11 @@ A Repository covers either a whole Project (`project_uids` holds its ProjectUID)
 of its Fleets (`project_uids` is empty and `fleet_uids` holds FleetUIDs). Match the
 selected ProjectUID against `project_uids` and the Project's FleetUIDs from `GetFleets`
 against `fleet_uids`. When several match, keep each one's fleet scope and choose the one
-that covers the devices in question. Retain RepositoryUID from `uid` and pass it
-explicitly under the tool's actual parameter name, such as `repositoryUID`; do not rely on
-a tool defaulting to the first Repository. Each table is one dataset of the same name:
-pass that name as `dataset_name` to read the definition and load status the cookbook's
-Step 2 checks.
+that covers the devices in question. Retain RepositoryUID
+from `uid` and pass it explicitly under the tool's actual parameter name, such as
+`repositoryUID`; do not rely on a tool
+defaulting to the first Repository. Each table is one dataset of the same name: pass that
+name as `dataset_name` to read the definition and load status the cookbook's Step 2 checks.
 
 ## Apply the query engine's contract
 

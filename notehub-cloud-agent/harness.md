@@ -59,9 +59,9 @@ session credentials.
   ProjectUID to the registry) and `status` (coverage and freshness).
 - A scheduled agent turn at the refresh interval runs `plan` and stops quietly when it
   is empty. For each due item, it fetches one batch with a read-only MCP call. It saves
-  the raw response, wrapped in an envelope (`project_uid`, `stream`, `requested_cursor`,
-  `fetched_at`), to a file, then runs `ingest` on that file. It repeats while `has_more`
-  is true, within a per-run batch budget.
+  the raw response, wrapped in an envelope (`project_uid`, `stream`,
+  `requested_cursor`, `fetched_at`), to a file, then runs `ingest` on that
+  file. It repeats while `has_more` is true, within a per-run batch budget.
 - Pass responses through files, not through the turn's own text, so batch size does not
   drive model usage.
 - The pure-Python scheduler keeps running storage checks, purge and optimization. It

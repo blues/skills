@@ -7,7 +7,7 @@ There is no universal native field for “battery life remaining”.
 | Question | Evidence | Essential limitation |
 |---|---|---|
 | Modem on/off cycles and on-time | Session `hp_cycles_*` and `hp_secs_*` snapshots | Cumulative counters, not exact on/off timestamps |
-| Notecard rebooted | `_health.qo` entries with `method` `boot` | Different from modem cycling; no Notefile body counts Notecard reboots; logs depend on capture/upload |
+| Notecard rebooted | `_health.qo` entries whose `text` starts with `boot` (method `boot` also tags restart requests) | Different from modem cycling; no Notefile body counts Notecard reboots; logs depend on capture/upload |
 | USB or charging state changed | `_power.qo`, tracking `usb`/`charging`, Session power flags | Sensed source state, not whole-product power consumption |
 | Charge used | Mojo-backed `power_mah` / `milliamp_hours` | mAh accumulator with reset, sign and wiring caveats |
 | Energy used | Charge/current plus appropriate voltage history and measurement scope | mAh alone is not Wh |

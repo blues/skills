@@ -119,10 +119,10 @@ nonadvancing cursors with more data. Omit it when the calling worker needs contr
 each batch and its checkpoint; use individual API requests instead.
 
 The CLI's API proxy covers the OpenAPI surface. The special Project Repository query
-capability requires MCP access and a Repository enabled for the Project; it isn't
-supported through the CLI, so use MCP for it. Without MCP, use the Notehub Cache or
-ordinary Notehub APIs for supported questions. Do not establish a second authentication
-path to obtain Repository access.
+capability requires MCP access and a Repository enabled for the Project; it isn't supported
+through the CLI, so use MCP for it. Without MCP, use the Notehub Cache or ordinary Notehub
+APIs for supported questions.
+Do not establish a second authentication path to obtain Repository access.
 
 On 401 check status/refresh; on 403 check permissions; on 400/404 check the current
 contract and resource. Back off for rate limits. After an uncertain write, inspect the

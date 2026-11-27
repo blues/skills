@@ -53,8 +53,9 @@ actual file, producer and configuration to interpret unfamiliar system records.
 
 Fields vary by method/build/template. These files are templated, and Notehub drops zero,
 `false` and empty fields from templated Notes, so a missing field can mean not measured or
-a real 0 or `false`. There is no guarantee that all log messages contain valid voltage or
-charge readings. Timestamp and location usually live in the Event envelope.
+a real 0 or `false`. There is no guarantee that all log
+messages contain valid voltage or charge readings. Timestamp and location usually
+live in the Event envelope.
 
 For reboot history, inspect boot-related health messages with Event capture time and
 firmware context. Distinguish a Notecard boot from modem cycling or a host restart.
@@ -94,13 +95,15 @@ because the template drops 0.
 
 Other fields include `voltage` (V), `usb` (presence), `count` (report-generation counter,
 not degrees or seconds) and `sn` (serial number of an attached ENS210 sensor; BME280s
-report none; not Event device `sn`). Configured diagnostics can add `temp_mcu`,
-`temp_accel`, `temp_modem` (degrees Celsius), `cycles` (cumulative modem data-power
-cycles), `resets` (cumulative modem hard-reset count, not Notecard reboots) and
-`milliamp_hours` (Mojo accumulator). Firmware v7.2.1 and later doesn't emit `motion`;
-verify the emitted schema. Counters have their own initialization/reset scope and are not
-all lifetime counts. Emission can be periodic or change-triggered; silence is not
-necessarily a missing heartbeat.
+report none; not Event
+device `sn`). Configured diagnostics can add `temp_mcu`, `temp_accel`, `temp_modem`
+(degrees Celsius), `cycles` (cumulative modem data-power cycles), `resets` (cumulative
+modem hard-reset count, not Notecard reboots) and `milliamp_hours` (Mojo accumulator).
+Firmware v7.2.1 and later doesn't emit `motion`;
+verify the emitted
+schema. Counters have their own initialization/reset scope and are not all lifetime
+counts. Emission can be periodic or change-triggered; silence is not necessarily a
+missing heartbeat.
 
 ## Button and AUX GPIO body
 

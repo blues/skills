@@ -12,11 +12,12 @@ Use modified cursors for incremental synchronization wherever the operation
 documents them.
 
 **Cursor start rules (required):**
-- Entities that are **not time-windowed** (Devices): always start at **`0`** for a
-  complete initial scan. Do not synthesize a start time for those streams.
-- Entities that **are time-windowed** (Events, Sessions, and any other stream whose
-  modified cursor is documented as an epoch-microsecond time cursor): **never** need to
-  start at `0` for catch-up of “recent” history. Start at a **synthesized Unix epoch
+- Entities that are **not time-windowed** (Devices):
+  always start at **`0`** for a complete initial scan. Do not synthesize a
+  start time for those streams.
+- Entities that **are time-windowed** (Events, Sessions, and any other stream whose modified
+  cursor is documented as an epoch-microsecond time cursor): **never** need to start
+  at `0` for catch-up of “recent” history. Start at a **synthesized Unix epoch
   microseconds** value for “how far back I want to begin” (for example 30 days ago
   in µs since epoch, matching the cache bootstrap). The cursor **is** documented as an epoch-microsecond cursor;
   after the first response, resume only with the returned opaque `next_cursor`.
@@ -79,17 +80,18 @@ For other entities, use the key named in the operation's response schema.
 
 A cursor orders **modifications**, not capture time. Devices and Sessions reappear
 whenever they change. For Events, the only modifications are storage and deletion: a
-stored Event never reappears except with `deleted: true`. Late events may describe old
-measurements. Retention and analytical windows
-are separate from the cursor. A Note's `note.delete` event is not automatically a
-deletion of that Event row: follow the entity's tombstone contract. Do not deduplicate
-by equal sensor values or drop raw suspect evidence.
+stored Event never reappears except with `deleted: true`. Late
+events may describe old measurements. Retention and analytical windows are separate
+from the cursor. A Note's `note.delete` event is not automatically a deletion of that
+Event row: follow the entity's tombstone contract. Do not deduplicate by equal sensor
+values or drop raw suspect evidence.
 
 Devices, Events and Sessions support project-level modified scans: `GetDevices`,
 `GetEvents` and `GetSessions`, which takes `deviceUID` and `fleetUID` filters.
-`GetDeviceSessions` reads one Device's Sessions; `_session.qo` is not a replacement for
-either. Notefile schemas use `GetNotefileSchemas`; where no modified cursor is documented,
-refresh a complete snapshot and compare only after a successful complete fetch. Never
-invent a cursor parameter or infer deletion from a partial snapshot.
+`GetDeviceSessions` reads one Device's Sessions;
+`_session.qo` is not a replacement for either. Notefile schemas
+use `GetNotefileSchemas`; where no modified cursor is documented, refresh a complete
+snapshot and compare only after a successful complete fetch. Never invent a cursor
+parameter or infer deletion from a partial snapshot.
 
 Return the saved checkpoint and actual coverage to the calling query or acquisition worker.

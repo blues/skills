@@ -40,7 +40,7 @@ generated it.
 | `failed_connects`, `penalty_secs` | Accumulated unsuccessful connection attempts and associated penalty seconds before this successful communication, not failures during the row's session. Reset boundaries and firmware matter. |
 | `cell` | Serving-cell identity encoded as `mcc,mnc,lac,cellid`. Event session metadata instead uses `cellid`. It is not a coordinate. |
 | `iccid`, `apn`, `ip` | SIM identity, access point name and connection network address. ICCID can change across SIM selection; IP is not a physical location. |
-| `bssid`, `ssid` | WiFi access point identity and network name, when applicable. SSID alone is not a unique site identifier. |
+| `bssid`, `ssid` | Wi-Fi access point identity and network name, when applicable. SSID alone is not a unique site identifier. |
 | `rat`, `bearer` | Radio access technology and bearer description. Compare signal and usage within compatible technologies. |
 | `scan`, `triangulate` | Scanned-radio input to location lookup, when exposed; `scan` can be an encoded string. Not a completed location result. |
 | `tower`, `tri`, `where*` | Session tower/triangulated and last-known note GPS context. See location. |
@@ -94,11 +94,12 @@ For ordinary sessions, usage starts as a service-side estimate. At a later conne
 device cumulative statistics can replace the previous period's byte, note and connection
 counts with deltas, and `usage_actual` becomes true. The deltas run from this Session's
 start to the next one's, so they include traffic outside this connection. These are
-**replacement values**, not another period to add. A closed session can therefore change.
-Negative cumulative deltas from resets are clamped to zero during service reconciliation;
-an actual-marked zero does not necessarily demonstrate no traffic. Missing device totals
-can also limit the correction. Persistent packet sessions can obtain actual usage by a
-different transport-specific path.
+**replacement values**,
+not another period to add. A closed session can therefore change. Negative cumulative
+deltas from resets are clamped to zero during service reconciliation; an actual-marked
+zero does not necessarily demonstrate no traffic. Missing device totals can also limit
+the correction. Persistent packet sessions can obtain actual usage by a different
+transport-specific path.
 
 Refresh recent mutable Session records before answering, rather than treating an
 append-only Event cache as an immutable Session store. Keep `usage_actual` and report

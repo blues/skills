@@ -74,10 +74,10 @@ subsets; inspect the response, including any route transform or column mapping.
 - Date filters can select capture or upload time. For readings, use capture time;
   for delivery delay, compare both. Test device-clock plausibility and late arrivals.
 - Many native fields omit zero values. Templated Notefiles also drop `0`, `false` and
-  empty-string fields, so a real zero and an unmeasured field both arrive as a missing
-  key. A schema alone cannot recover presence before encoding. Preserve nullability in
-  analysis, and qualify unresolvable zero-versus-unavailable cases rather than using
-  `COALESCE(..., 0)` indiscriminately.
+  empty-string fields unless the Note was added with `full:true`, so a real zero and an
+  unmeasured field both arrive as a missing key. A schema alone cannot recover
+  presence before encoding. Preserve nullability in analysis, and qualify unresolvable
+  zero-versus-unavailable cases rather than using `COALESCE(..., 0)` indiscriminately.
 - Numeric template encoding can round values. More decimal digits in JSON are not
   evidence of that much measurement accuracy. Latitude or longitude equal to zero
   individually is valid; do not drop every point on the equator or prime meridian.
@@ -104,24 +104,25 @@ before joining across surfaces.
 
 ## Project, Fleet and configuration semantics
 
-An Organization (organizationUID, `billing_account_uid` in project bodies) owns and is
-billed for Projects; people are Project members with a role. Each Project contains
+An Organization (organizationUID, `billing_account_uid` in CreateProject/CloneProject
+requests; project responses don't include it) owns and is billed for Projects; people have
+an Organization role and, separately, a role on each Project they belong to. Each Project contains
 Devices, Fleets, Routes, Events and Sessions.
 
 Every Project has a human-readable name and one unique programmatic GUID, called either
 AppUID or ProjectUID (`uid` in the project response). Those two names mean the same
-identifier. Each project also has zero or more unique ProductUID text strings (one
-created through the API starts with none) representing customer product types or SKUs
-whose data flows into it. A ProductUID routes/provisions
+identifier. Each project also has zero or more unique ProductUID text strings (one created
+through the API starts with none) representing
+customer product types or SKUs whose data flows into it. A ProductUID routes/provisions
 that product's devices into the project; a human product description in firmware metadata
 is a different value.
 
 A Fleet, identified by FleetUID, is not a container: its Devices are the Devices whose
 `fleet_uids` currently include its FleetUID, which `GetFleetDevices` queries. A Device may
-belong to several Fleets. Smart Fleets automatically add or remove Devices
-based on dynamic characteristics. Membership is not proof of a physical installation or
-location, or of membership at an earlier time. Use the Project's product knowledge for
-those meanings.
+belong to several
+Fleets. Smart Fleets automatically add or remove Devices based on dynamic characteristics.
+Membership is not proof of a physical installation or location, or of membership at an
+earlier time. Use the Project's product knowledge for those meanings.
 
 Environment responses distinguish variables set at that scope, defaults and effective
 values. For example, device responses expose `environment_variables`,

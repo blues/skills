@@ -84,12 +84,12 @@ The folder README and shared memory locate the cache; live state stays in the da
 | Product skills | Read the catalog and needed content, or a complete content snapshot; check metadata periodically, reuse unchanged documents and recheck dependent views/monitors when meaning changes |
 
 A start cursor in epoch microseconds bounds **modification time**, not capture time.
-Bootstrap Events and Sessions from a synthesized start cursor **30 days ago** (never page
-through older data the cache will not use; the 45-day figure is only the purge buffer)
-where the contract supports it, then verify that the requested capture-time window is
-covered. If complete recent coverage cannot be established from that bound, use a complete
-scan or documented capture-time backfill plus overlapping modification scan. State service
-retention gaps. Do not assume advancing a cursor proves that all historical events exist.
+Bootstrap Events and Sessions from a synthesized start cursor **30 days ago** (never page through
+older data the cache will not use; the 45-day figure is only the purge buffer) where the contract supports
+it, then verify that the requested capture-time window is covered. If complete recent
+coverage cannot be established from that bound, use a complete scan or documented
+capture-time backfill plus overlapping modification scan. State service retention gaps.
+Do not assume advancing a cursor proves that all historical events exist.
 
 One project-wide `GetSessions` stream covers every Device's Sessions, including Devices
 that appear later; do not enumerate Devices to fetch Sessions. Do not silently discard
@@ -196,12 +196,13 @@ FROM events ORDER BY project_uid, file, captured;
 
 `best_lat`/`best_lon` are Notehub's chosen best fix, which already falls back from GPS
 (`where_*`) to triangulation (`tri_*`), then to the cell tower (`tower_*`); in sampled
-data no Event lacked `best_lat` while having another fix, so no `coalesce` is needed.
-`where_lat`/`where_lon` keep the GPS-only fix for track analysis. Promote a field when the
-query log shows bots joining back to `events.data` for it: Event UIDs are random, so that
-join scans every `events.data` row (about 3.8 CPU-seconds on 4M rows; one such query took
-3.7 s and fell to 8 ms once `best_lat`/`best_lon` were promoted). If the refresh finds a
-listed column missing, it rebuilds the table.
+data no Event lacked `best_lat` while
+having another fix, so no `coalesce` is needed. `where_lat`/`where_lon` keep the GPS-only
+fix for track analysis. Promote a field when the query log shows bots joining back to
+`events.data` for it: Event UIDs are random, so that join scans every `events.data` row
+(about 3.8 CPU-seconds on 4M rows; one such query took 3.7 s and fell to 8 ms once
+`best_lat`/`best_lon` were promoted). If the refresh finds a listed column missing, it
+rebuilds the table.
 
 **Refresh after every ingest.** `step.sh` runs `refresh_events_x.py` immediately after
 `handoff.py ingest`. It takes the same exclusive flock on `notehub.duckdb.lock` as

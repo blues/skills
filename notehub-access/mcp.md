@@ -73,8 +73,8 @@ The code-mode contract excludes `o_auth2_client_credentials`,
 `upload_firmware` and `download_firmware`. MCP code mode cannot upload or download firmware
 files; report that limitation. A switch to the CLI is a transport change under Access, made
 only for this need or at the user's choice, and not available where the harness forbids a
-second path (e.g. Grok Bot). Do not assume every OpenAPI operation is exposed unchanged. If
-needed, report a concrete limitation; don't reach for raw tokens.
+second path (e.g. Grok Bot). Do not assume every OpenAPI operation is
+exposed unchanged. If needed, report a concrete limitation; don't reach for raw tokens.
 
 Specific guards still apply:
 

@@ -3,8 +3,8 @@
 For “where is it now?”, report the latest known location **with its observation time
 and source**. For “where was this reading taken?”, use that Event's location context
 and compare its location time with capture time. `where_when` is when the location was
-last known valid, which can be later than the fix for a stationary device; in
-`_track.qo`, `body.time` is the fix time. Today's Device object cannot supply the
+last known valid, which can be later than the fix for a stationary device; in an
+ordinary `_track.qo` point, `body.time` is the fix time. Today's Device object cannot supply the
 historical location of all its Events.
 
 ## Choose the relevant reference
@@ -83,11 +83,12 @@ from the decoded body. Query `where_lat/where_lon/where_when`, not presumed
 `body._lat/body._lon` or `body.lat/body.lon`. A custom host body may independently
 contain coordinates with its own meaning.
 
-Privacy/fuzz configuration can coarsen visible coordinates. Device-derived distance and
-velocity can use unfuzzed fixes, so recalculating from displayed coordinates can differ.
-Do not silently “correct” one with the other. With `_suppress_where`, Notecard
-substitutes a fixed placeholder location (OLC `7MV8XWQF+HW`, about 27.98888, 86.92519, fix
-time `1717171717`). Treat it as “location withheld”, never as a real position.
+Privacy/fuzz configuration can coarsen visible coordinates. Device-derived distance
+and velocity can use unfuzzed fixes, so recalculating from displayed coordinates can
+differ. Do not silently “correct” one with the other. With `_suppress_where`, Notecard
+substitutes a fixed placeholder location (OLC `7MV8XWQF+HW`, about 27.98888, 86.92519).
+Identify it by the OLC or coordinates: `body.time` is `1717171717`, but Event `where_when`
+can advance past it. Treat it as “location withheld”, never as a real position.
 
 For a map, retain source/time and distinguish radio estimates from GPS points. For
 distance or speed, restrict to compatible, credible fixes, positive time deltas and

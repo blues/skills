@@ -89,7 +89,8 @@ checked and reused in Q&A, query preparation and Training.
    `GetNotefileSchemas` through the established connection and select the entry whose
    `notefile` matches the Event's NotefileID. It lists the `body` fields Notehub has seen
    and their JSON types (string, number, boolean, array, object), inferred from received
-   Events. It includes fields from every firmware version seen and has no units, ranges
+   Events. It keeps fields from earlier firmware versions too (until the project's schemas
+   pass 1,000 fields, when the least recently seen are pruned) and has no units, ranges
    or meaning.
 3. **Combine structure with meaning.** Use the schema's field names and types alongside
    the product skills' terminology, units and interpretation rules. Trace the same
